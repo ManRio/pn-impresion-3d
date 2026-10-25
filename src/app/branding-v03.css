@@ -1,0 +1,12 @@
+/* PN v0.3 — Brand lockup and isolated hero emblem */
+.brand { min-width: 190px; display: flex; align-items: center; gap: 0; }
+.brand .brand-wordmark { display: block; width: 205px; height: auto; max-height: 68px; object-fit: contain; object-position: left center; }
+.hero-showcase { height: auto; min-height: 455px; border: 0; border-radius: 0; padding: 0; overflow: visible; background: transparent; display: flex; justify-content: center; align-items: center; isolation: auto; }
+.hero-showcase::before { content: none; }
+.hero-showcase .hero-brand-image { display: block; width: min(100%, 480px); height: auto; object-fit: contain; filter: drop-shadow(0 20px 35px rgba(0,0,0,.25)); }
+@media (max-width: 720px) {
+ .brand { min-width: 0; }
+ .brand .brand-wordmark { width: 155px; max-height: 58px; }
+ .hero-showcase { min-height: 0; padding-bottom: 20px; }
+ .hero-showcase .hero-brand-image { width: min(85%, 370px); }
+}

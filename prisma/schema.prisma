@@ -1,0 +1,106 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum ProductStatus {
+  DRAFT
+  ACTIVE
+  ARCHIVED
+}
+
+enum SaleMode {
+  DIRECT
+  QUOTE
+}
+
+enum Material {
+  PLA
+  PETG
+  TPU
+  OTHER
+}
+
+enum QuoteStatus {
+  NEW
+  REVIEWING
+  QUOTED
+  ACCEPTED
+  REJECTED
+  CLOSED
+}
+
+model Category {
+  id        String    @id @default(cuid())
+  name      String
+  slug      String    @unique
+  products  Product[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Product {
+  id          String          @id @default(cuid())
+  name        String
+  slug        String          @unique
+  description String          @db.Text
+  status      ProductStatus   @default(DRAFT)
+  saleMode    SaleMode        @default(DIRECT)
+  categoryId  String
+  category    Category        @relation(fields: [categoryId], references: [id])
+  images      ProductImage[]
+  variants    ProductVariant[]
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  @@index([status, categoryId])
+}
+
+model ProductImage {
+  id        String  @id @default(cuid())
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  url       String
+  alt       String
+  position  Int     @default(0)
+  @@index([productId, position])
+}
+
+model ProductVariant {
+  id            String   @id @default(cuid())
+  productId     String
+  product       Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  sku           String   @unique
+  label         String
+  material      Material @default(PLA)
+  color         String
+  weightGrams   Int      // Peso total estimado por Bambu Studio, incluidos soportes/purgas
+  priceCents    Int      // Precio final editable en céntimos; no usar Float para dinero
+  productionMins Int?
+  active        Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  @@index([productId, active])
+}
+
+model PricingConfig {
+  id              String   @id @default("default")
+  baseCentsPerGram Int      @default(12) // 12 céntimos/g. Cambiable en panel.
+  minimumCents    Int      @default(0)  // Sin mínimo hasta acuerdo comercial.
+  updatedAt       DateTime @updatedAt
+}
+
+model QuoteRequest {
+  id          String      @id @default(cuid())
+  customerName String
+  email       String
+  notes       String?     @db.Text
+  fileKey     String?     // Ruta privada; NUNCA URL pública del STL del cliente.
+  status      QuoteStatus @default(NEW)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+}
