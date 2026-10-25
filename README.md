@@ -1,105 +1,97 @@
-# P&N Impresión 3D — Ecommerce en desarrollo
+# P&N Impresión 3D
 
-Tienda online de **P&N Impresión 3D** para productos impresos en 3D bajo demanda y encargos personalizados, con venta prevista en España.
+Ecommerce de impresión 3D en desarrollo. Catálogo mixto: productos de compra directa y encargos que requieren presupuesto. Destinado inicialmente a clientes en España.
 
-> **Estado:** MVP en desarrollo. La interfaz muestra productos de demostración. La base PostgreSQL está creada en Neon y accesible desde Prisma Studio, pero el catálogo visual aún no consume los datos de la base. No hay pagos ni panel administrativo operativo. Se mantiene `noindex` durante el desarrollo.
+> **Estado:** prototipo funcional con autenticación administrativa y base de datos. La tienda aún no procesa pedidos ni pagos; el catálogo público contiene contenido de demostración. No está lista para producción.
 
-## Stack tecnológico
+## Tecnologías
 
-- Next.js 16, React 19 y TypeScript.
-- Tailwind CSS 4, estilos personalizados y Lucide React.
-- Oxanium para títulos e Inter para textos.
-- PostgreSQL en Neon, Prisma ORM 7 y `@prisma/adapter-pg`.
+- Next.js 16, React 19, TypeScript y Tailwind CSS 4.
+- Oxanium e Inter; identidad P&N en carbón y verde lima.
+- PostgreSQL (Neon), Prisma 7 y adaptador `@prisma/adapter-pg`.
+- Better Auth con plugin `admin` para sesiones y roles.
 
 ## Requisitos
 
-- Node.js **24 LTS** (probado con `24.22.1`).
+- Node.js 24 LTS (en desarrollo se ha utilizado 24.22.1).
 - npm y VS Code.
-- Proyecto PostgreSQL en Neon para las funciones con datos.
+- Proyecto PostgreSQL de desarrollo en Neon.
 
-## Instalación local
+## Configuración local
 
-1. Clonar el repositorio, abrir la carpeta en VS Code y ejecutar:
-
-   ```powershell
-   npm install
-   ```
-
-2. Crear un archivo `.env` en la raíz siguiendo `.env.example`:
+1. Clona el repositorio y abre la carpeta en VS Code.
+2. Instala dependencias con `npm install`.
+3. Crea `.env` a partir de `.env.example` (sin publicar credenciales):
 
    ```dotenv
-   DATABASE_URL="postgresql://...CONEXION_POOL..."
-   DATABASE_URL_UNPOOLED="postgresql://...CONEXION_DIRECTA..."
+   DATABASE_URL="postgresql://...conexion-pooled..."
+   DATABASE_URL_UNPOOLED="postgresql://...conexion-directa..."
+   BETTER_AUTH_URL="http://localhost:3000"
+   BETTER_AUTH_SECRET="...secreto-aleatorio..."
    ```
 
-   Utilizar las URL reales proporcionadas por Neon. `DATABASE_URL` corresponde a la conexión con _pooling_ para la aplicación; `DATABASE_URL_UNPOOLED` es la conexión directa usada en `prisma.config.ts` para migraciones. **Nunca publicar credenciales ni el archivo `.env`.**
-
-3. Validar el esquema y generar el cliente Prisma:
+4. Valida el esquema, aplica las migraciones _existentes_ a una base de desarrollo nueva y genera el cliente:
 
    ```powershell
    npx prisma validate
+   npx prisma migrate deploy
    npx prisma generate
    ```
 
-4. En una base de datos de desarrollo **nueva**, aplicar las migraciones versionadas:
+5. Inicia la aplicación con `npm run dev` y abre http://localhost:3000.
 
-   ```powershell
-   npx prisma migrate deploy
-   ```
-
-5. Iniciar la web con `npm run dev` y abrir http://localhost:3000.
+Nunca compartas `.env`, credenciales de Neon ni `BETTER_AUTH_SECRET`. Asegúrate de que `.env` está excluido en `.gitignore`.
 
 ## Comandos útiles
 
 ```powershell
-npm run dev        # Servidor local
-npm run lint       # Análisis ESLint
-npm run build      # Compilación de producción
-npx prisma studio  # Consultar tablas en una interfaz visual
+npm run dev
+npm run lint
+npm run build
+npx tsc --noEmit
+npx prisma migrate status
+npx prisma studio
 ```
 
-ESLint 9.39.5 se mantiene temporalmente por compatibilidad de plugins. Su migración a una versión mantenida está pendiente.
+## Rutas actuales
 
-## Páginas y funciones actuales
+| Ruta                 | Estado                                        |
+| -------------------- | --------------------------------------------- |
+| `/`                  | Portada visual                                |
+| `/tienda`            | Catálogo de demostración                      |
+| `/personalizados`    | Página informativa                            |
+| `/presupuesto`       | Página informativa; solicitudes pendientes    |
+| `/contacto`          | Página informativa                            |
+| `/admin/login`       | Inicio de sesión con Better Auth              |
+| `/admin`             | Dashboard protegido por sesión y rol `admin`  |
+| `/api/auth/[...all]` | Endpoints de Better Auth                      |
+| `/api/productos`     | Lectura de productos publicados (requiere BD) |
 
-| Ruta              | Estado                                                                          |
-| ----------------- | ------------------------------------------------------------------------------- |
-| `/`               | Portada visual responsive                                                       |
-| `/tienda`         | Catálogo ficticio de demostración                                               |
-| `/personalizados` | Página informativa                                                              |
-| `/presupuesto`    | Página informativa; solicitud funcional pendiente                               |
-| `/contacto`       | Página informativa; formulario funcional pendiente                              |
-| `/api/productos`  | Endpoint de lectura preparado para productos publicados; requiere conexión a BD |
+## Modelo de datos
 
-## Base de datos
+- **Catálogo:** `Category`, `Product`, `ProductImage`, `ProductVariant`, `PricingConfig`, `QuoteRequest`.
+- **Autenticación:** `User`, `Session`, `Account`, `Verification`.
+- **Migraciones:** archivos versionados en `prisma/migrations/` (actualmente 3 migraciones aplicadas en desarrollo).
 
-El esquema `prisma/schema.prisma` contiene los modelos `Category`, `Product`, `ProductImage`, `ProductVariant`, `PricingConfig` y `QuoteRequest`.
+## Reglas comerciales iniciales
 
-Las migraciones se guardan en `prisma/migrations/` y deben incluirse en Git. La base Neon actual ya está sincronizada y las tablas de negocio están vacías hasta incorporar productos reales.
+- Impresora: Bambu Lab A1 con AMS Lite.
+- Productos estándar y personalizados; ventas previstas en España.
+- Precio orientativo: 0,10–0,12 €/g de material calculado con Bambu Studio, revisando tiempos, desperdicio, embalaje, impuestos, envío y márgenes antes de publicar el precio final.
+- No se aceptan automáticamente modelos externos sin revisar derechos de uso comercial.
 
-## Reglas comerciales previstas
+## Seguridad y limitaciones
 
-- Bambu Lab A1 con AMS Lite.
-- Catálogo mixto: compra directa y encargos sujetos a presupuesto.
-- Tarifa orientativa configurable de **0,10–0,12 €/gramo**; revisar complejidad, desperdicio, empaquetado, impuestos y envío antes de publicar cada precio.
-- Fabricación bajo demanda y ámbito de venta inicial en España.
+- Acceso administrativo con Better Auth; rol `admin` verificado en el servidor.
+- Registro público deshabilitado. No documentar ni automatizar credenciales en el repositorio.
+- Las futuras operaciones de escritura deberán verificar permisos en servidor, validar datos y proteger los archivos subidos.
+- La web permanece con `noindex` durante el desarrollo.
+- **Pendiente para producción:** recuperación de acceso, controles antiabuso, revisión de autorización en cada endpoint, pagos, pedidos, documentación legal, tratamiento de datos y SEO definitivo.
 
-## Identidad visual
+## Próximos pasos
 
-Paleta carbón y verde lima (`#B5FF67`), logotipo de P&N, favicon `LogoPN.png` y tipografías Oxanium e Inter. Diseño y catálogo visual todavía sujetos a mejoras.
-
-## Próximos hitos
-
-1. Autenticación y autorización del administrador.
-2. CRUD de categorías, productos, variantes y precios, con subida segura de imágenes.
-3. Catálogo conectado a PostgreSQL con fotografías y precios reales.
-4. Solicitudes de presupuesto y almacenamiento seguro de archivos STL/3MF.
-5. Carrito, pagos, pedidos, notificaciones y envíos.
-6. Revisión legal, fiscal, SEO y activación de indexación en el lanzamiento.
-
-## Seguridad
-
-- No subir `.env`, `.env.local`, contraseñas ni archivos privados de clientes.
-- Revisar `.gitignore`, `git status` y `git diff --cached --check` antes de cada commit.
-- No exponer endpoints de escritura ni paneles de administración sin autenticación.
-- Este repositorio **no es todavía una tienda lista para producción**.
+1. CRUD protegido de categorías.
+2. Listado de productos reales desde Neon y alta/edición de productos.
+3. Variantes, precios e imágenes.
+4. Conexión del catálogo público a PostgreSQL.
+5. Presupuestos, carrito, checkout, pagos y pedidos.
