@@ -1250,6 +1250,7 @@ export const ProductVariantScalarFieldEnum = {
   material: 'material',
   color: 'color',
   weightGrams: 'weightGrams',
+  weightCentigrams: 'weightCentigrams',
   priceCents: 'priceCents',
   productionMins: 'productionMins',
   active: 'active',

@@ -81,6 +81,7 @@ model ProductVariant {
   material       Material @default(PLA)
   color          String
   weightGrams    Int // Peso total estimado por Bambu Studio, incluidos soportes/purgas
+  weightCentigrams Int?
   priceCents     Int // Precio final editable en céntimos; no usar Float para dinero
   productionMins Int?
   active         Boolean  @default(true)

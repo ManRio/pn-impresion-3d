@@ -28,12 +28,14 @@ export type AggregateProductVariant = {
 
 export type ProductVariantAvgAggregateOutputType = {
   weightGrams: number | null
+  weightCentigrams: number | null
   priceCents: number | null
   productionMins: number | null
 }
 
 export type ProductVariantSumAggregateOutputType = {
   weightGrams: number | null
+  weightCentigrams: number | null
   priceCents: number | null
   productionMins: number | null
 }
@@ -46,6 +48,7 @@ export type ProductVariantMinAggregateOutputType = {
   material: $Enums.Material | null
   color: string | null
   weightGrams: number | null
+  weightCentigrams: number | null
   priceCents: number | null
   productionMins: number | null
   active: boolean | null
@@ -61,6 +64,7 @@ export type ProductVariantMaxAggregateOutputType = {
   material: $Enums.Material | null
   color: string | null
   weightGrams: number | null
+  weightCentigrams: number | null
   priceCents: number | null
   productionMins: number | null
   active: boolean | null
@@ -76,6 +80,7 @@ export type ProductVariantCountAggregateOutputType = {
   material: number
   color: number
   weightGrams: number
+  weightCentigrams: number
   priceCents: number
   productionMins: number
   active: number
@@ -87,12 +92,14 @@ export type ProductVariantCountAggregateOutputType = {
 
 export type ProductVariantAvgAggregateInputType = {
   weightGrams?: true
+  weightCentigrams?: true
   priceCents?: true
   productionMins?: true
 }
 
 export type ProductVariantSumAggregateInputType = {
   weightGrams?: true
+  weightCentigrams?: true
   priceCents?: true
   productionMins?: true
 }
@@ -105,6 +112,7 @@ export type ProductVariantMinAggregateInputType = {
   material?: true
   color?: true
   weightGrams?: true
+  weightCentigrams?: true
   priceCents?: true
   productionMins?: true
   active?: true
@@ -120,6 +128,7 @@ export type ProductVariantMaxAggregateInputType = {
   material?: true
   color?: true
   weightGrams?: true
+  weightCentigrams?: true
   priceCents?: true
   productionMins?: true
   active?: true
@@ -135,6 +144,7 @@ export type ProductVariantCountAggregateInputType = {
   material?: true
   color?: true
   weightGrams?: true
+  weightCentigrams?: true
   priceCents?: true
   productionMins?: true
   active?: true
@@ -237,6 +247,7 @@ export type ProductVariantGroupByOutputType = {
   material: $Enums.Material
   color: string
   weightGrams: number
+  weightCentigrams: number | null
   priceCents: number
   productionMins: number | null
   active: boolean
@@ -275,6 +286,7 @@ export type ProductVariantWhereInput = {
   material?: Prisma.EnumMaterialFilter<"ProductVariant"> | $Enums.Material
   color?: Prisma.StringFilter<"ProductVariant"> | string
   weightGrams?: Prisma.IntFilter<"ProductVariant"> | number
+  weightCentigrams?: Prisma.IntNullableFilter<"ProductVariant"> | number | null
   priceCents?: Prisma.IntFilter<"ProductVariant"> | number
   productionMins?: Prisma.IntNullableFilter<"ProductVariant"> | number | null
   active?: Prisma.BoolFilter<"ProductVariant"> | boolean
@@ -291,6 +303,7 @@ export type ProductVariantOrderByWithRelationInput = {
   material?: Prisma.SortOrder
   color?: Prisma.SortOrder
   weightGrams?: Prisma.SortOrder
+  weightCentigrams?: Prisma.SortOrderInput | Prisma.SortOrder
   priceCents?: Prisma.SortOrder
   productionMins?: Prisma.SortOrderInput | Prisma.SortOrder
   active?: Prisma.SortOrder
@@ -310,6 +323,7 @@ export type ProductVariantWhereUniqueInput = Prisma.AtLeast<{
   material?: Prisma.EnumMaterialFilter<"ProductVariant"> | $Enums.Material
   color?: Prisma.StringFilter<"ProductVariant"> | string
   weightGrams?: Prisma.IntFilter<"ProductVariant"> | number
+  weightCentigrams?: Prisma.IntNullableFilter<"ProductVariant"> | number | null
   priceCents?: Prisma.IntFilter<"ProductVariant"> | number
   productionMins?: Prisma.IntNullableFilter<"ProductVariant"> | number | null
   active?: Prisma.BoolFilter<"ProductVariant"> | boolean
@@ -326,6 +340,7 @@ export type ProductVariantOrderByWithAggregationInput = {
   material?: Prisma.SortOrder
   color?: Prisma.SortOrder
   weightGrams?: Prisma.SortOrder
+  weightCentigrams?: Prisma.SortOrderInput | Prisma.SortOrder
   priceCents?: Prisma.SortOrder
   productionMins?: Prisma.SortOrderInput | Prisma.SortOrder
   active?: Prisma.SortOrder
@@ -349,6 +364,7 @@ export type ProductVariantScalarWhereWithAggregatesInput = {
   material?: Prisma.EnumMaterialWithAggregatesFilter<"ProductVariant"> | $Enums.Material
   color?: Prisma.StringWithAggregatesFilter<"ProductVariant"> | string
   weightGrams?: Prisma.IntWithAggregatesFilter<"ProductVariant"> | number
+  weightCentigrams?: Prisma.IntNullableWithAggregatesFilter<"ProductVariant"> | number | null
   priceCents?: Prisma.IntWithAggregatesFilter<"ProductVariant"> | number
   productionMins?: Prisma.IntNullableWithAggregatesFilter<"ProductVariant"> | number | null
   active?: Prisma.BoolWithAggregatesFilter<"ProductVariant"> | boolean
@@ -363,6 +379,7 @@ export type ProductVariantCreateInput = {
   material?: $Enums.Material
   color: string
   weightGrams: number
+  weightCentigrams?: number | null
   priceCents: number
   productionMins?: number | null
   active?: boolean
@@ -379,6 +396,7 @@ export type ProductVariantUncheckedCreateInput = {
   material?: $Enums.Material
   color: string
   weightGrams: number
+  weightCentigrams?: number | null
   priceCents: number
   productionMins?: number | null
   active?: boolean
@@ -393,6 +411,7 @@ export type ProductVariantUpdateInput = {
   material?: Prisma.EnumMaterialFieldUpdateOperationsInput | $Enums.Material
   color?: Prisma.StringFieldUpdateOperationsInput | string
   weightGrams?: Prisma.IntFieldUpdateOperationsInput | number
+  weightCentigrams?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   priceCents?: Prisma.IntFieldUpdateOperationsInput | number
   productionMins?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -409,6 +428,7 @@ export type ProductVariantUncheckedUpdateInput = {
   material?: Prisma.EnumMaterialFieldUpdateOperationsInput | $Enums.Material
   color?: Prisma.StringFieldUpdateOperationsInput | string
   weightGrams?: Prisma.IntFieldUpdateOperationsInput | number
+  weightCentigrams?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   priceCents?: Prisma.IntFieldUpdateOperationsInput | number
   productionMins?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -424,6 +444,7 @@ export type ProductVariantCreateManyInput = {
   material?: $Enums.Material
   color: string
   weightGrams: number
+  weightCentigrams?: number | null
   priceCents: number
   productionMins?: number | null
   active?: boolean
@@ -438,6 +459,7 @@ export type ProductVariantUpdateManyMutationInput = {
   material?: Prisma.EnumMaterialFieldUpdateOperationsInput | $Enums.Material
   color?: Prisma.StringFieldUpdateOperationsInput | string
   weightGrams?: Prisma.IntFieldUpdateOperationsInput | number
+  weightCentigrams?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   priceCents?: Prisma.IntFieldUpdateOperationsInput | number
   productionMins?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -453,6 +475,7 @@ export type ProductVariantUncheckedUpdateManyInput = {
   material?: Prisma.EnumMaterialFieldUpdateOperationsInput | $Enums.Material
   color?: Prisma.StringFieldUpdateOperationsInput | string
   weightGrams?: Prisma.IntFieldUpdateOperationsInput | number
+  weightCentigrams?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   priceCents?: Prisma.IntFieldUpdateOperationsInput | number
   productionMins?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -478,6 +501,7 @@ export type ProductVariantCountOrderByAggregateInput = {
   material?: Prisma.SortOrder
   color?: Prisma.SortOrder
   weightGrams?: Prisma.SortOrder
+  weightCentigrams?: Prisma.SortOrder
   priceCents?: Prisma.SortOrder
   productionMins?: Prisma.SortOrder
   active?: Prisma.SortOrder
@@ -487,6 +511,7 @@ export type ProductVariantCountOrderByAggregateInput = {
 
 export type ProductVariantAvgOrderByAggregateInput = {
   weightGrams?: Prisma.SortOrder
+  weightCentigrams?: Prisma.SortOrder
   priceCents?: Prisma.SortOrder
   productionMins?: Prisma.SortOrder
 }
@@ -499,6 +524,7 @@ export type ProductVariantMaxOrderByAggregateInput = {
   material?: Prisma.SortOrder
   color?: Prisma.SortOrder
   weightGrams?: Prisma.SortOrder
+  weightCentigrams?: Prisma.SortOrder
   priceCents?: Prisma.SortOrder
   productionMins?: Prisma.SortOrder
   active?: Prisma.SortOrder
@@ -514,6 +540,7 @@ export type ProductVariantMinOrderByAggregateInput = {
   material?: Prisma.SortOrder
   color?: Prisma.SortOrder
   weightGrams?: Prisma.SortOrder
+  weightCentigrams?: Prisma.SortOrder
   priceCents?: Prisma.SortOrder
   productionMins?: Prisma.SortOrder
   active?: Prisma.SortOrder
@@ -523,6 +550,7 @@ export type ProductVariantMinOrderByAggregateInput = {
 
 export type ProductVariantSumOrderByAggregateInput = {
   weightGrams?: Prisma.SortOrder
+  weightCentigrams?: Prisma.SortOrder
   priceCents?: Prisma.SortOrder
   productionMins?: Prisma.SortOrder
 }
@@ -592,6 +620,7 @@ export type ProductVariantCreateWithoutProductInput = {
   material?: $Enums.Material
   color: string
   weightGrams: number
+  weightCentigrams?: number | null
   priceCents: number
   productionMins?: number | null
   active?: boolean
@@ -606,6 +635,7 @@ export type ProductVariantUncheckedCreateWithoutProductInput = {
   material?: $Enums.Material
   color: string
   weightGrams: number
+  weightCentigrams?: number | null
   priceCents: number
   productionMins?: number | null
   active?: boolean
@@ -650,6 +680,7 @@ export type ProductVariantScalarWhereInput = {
   material?: Prisma.EnumMaterialFilter<"ProductVariant"> | $Enums.Material
   color?: Prisma.StringFilter<"ProductVariant"> | string
   weightGrams?: Prisma.IntFilter<"ProductVariant"> | number
+  weightCentigrams?: Prisma.IntNullableFilter<"ProductVariant"> | number | null
   priceCents?: Prisma.IntFilter<"ProductVariant"> | number
   productionMins?: Prisma.IntNullableFilter<"ProductVariant"> | number | null
   active?: Prisma.BoolFilter<"ProductVariant"> | boolean
@@ -664,6 +695,7 @@ export type ProductVariantCreateManyProductInput = {
   material?: $Enums.Material
   color: string
   weightGrams: number
+  weightCentigrams?: number | null
   priceCents: number
   productionMins?: number | null
   active?: boolean
@@ -678,6 +710,7 @@ export type ProductVariantUpdateWithoutProductInput = {
   material?: Prisma.EnumMaterialFieldUpdateOperationsInput | $Enums.Material
   color?: Prisma.StringFieldUpdateOperationsInput | string
   weightGrams?: Prisma.IntFieldUpdateOperationsInput | number
+  weightCentigrams?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   priceCents?: Prisma.IntFieldUpdateOperationsInput | number
   productionMins?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -692,6 +725,7 @@ export type ProductVariantUncheckedUpdateWithoutProductInput = {
   material?: Prisma.EnumMaterialFieldUpdateOperationsInput | $Enums.Material
   color?: Prisma.StringFieldUpdateOperationsInput | string
   weightGrams?: Prisma.IntFieldUpdateOperationsInput | number
+  weightCentigrams?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   priceCents?: Prisma.IntFieldUpdateOperationsInput | number
   productionMins?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -706,6 +740,7 @@ export type ProductVariantUncheckedUpdateManyWithoutProductInput = {
   material?: Prisma.EnumMaterialFieldUpdateOperationsInput | $Enums.Material
   color?: Prisma.StringFieldUpdateOperationsInput | string
   weightGrams?: Prisma.IntFieldUpdateOperationsInput | number
+  weightCentigrams?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   priceCents?: Prisma.IntFieldUpdateOperationsInput | number
   productionMins?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -723,6 +758,7 @@ export type ProductVariantSelect<ExtArgs extends runtime.Types.Extensions.Intern
   material?: boolean
   color?: boolean
   weightGrams?: boolean
+  weightCentigrams?: boolean
   priceCents?: boolean
   productionMins?: boolean
   active?: boolean
@@ -739,6 +775,7 @@ export type ProductVariantSelectCreateManyAndReturn<ExtArgs extends runtime.Type
   material?: boolean
   color?: boolean
   weightGrams?: boolean
+  weightCentigrams?: boolean
   priceCents?: boolean
   productionMins?: boolean
   active?: boolean
@@ -755,6 +792,7 @@ export type ProductVariantSelectUpdateManyAndReturn<ExtArgs extends runtime.Type
   material?: boolean
   color?: boolean
   weightGrams?: boolean
+  weightCentigrams?: boolean
   priceCents?: boolean
   productionMins?: boolean
   active?: boolean
@@ -771,6 +809,7 @@ export type ProductVariantSelectScalar = {
   material?: boolean
   color?: boolean
   weightGrams?: boolean
+  weightCentigrams?: boolean
   priceCents?: boolean
   productionMins?: boolean
   active?: boolean
@@ -778,7 +817,7 @@ export type ProductVariantSelectScalar = {
   updatedAt?: boolean
 }
 
-export type ProductVariantOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "productId" | "sku" | "label" | "material" | "color" | "weightGrams" | "priceCents" | "productionMins" | "active" | "createdAt" | "updatedAt", ExtArgs["result"]["productVariant"]>
+export type ProductVariantOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "productId" | "sku" | "label" | "material" | "color" | "weightGrams" | "weightCentigrams" | "priceCents" | "productionMins" | "active" | "createdAt" | "updatedAt", ExtArgs["result"]["productVariant"]>
 export type ProductVariantInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   product?: boolean | Prisma.ProductDefaultArgs<ExtArgs>
 }
@@ -802,6 +841,7 @@ export type $ProductVariantPayload<ExtArgs extends runtime.Types.Extensions.Inte
     material: $Enums.Material
     color: string
     weightGrams: number
+    weightCentigrams: number | null
     priceCents: number
     productionMins: number | null
     active: boolean
@@ -1238,6 +1278,7 @@ export interface ProductVariantFieldRefs {
   readonly material: Prisma.FieldRef<"ProductVariant", 'Material'>
   readonly color: Prisma.FieldRef<"ProductVariant", 'String'>
   readonly weightGrams: Prisma.FieldRef<"ProductVariant", 'Int'>
+  readonly weightCentigrams: Prisma.FieldRef<"ProductVariant", 'Int'>
   readonly priceCents: Prisma.FieldRef<"ProductVariant", 'Int'>
   readonly productionMins: Prisma.FieldRef<"ProductVariant", 'Int'>
   readonly active: Prisma.FieldRef<"ProductVariant", 'Boolean'>
