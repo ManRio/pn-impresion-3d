@@ -1,9 +1,10 @@
 import Link from 'next/link';
-import { ArrowLeft, Save } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import { requireAdmin } from '@/lib/require-admin';
 import { prisma } from '@/lib/prisma';
-import { createProduct } from '../actions';
+import { createAndUpload } from './create-and-upload';
 import PricePreview from './PricePreview';
+import PhotoSelector from './PhotoSelector';
 
 export default async function NewProductPage({
   searchParams,
@@ -32,7 +33,8 @@ export default async function NewProductPage({
         <p className='text-sm font-bold text-[#B5FF67]'>P&N · CATÁLOGO</p>
         <h1 className='font-display text-3xl font-extrabold'>NUEVO PRODUCTO</h1>
         <p className='mb-8 mt-2 text-sm text-neutral-400'>
-          El producto se guarda como borrador con una variante inicial.
+          Puedes guardar un borrador o publicar directamente. También puedes
+          adjuntar fotografías.
         </p>
         {params.error && (
           <p
@@ -50,7 +52,7 @@ export default async function NewProductPage({
             </Link>
           </p>
         ) : (
-          <form action={createProduct} className='space-y-6'>
+          <form action={createAndUpload} className='space-y-6'>
             <section className='space-y-4 rounded-xl border border-white/10 bg-[#1a211e] p-6'>
               <h2 className='font-display text-xl font-bold'>
                 INFORMACIÓN DEL PRODUCTO
@@ -169,14 +171,27 @@ export default async function NewProductPage({
               </div>
               <PricePreview />
             </section>
+            <PhotoSelector />
             <div className='flex flex-wrap items-center justify-between gap-3'>
               <p className='text-sm text-amber-200'>Estado: BORRADOR</p>
-              <button
-                type='submit'
-                className='inline-flex items-center gap-2 rounded-lg bg-[#B5FF67] px-6 py-3 font-bold text-[#101319]'
-              >
-                <Save size={18} /> Guardar producto
-              </button>
+              <div className='flex flex-wrap gap-3'>
+                <button
+                  type='submit'
+                  name='intent'
+                  value='draft'
+                  className='rounded-lg border border-white/30 px-5 py-3 font-bold'
+                >
+                  Guardar borrador
+                </button>
+                <button
+                  type='submit'
+                  name='intent'
+                  value='publish'
+                  className='rounded-lg bg-[#B5FF67] px-5 py-3 font-bold text-[#101319]'
+                >
+                  Crear y publicar
+                </button>
+              </div>
             </div>
           </form>
         )}

@@ -106,7 +106,10 @@ export const ProductScalarFieldEnum = {
   sourceUrl: 'sourceUrl',
   sourceDesigner: 'sourceDesigner',
   sourceLicense: 'sourceLicense',
-  commercialPermission: 'commercialPermission'
+  commercialPermission: 'commercialPermission',
+  rightsEvidence: 'rightsEvidence',
+  rightsReviewedAt: 'rightsReviewedAt',
+  designOrigin: 'designOrigin'
 } as const
 
 export type ProductScalarFieldEnum = (typeof ProductScalarFieldEnum)[keyof typeof ProductScalarFieldEnum]

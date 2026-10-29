@@ -55,3 +55,12 @@ export const SavedDesignStatus = {
 } as const
 
 export type SavedDesignStatus = (typeof SavedDesignStatus)[keyof typeof SavedDesignStatus]
+
+
+export const DesignOrigin = {
+  OWN: 'OWN',
+  CUSTOM: 'CUSTOM',
+  THIRD_PARTY: 'THIRD_PARTY'
+} as const
+
+export type DesignOrigin = (typeof DesignOrigin)[keyof typeof DesignOrigin]

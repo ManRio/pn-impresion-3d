@@ -1306,7 +1306,10 @@ export const ProductScalarFieldEnum = {
   sourceUrl: 'sourceUrl',
   sourceDesigner: 'sourceDesigner',
   sourceLicense: 'sourceLicense',
-  commercialPermission: 'commercialPermission'
+  commercialPermission: 'commercialPermission',
+  rightsEvidence: 'rightsEvidence',
+  rightsReviewedAt: 'rightsReviewedAt',
+  designOrigin: 'designOrigin'
 } as const
 
 export type ProductScalarFieldEnum = (typeof ProductScalarFieldEnum)[keyof typeof ProductScalarFieldEnum]
@@ -1535,6 +1538,20 @@ export type ListEnumSaleModeFieldRefInput<$PrismaModel> = FieldRefInputType<$Pri
  * Reference to a field of type 'Boolean'
  */
 export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+/**
+ * Reference to a field of type 'DesignOrigin'
+ */
+export type EnumDesignOriginFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DesignOrigin'>
+    
+
+
+/**
+ * Reference to a field of type 'DesignOrigin[]'
+ */
+export type ListEnumDesignOriginFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DesignOrigin[]'>
     
 
 

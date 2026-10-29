@@ -63,6 +63,9 @@ model Product {
   sourceDesigner       String?
   sourceLicense        String?
   commercialPermission Boolean @default(false)
+  rightsEvidence   String?   @db.Text
+  rightsReviewedAt DateTime?
+  designOrigin DesignOrigin @default(OWN)
 
   @@index([status, categoryId])
   @@unique([sourcePlatform, sourceModelId])
@@ -188,6 +191,12 @@ enum SavedDesignStatus {
   TO_REVIEW
   SHORTLIST
   DISCARDED
+}
+
+enum DesignOrigin {
+  OWN
+  CUSTOM
+  THIRD_PARTY
 }
 
 model SavedDesign {
