@@ -60,7 +60,8 @@ export const ModelName = {
   User: 'User',
   Session: 'Session',
   Account: 'Account',
-  Verification: 'Verification'
+  Verification: 'Verification',
+  SavedDesign: 'SavedDesign'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -99,7 +100,13 @@ export const ProductScalarFieldEnum = {
   saleMode: 'saleMode',
   categoryId: 'categoryId',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  sourcePlatform: 'sourcePlatform',
+  sourceModelId: 'sourceModelId',
+  sourceUrl: 'sourceUrl',
+  sourceDesigner: 'sourceDesigner',
+  sourceLicense: 'sourceLicense',
+  commercialPermission: 'commercialPermission'
 } as const
 
 export type ProductScalarFieldEnum = (typeof ProductScalarFieldEnum)[keyof typeof ProductScalarFieldEnum]
@@ -220,6 +227,22 @@ export const VerificationScalarFieldEnum = {
 } as const
 
 export type VerificationScalarFieldEnum = (typeof VerificationScalarFieldEnum)[keyof typeof VerificationScalarFieldEnum]
+
+
+export const SavedDesignScalarFieldEnum = {
+  id: 'id',
+  platform: 'platform',
+  externalId: 'externalId',
+  title: 'title',
+  designer: 'designer',
+  license: 'license',
+  sourceUrl: 'sourceUrl',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SavedDesignScalarFieldEnum = (typeof SavedDesignScalarFieldEnum)[keyof typeof SavedDesignScalarFieldEnum]
 
 
 export const SortOrder = {

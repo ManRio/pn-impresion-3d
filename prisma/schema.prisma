@@ -57,8 +57,15 @@ model Product {
   variants    ProductVariant[]
   createdAt   DateTime         @default(now())
   updatedAt   DateTime         @updatedAt
+  sourcePlatform       String?
+  sourceModelId        String?
+  sourceUrl            String?
+  sourceDesigner       String?
+  sourceLicense        String?
+  commercialPermission Boolean @default(false)
 
   @@index([status, categoryId])
+  @@unique([sourcePlatform, sourceModelId])
 }
 
 model ProductImage {
@@ -175,4 +182,26 @@ model Verification {
 
   @@index([identifier])
   @@map("verification")
+}
+
+enum SavedDesignStatus {
+  TO_REVIEW
+  SHORTLIST
+  DISCARDED
+}
+
+model SavedDesign {
+  id         String            @id @default(cuid())
+  platform   String
+  externalId String
+  title      String
+  designer   String
+  license    String
+  sourceUrl  String
+  status     SavedDesignStatus @default(TO_REVIEW)
+  createdAt  DateTime          @default(now())
+  updatedAt  DateTime          @updatedAt
+
+  @@unique([platform, externalId])
+  @@index([status, createdAt])
 }

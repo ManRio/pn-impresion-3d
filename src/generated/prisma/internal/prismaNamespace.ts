@@ -406,7 +406,8 @@ export const ModelName = {
   User: 'User',
   Session: 'Session',
   Account: 'Account',
-  Verification: 'Verification'
+  Verification: 'Verification',
+  SavedDesign: 'SavedDesign'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -422,7 +423,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "category" | "product" | "productImage" | "productVariant" | "pricingConfig" | "quoteRequest" | "user" | "session" | "account" | "verification"
+    modelProps: "category" | "product" | "productImage" | "productVariant" | "pricingConfig" | "quoteRequest" | "user" | "session" | "account" | "verification" | "savedDesign"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1166,6 +1167,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    SavedDesign: {
+      payload: Prisma.$SavedDesignPayload<ExtArgs>
+      fields: Prisma.SavedDesignFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.SavedDesignFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedDesignPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.SavedDesignFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedDesignPayload>
+        }
+        findFirst: {
+          args: Prisma.SavedDesignFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedDesignPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.SavedDesignFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedDesignPayload>
+        }
+        findMany: {
+          args: Prisma.SavedDesignFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedDesignPayload>[]
+        }
+        create: {
+          args: Prisma.SavedDesignCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedDesignPayload>
+        }
+        createMany: {
+          args: Prisma.SavedDesignCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.SavedDesignCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedDesignPayload>[]
+        }
+        delete: {
+          args: Prisma.SavedDesignDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedDesignPayload>
+        }
+        update: {
+          args: Prisma.SavedDesignUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedDesignPayload>
+        }
+        deleteMany: {
+          args: Prisma.SavedDesignDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.SavedDesignUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.SavedDesignUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedDesignPayload>[]
+        }
+        upsert: {
+          args: Prisma.SavedDesignUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedDesignPayload>
+        }
+        aggregate: {
+          args: Prisma.SavedDesignAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateSavedDesign>
+        }
+        groupBy: {
+          args: Prisma.SavedDesignGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SavedDesignGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.SavedDesignCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SavedDesignCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1225,7 +1300,13 @@ export const ProductScalarFieldEnum = {
   saleMode: 'saleMode',
   categoryId: 'categoryId',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  sourcePlatform: 'sourcePlatform',
+  sourceModelId: 'sourceModelId',
+  sourceUrl: 'sourceUrl',
+  sourceDesigner: 'sourceDesigner',
+  sourceLicense: 'sourceLicense',
+  commercialPermission: 'commercialPermission'
 } as const
 
 export type ProductScalarFieldEnum = (typeof ProductScalarFieldEnum)[keyof typeof ProductScalarFieldEnum]
@@ -1348,6 +1429,22 @@ export const VerificationScalarFieldEnum = {
 export type VerificationScalarFieldEnum = (typeof VerificationScalarFieldEnum)[keyof typeof VerificationScalarFieldEnum]
 
 
+export const SavedDesignScalarFieldEnum = {
+  id: 'id',
+  platform: 'platform',
+  externalId: 'externalId',
+  title: 'title',
+  designer: 'designer',
+  license: 'license',
+  sourceUrl: 'sourceUrl',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SavedDesignScalarFieldEnum = (typeof SavedDesignScalarFieldEnum)[keyof typeof SavedDesignScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -1435,6 +1532,13 @@ export type ListEnumSaleModeFieldRefInput<$PrismaModel> = FieldRefInputType<$Pri
 
 
 /**
+ * Reference to a field of type 'Boolean'
+ */
+export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+/**
  * Reference to a field of type 'Int'
  */
 export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
@@ -1463,13 +1567,6 @@ export type ListEnumMaterialFieldRefInput<$PrismaModel> = FieldRefInputType<$Pri
 
 
 /**
- * Reference to a field of type 'Boolean'
- */
-export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
-    
-
-
-/**
  * Reference to a field of type 'QuoteStatus'
  */
 export type EnumQuoteStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QuoteStatus'>
@@ -1480,6 +1577,20 @@ export type EnumQuoteStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$Pris
  * Reference to a field of type 'QuoteStatus[]'
  */
 export type ListEnumQuoteStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QuoteStatus[]'>
+    
+
+
+/**
+ * Reference to a field of type 'SavedDesignStatus'
+ */
+export type EnumSavedDesignStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SavedDesignStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'SavedDesignStatus[]'
+ */
+export type ListEnumSavedDesignStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SavedDesignStatus[]'>
     
 
 
@@ -1657,6 +1768,7 @@ export type GlobalOmitConfig = {
   session?: Prisma.SessionOmit
   account?: Prisma.AccountOmit
   verification?: Prisma.VerificationOmit
+  savedDesign?: Prisma.SavedDesignOmit
 }
 
 /* Types for Logging */

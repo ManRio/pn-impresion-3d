@@ -46,3 +46,12 @@ export const QuoteStatus = {
 } as const
 
 export type QuoteStatus = (typeof QuoteStatus)[keyof typeof QuoteStatus]
+
+
+export const SavedDesignStatus = {
+  TO_REVIEW: 'TO_REVIEW',
+  SHORTLIST: 'SHORTLIST',
+  DISCARDED: 'DISCARDED'
+} as const
+
+export type SavedDesignStatus = (typeof SavedDesignStatus)[keyof typeof SavedDesignStatus]
