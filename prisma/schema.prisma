@@ -66,6 +66,7 @@ model Product {
   rightsEvidence   String?   @db.Text
   rightsReviewedAt DateTime?
   designOrigin DesignOrigin @default(OWN)
+  quoteRequests QuoteRequest[]
 
   @@index([status, categoryId])
   @@unique([sourcePlatform, sourceModelId])
@@ -117,6 +118,15 @@ model QuoteRequest {
   status       QuoteStatus @default(NEW)
   createdAt    DateTime    @default(now())
   updatedAt    DateTime    @updatedAt
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  internalNotes QuoteInternalNote[]
+
+  productId String?
+  product   Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
+
+  @@index([userId, createdAt])
+  @@index([productId])
 }
 
 model User {
@@ -133,6 +143,9 @@ model User {
   updatedAt     DateTime  @updatedAt
   sessions      Session[]
   accounts      Account[]
+  quoteRequests QuoteRequest[]
+  customerProfile CustomerProfile?
+  orders Order[]
 
   @@unique([email])
   @@map("user")
@@ -213,4 +226,113 @@ model SavedDesign {
 
   @@unique([platform, externalId])
   @@index([status, createdAt])
+}
+
+
+model CustomerProfile {
+  id                 String   @id @default(cuid())
+  userId             String   @unique
+  user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  firstName          String   @default("")
+  lastName           String   @default("")
+  phone              String   @default("")
+
+  shippingAddress    String   @default("")
+  shippingPostalCode String   @default("")
+  shippingCity       String   @default("")
+  shippingProvince   String   @default("")
+  shippingCountry    String   @default("España")
+
+  billingAddress     String   @default("")
+  billingPostalCode  String   @default("")
+  billingCity        String   @default("")
+  billingProvince    String   @default("")
+  billingCountry     String   @default("España")
+
+  taxId              String   @default("")
+  updatedAt          DateTime @updatedAt
+}
+
+
+model QuoteInternalNote {
+  id               String       @id @default(cuid())
+  quoteId          String
+  quote            QuoteRequest @relation(fields: [quoteId], references: [id], onDelete: Cascade)
+
+  authorId         String
+  authorName       String
+  body             String       @db.Text
+
+  statusFrom       QuoteStatus
+  statusTo         QuoteStatus
+
+  reference        String?
+  amountCents      Int?
+  itemsSummary     String?
+  deliveryEstimate String?
+  sentToCustomer   Boolean      @default(false)
+
+  createdAt        DateTime     @default(now())
+
+  @@index([quoteId, createdAt])
+}
+
+enum OrderStatus {
+  RECEIVED
+  MANUFACTURING
+  FINISHED
+  SHIPPED
+}
+
+model Order {
+  id               String         @id @default(cuid())
+  userId           String
+  user             User           @relation(fields: [userId], references: [id], onDelete: Restrict)
+  customerName     String
+  customerEmail    String
+  customerPhone    String         @default("")
+  shippingAddress  String         @db.Text
+  billingAddress   String         @db.Text
+  customerNotes    String         @default("") @db.Text
+  totalCents       Int
+  status           OrderStatus    @default(RECEIVED)
+  paymentStatus    String         @default("PENDING")
+  carrier          String?
+  trackingNumber   String?
+  items            OrderItem[]
+  history          OrderHistory[]
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  @@index([userId, createdAt])
+  @@index([status, createdAt])
+}
+
+model OrderItem {
+  id             String   @id @default(cuid())
+  orderId        String
+  order          Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  variantId      String
+  productName    String
+  variantLabel   String
+  sku            String
+  material       Material
+  color          String
+  unitPriceCents Int
+  quantity       Int
+  lineTotalCents Int
+}
+
+model OrderHistory {
+  id             String       @id @default(cuid())
+  orderId        String
+  order          Order        @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  authorId       String?
+  authorName     String
+  previousStatus OrderStatus?
+  newStatus      OrderStatus
+  internalNote   String?      @db.Text
+  publicMessage  String?      @db.Text
+  createdAt      DateTime     @default(now())
+  @@index([orderId, createdAt])
 }

@@ -72,3 +72,28 @@ export type Verification = Prisma.VerificationModel
  * 
  */
 export type SavedDesign = Prisma.SavedDesignModel
+/**
+ * Model CustomerProfile
+ * 
+ */
+export type CustomerProfile = Prisma.CustomerProfileModel
+/**
+ * Model QuoteInternalNote
+ * 
+ */
+export type QuoteInternalNote = Prisma.QuoteInternalNoteModel
+/**
+ * Model Order
+ * 
+ */
+export type Order = Prisma.OrderModel
+/**
+ * Model OrderItem
+ * 
+ */
+export type OrderItem = Prisma.OrderItemModel
+/**
+ * Model OrderHistory
+ * 
+ */
+export type OrderHistory = Prisma.OrderHistoryModel

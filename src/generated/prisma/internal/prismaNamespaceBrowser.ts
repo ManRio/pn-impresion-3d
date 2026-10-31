@@ -61,7 +61,12 @@ export const ModelName = {
   Session: 'Session',
   Account: 'Account',
   Verification: 'Verification',
-  SavedDesign: 'SavedDesign'
+  SavedDesign: 'SavedDesign',
+  CustomerProfile: 'CustomerProfile',
+  QuoteInternalNote: 'QuoteInternalNote',
+  Order: 'Order',
+  OrderItem: 'OrderItem',
+  OrderHistory: 'OrderHistory'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -163,7 +168,9 @@ export const QuoteRequestScalarFieldEnum = {
   fileKey: 'fileKey',
   status: 'status',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  userId: 'userId',
+  productId: 'productId'
 } as const
 
 export type QuoteRequestScalarFieldEnum = (typeof QuoteRequestScalarFieldEnum)[keyof typeof QuoteRequestScalarFieldEnum]
@@ -246,6 +253,101 @@ export const SavedDesignScalarFieldEnum = {
 } as const
 
 export type SavedDesignScalarFieldEnum = (typeof SavedDesignScalarFieldEnum)[keyof typeof SavedDesignScalarFieldEnum]
+
+
+export const CustomerProfileScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  firstName: 'firstName',
+  lastName: 'lastName',
+  phone: 'phone',
+  shippingAddress: 'shippingAddress',
+  shippingPostalCode: 'shippingPostalCode',
+  shippingCity: 'shippingCity',
+  shippingProvince: 'shippingProvince',
+  shippingCountry: 'shippingCountry',
+  billingAddress: 'billingAddress',
+  billingPostalCode: 'billingPostalCode',
+  billingCity: 'billingCity',
+  billingProvince: 'billingProvince',
+  billingCountry: 'billingCountry',
+  taxId: 'taxId',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CustomerProfileScalarFieldEnum = (typeof CustomerProfileScalarFieldEnum)[keyof typeof CustomerProfileScalarFieldEnum]
+
+
+export const QuoteInternalNoteScalarFieldEnum = {
+  id: 'id',
+  quoteId: 'quoteId',
+  authorId: 'authorId',
+  authorName: 'authorName',
+  body: 'body',
+  statusFrom: 'statusFrom',
+  statusTo: 'statusTo',
+  reference: 'reference',
+  amountCents: 'amountCents',
+  itemsSummary: 'itemsSummary',
+  deliveryEstimate: 'deliveryEstimate',
+  sentToCustomer: 'sentToCustomer',
+  createdAt: 'createdAt'
+} as const
+
+export type QuoteInternalNoteScalarFieldEnum = (typeof QuoteInternalNoteScalarFieldEnum)[keyof typeof QuoteInternalNoteScalarFieldEnum]
+
+
+export const OrderScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  customerName: 'customerName',
+  customerEmail: 'customerEmail',
+  customerPhone: 'customerPhone',
+  shippingAddress: 'shippingAddress',
+  billingAddress: 'billingAddress',
+  customerNotes: 'customerNotes',
+  totalCents: 'totalCents',
+  status: 'status',
+  paymentStatus: 'paymentStatus',
+  carrier: 'carrier',
+  trackingNumber: 'trackingNumber',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type OrderScalarFieldEnum = (typeof OrderScalarFieldEnum)[keyof typeof OrderScalarFieldEnum]
+
+
+export const OrderItemScalarFieldEnum = {
+  id: 'id',
+  orderId: 'orderId',
+  variantId: 'variantId',
+  productName: 'productName',
+  variantLabel: 'variantLabel',
+  sku: 'sku',
+  material: 'material',
+  color: 'color',
+  unitPriceCents: 'unitPriceCents',
+  quantity: 'quantity',
+  lineTotalCents: 'lineTotalCents'
+} as const
+
+export type OrderItemScalarFieldEnum = (typeof OrderItemScalarFieldEnum)[keyof typeof OrderItemScalarFieldEnum]
+
+
+export const OrderHistoryScalarFieldEnum = {
+  id: 'id',
+  orderId: 'orderId',
+  authorId: 'authorId',
+  authorName: 'authorName',
+  previousStatus: 'previousStatus',
+  newStatus: 'newStatus',
+  internalNote: 'internalNote',
+  publicMessage: 'publicMessage',
+  createdAt: 'createdAt'
+} as const
+
+export type OrderHistoryScalarFieldEnum = (typeof OrderHistoryScalarFieldEnum)[keyof typeof OrderHistoryScalarFieldEnum]
 
 
 export const SortOrder = {

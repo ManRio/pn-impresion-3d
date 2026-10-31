@@ -64,3 +64,13 @@ export const DesignOrigin = {
 } as const
 
 export type DesignOrigin = (typeof DesignOrigin)[keyof typeof DesignOrigin]
+
+
+export const OrderStatus = {
+  RECEIVED: 'RECEIVED',
+  MANUFACTURING: 'MANUFACTURING',
+  FINISHED: 'FINISHED',
+  SHIPPED: 'SHIPPED'
+} as const
+
+export type OrderStatus = (typeof OrderStatus)[keyof typeof OrderStatus]

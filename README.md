@@ -2,7 +2,7 @@
 
 **Tienda online de productos impresos en 3D y encargos personalizados**, orientada inicialmente al mercado español.
 
-> **Estado (octubre de 2026): MVP en desarrollo.** El administrador de productos y el catálogo público están operativos y probados en entorno de desarrollo. **Todavía no hay carrito, gestión de pedidos, checkout ni cobros integrados**, y la solicitud de presupuestos sigue pendiente de implementación. **No está lista para recibir compras reales ni para lanzamiento público.**
+> **Estado (31 de octubre de 2026): MVP funcional en desarrollo y pruebas locales.** Catálogo, administración, cuentas, solicitudes de presupuesto, carrito y registro/seguimiento de pedidos están implementados. **El pago online, la configuración definitiva de envíos y los requisitos legales/fiscales siguen pendientes. No está lista para recibir compras reales ni para lanzamiento público.**
 
 ## 1. Tecnologías
 
@@ -49,6 +49,24 @@
 - Galería con ampliación de fotografías en un modal, sin abandonar la ficha del producto.
 - Los productos retirados o archivados dejan de formar parte del catálogo público.
 - `/api/productos` ofrece una lectura de los productos activos.
+
+### Clientes, acceso y presupuestos
+
+- Registro e inicio de sesión por correo y contraseña con Better Auth.
+- Redirección tras el acceso según el rol: administradores a `/admin` y clientes a `/mi-cuenta` (salvo navegación explícita a una ruta protegida).
+- Perfil de cliente con información de contacto y direcciones, además de accesos a presupuestos y pedidos.
+- Formulario público de solicitud en `/presupuesto` y consulta de solicitudes propias en `/mi-cuenta/mis-presupuestos`.
+- Gestión administrativa en `/admin/presupuestos`: cambio de estado, detalles presupuestados (referencia, piezas, importe y plazo), constancia manual del envío y **notas internas históricas con autor y fecha**. Las anotaciones internas no son visibles para los clientes.
+
+### Carrito y pedidos (MVP sin cobro integrado)
+
+- Productos `DIRECT` añadibles al carrito por variante y cantidad; notas generales del comprador.
+- Cabecera con iconos de carrito y cuenta: desplegable con artículos y contador de unidades, y menú de perfil, pedidos, presupuestos y cierre de sesión.
+- Carrito identificado por cuenta en `localStorage`: al cerrar sesión se oculta y la misma cuenta lo recupera en **ese mismo navegador**. **Todavía no se sincroniza entre dispositivos ni se almacena en Neon**; limpiar los datos del navegador puede eliminarlo. No se migran carritos antiguos compartidos.
+- Confirmación de pedidos sin cobro online, con precios recalculados en el servidor y copia de las líneas de pedido.
+- Historial privado en `/mi-cuenta/mis-pedidos`.
+- Administración en `/admin/pedidos` con estados **Recibido, En fabricación, Terminado, Enviado**, transportista y número de seguimiento, y anotaciones internas con autor y fecha.
+- **Importante:** registrar un pedido no equivale a cobrarlo ni garantiza la aceptación comercial del encargo. El pago online y las reglas completas de envío/checkout siguen pendientes.
 
 ## 3. Requisitos para trabajar en local
 
@@ -116,32 +134,40 @@ En el desarrollo se han utilizado comprobaciones de TypeScript, ESLint y compila
 
 ## 6. Rutas principales
 
-| Ruta                     | Función / estado                                                   |
-| ------------------------ | ------------------------------------------------------------------ |
-| `/`                      | Portada de P&N                                                     |
-| `/tienda`                | Catálogo dinámico de productos `ACTIVE`                            |
-| `/tienda/[slug]`         | Ficha individual del producto                                      |
-| `/personalizados`        | Página informativa de personalización                              |
-| `/presupuesto`           | Página preparada; **recepción funcional de solicitudes pendiente** |
-| `/contacto`              | Página de contacto/información                                     |
-| `/admin/login`           | Acceso administrativo                                              |
-| `/admin`                 | Panel principal, restringido                                       |
-| `/admin/productos`       | Listado y gestión de productos                                     |
-| `/admin/productos/nuevo` | Alta, fotografías y creación/publicación                           |
-| `/admin/productos/[id]`  | Edición, galería, variantes y ciclo de vida                        |
-| `/admin/categorias`      | Gestión de categorías                                              |
-| `/admin/importar`        | Importación de modelos de referencia                               |
-| `/admin/explorar`        | Exploración interna de MakerWorld                                  |
-| `/admin/biblioteca`      | Biblioteca de diseños guardados                                    |
-| `/api/productos`         | Lectura pública de productos activos                               |
-| `/api/auth/[...all]`     | Endpoints de autenticación                                         |
+| Ruta                          | Función / estado                               |
+| ----------------------------- | ---------------------------------------------- |
+| `/`                           | Portada de P&N                                 |
+| `/tienda`                     | Catálogo dinámico de productos `ACTIVE`        |
+| `/tienda/[slug]`              | Ficha individual del producto                  |
+| `/personalizados`             | Página informativa de personalización          |
+| `/presupuesto`                | Solicitud de presupuestos funcional            |
+| `/contacto`                   | Página de contacto/información                 |
+| `/admin/login`                | Acceso administrativo                          |
+| `/admin`                      | Panel principal, restringido                   |
+| `/admin/productos`            | Listado y gestión de productos                 |
+| `/admin/productos/nuevo`      | Alta, fotografías y creación/publicación       |
+| `/admin/productos/[id]`       | Edición, galería, variantes y ciclo de vida    |
+| `/admin/categorias`           | Gestión de categorías                          |
+| `/admin/importar`             | Importación de modelos de referencia           |
+| `/admin/explorar`             | Exploración interna de MakerWorld              |
+| `/admin/biblioteca`           | Biblioteca de diseños guardados                |
+| `/api/productos`              | Lectura pública de productos activos           |
+| `/api/auth/[...all]`          | Endpoints de autenticación                     |
+| `/mi-cuenta/acceso`           | Registro e inicio de sesión                    |
+| `/mi-cuenta`                  | Perfil y datos del cliente                     |
+| `/mi-cuenta/mis-presupuestos` | Historial privado de presupuestos              |
+| `/admin/presupuestos`         | Presupuestos, estados y notas internas         |
+| `/carrito`                    | Carrito y registro de pedidos                  |
+| `/mi-cuenta/mis-pedidos`      | Historial privado de pedidos                   |
+| `/admin/pedidos`              | Fabricación, envíos e historial administrativo |
 
 ## 7. Datos y reglas comerciales
 
 El esquema Prisma incorpora, entre otros, los siguientes modelos:
 
 - **Catálogo:** `Category`, `Product`, `ProductImage`, `ProductVariant`, `PricingConfig`.
-- **Presupuestos:** `QuoteRequest` (estructura preparada; flujo de recepción/gestión pendiente).
+- **Presupuestos:** `QuoteRequest` y `QuoteInternalNote` (solicitudes e historial administrativo).
+- **Pedidos:** `Order`, `OrderItem`, `OrderHistory` (registro y seguimiento; no cobro online).
 - **Biblioteca:** `SavedDesign`.
 - **Autenticación:** `User`, `Session`, `Account`, `Verification`.
 
@@ -162,11 +188,35 @@ Los productos usan estados `DRAFT`, `ACTIVE` y `ARCHIVED`. Su modalidad comercia
 
 ## 9. Próximas entregas: cerrar el MVP comercial
 
-1. **Presupuestos:** formulario real de solicitud para productos personalizados, validaciones y recepción/gestión desde el administrador. Los archivos técnicos privados (STL/3MF) deberán tratarse con almacenamiento y permisos adecuados.
-2. **Carrito:** selección de variantes y cantidades, precios y resumen de compra.
-3. **Pedidos y envíos:** datos del cliente, persistencia del pedido, estados administrativos y costes de envío.
-4. **Pagos:** integración del proveedor elegido y confirmación fiable del pago desde el servidor.
-5. **Lanzamiento:** pruebas de compra, optimización de imágenes, SEO, sitemap, datos estructurados y revisión legal. Desactivar `noindex` únicamente al publicar la tienda.
+1. **Validación funcional y UX:** probar el flujo completo con dos cuentas y un administrador, revisar permisos, estados y notas; pulir experiencia móvil, carrito desplegable y fichas.
+2. **Persistencia del carrito:** pasar de `localStorage` por cuenta a Neon para continuidad entre dispositivos y protección ante pérdida de datos locales.
+3. **Pedidos y envíos:** configurar transportistas y tarifas reales, direcciones, disponibilidad, gestión de incidencias y notificaciones. Verificar enlaces de seguimiento.
+4. **Pagos y fiscalidad:** integrar una pasarela, confirmar pagos mediante eventos del servidor y aplicar impuestos, gastos, totales y documentos exigibles.
+5. **Presupuestos y archivos privados:** completar el tratamiento seguro de STL/3MF y un flujo formal de presupuestos y aceptación por cliente.
+6. **Lanzamiento:** pruebas de extremo a extremo, accesibilidad, optimización de imágenes, SEO, sitemap, datos estructurados y revisión de condiciones legales, privacidad y devoluciones. Desactivar `noindex` solo al publicar.
+
+### Nota de desarrollo: Server Actions y túneles
+
+Al trabajar con `localhost:3000`, un puerto reenviado mediante VS Code Dev Tunnels puede introducir un `x-forwarded-host` distinto del `origin` y provocar `Invalid Server Actions request` (HTTP 500) en pedidos y presupuestos. Para desarrollo local, detener el reenvío del puerto 3000 y reiniciar Next.js; no desactivar indiscriminadamente las comprobaciones de origen.
+
+### Flujo antes de subir cambios a GitHub
+
+```powershell
+npx prisma validate
+npx prisma generate
+npx tsc --noEmit
+npm run lint
+npm run build
+git status --short
+git diff --check
+git add README.md src prisma next.config.ts package.json package-lock.json
+git diff --cached --check
+git diff --cached --stat
+git commit -m "feat: presupuestos, carrito por cuenta y gestion de pedidos"
+git push origin main
+```
+
+Revisar `git status` antes de `git add` por si hay otros archivos nuevos relevantes fuera de estas rutas (y añadirlos de forma selectiva). No subir `.env`, claves, contraseñas, imágenes privadas ni scripts temporales de reseteo de administradores.
 
 La prioridad es completar un **flujo real de solicitud o compra**, no seguir ampliando herramientas secundarias del administrador.
 

@@ -41,6 +41,12 @@ export default async function AdminPage() {
       icon: ClipboardList,
     },
     {
+      label: 'Pedidos',
+      desc: 'Fabricación, envíos y notas internas',
+      href: '/admin/pedidos',
+      icon: Package,
+    },
+    {
       label: 'Ver tienda',
       desc: 'Comprobar escaparate público',
       href: '/tienda',

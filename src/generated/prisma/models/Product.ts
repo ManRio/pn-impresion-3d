@@ -289,6 +289,7 @@ export type ProductWhereInput = {
   category?: Prisma.XOR<Prisma.CategoryScalarRelationFilter, Prisma.CategoryWhereInput>
   images?: Prisma.ProductImageListRelationFilter
   variants?: Prisma.ProductVariantListRelationFilter
+  quoteRequests?: Prisma.QuoteRequestListRelationFilter
 }
 
 export type ProductOrderByWithRelationInput = {
@@ -313,6 +314,7 @@ export type ProductOrderByWithRelationInput = {
   category?: Prisma.CategoryOrderByWithRelationInput
   images?: Prisma.ProductImageOrderByRelationAggregateInput
   variants?: Prisma.ProductVariantOrderByRelationAggregateInput
+  quoteRequests?: Prisma.QuoteRequestOrderByRelationAggregateInput
 }
 
 export type ProductWhereUniqueInput = Prisma.AtLeast<{
@@ -341,6 +343,7 @@ export type ProductWhereUniqueInput = Prisma.AtLeast<{
   category?: Prisma.XOR<Prisma.CategoryScalarRelationFilter, Prisma.CategoryWhereInput>
   images?: Prisma.ProductImageListRelationFilter
   variants?: Prisma.ProductVariantListRelationFilter
+  quoteRequests?: Prisma.QuoteRequestListRelationFilter
 }, "id" | "slug" | "sourcePlatform_sourceModelId">
 
 export type ProductOrderByWithAggregationInput = {
@@ -412,6 +415,7 @@ export type ProductCreateInput = {
   category: Prisma.CategoryCreateNestedOneWithoutProductsInput
   images?: Prisma.ProductImageCreateNestedManyWithoutProductInput
   variants?: Prisma.ProductVariantCreateNestedManyWithoutProductInput
+  quoteRequests?: Prisma.QuoteRequestCreateNestedManyWithoutProductInput
 }
 
 export type ProductUncheckedCreateInput = {
@@ -435,6 +439,7 @@ export type ProductUncheckedCreateInput = {
   designOrigin?: $Enums.DesignOrigin
   images?: Prisma.ProductImageUncheckedCreateNestedManyWithoutProductInput
   variants?: Prisma.ProductVariantUncheckedCreateNestedManyWithoutProductInput
+  quoteRequests?: Prisma.QuoteRequestUncheckedCreateNestedManyWithoutProductInput
 }
 
 export type ProductUpdateInput = {
@@ -458,6 +463,7 @@ export type ProductUpdateInput = {
   category?: Prisma.CategoryUpdateOneRequiredWithoutProductsNestedInput
   images?: Prisma.ProductImageUpdateManyWithoutProductNestedInput
   variants?: Prisma.ProductVariantUpdateManyWithoutProductNestedInput
+  quoteRequests?: Prisma.QuoteRequestUpdateManyWithoutProductNestedInput
 }
 
 export type ProductUncheckedUpdateInput = {
@@ -481,6 +487,7 @@ export type ProductUncheckedUpdateInput = {
   designOrigin?: Prisma.EnumDesignOriginFieldUpdateOperationsInput | $Enums.DesignOrigin
   images?: Prisma.ProductImageUncheckedUpdateManyWithoutProductNestedInput
   variants?: Prisma.ProductVariantUncheckedUpdateManyWithoutProductNestedInput
+  quoteRequests?: Prisma.QuoteRequestUncheckedUpdateManyWithoutProductNestedInput
 }
 
 export type ProductCreateManyInput = {
@@ -628,6 +635,11 @@ export type ProductScalarRelationFilter = {
   isNot?: Prisma.ProductWhereInput
 }
 
+export type ProductNullableScalarRelationFilter = {
+  is?: Prisma.ProductWhereInput | null
+  isNot?: Prisma.ProductWhereInput | null
+}
+
 export type ProductCreateNestedManyWithoutCategoryInput = {
   create?: Prisma.XOR<Prisma.ProductCreateWithoutCategoryInput, Prisma.ProductUncheckedCreateWithoutCategoryInput> | Prisma.ProductCreateWithoutCategoryInput[] | Prisma.ProductUncheckedCreateWithoutCategoryInput[]
   connectOrCreate?: Prisma.ProductCreateOrConnectWithoutCategoryInput | Prisma.ProductCreateOrConnectWithoutCategoryInput[]
@@ -722,6 +734,22 @@ export type ProductUpdateOneRequiredWithoutVariantsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ProductUpdateToOneWithWhereWithoutVariantsInput, Prisma.ProductUpdateWithoutVariantsInput>, Prisma.ProductUncheckedUpdateWithoutVariantsInput>
 }
 
+export type ProductCreateNestedOneWithoutQuoteRequestsInput = {
+  create?: Prisma.XOR<Prisma.ProductCreateWithoutQuoteRequestsInput, Prisma.ProductUncheckedCreateWithoutQuoteRequestsInput>
+  connectOrCreate?: Prisma.ProductCreateOrConnectWithoutQuoteRequestsInput
+  connect?: Prisma.ProductWhereUniqueInput
+}
+
+export type ProductUpdateOneWithoutQuoteRequestsNestedInput = {
+  create?: Prisma.XOR<Prisma.ProductCreateWithoutQuoteRequestsInput, Prisma.ProductUncheckedCreateWithoutQuoteRequestsInput>
+  connectOrCreate?: Prisma.ProductCreateOrConnectWithoutQuoteRequestsInput
+  upsert?: Prisma.ProductUpsertWithoutQuoteRequestsInput
+  disconnect?: Prisma.ProductWhereInput | boolean
+  delete?: Prisma.ProductWhereInput | boolean
+  connect?: Prisma.ProductWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ProductUpdateToOneWithWhereWithoutQuoteRequestsInput, Prisma.ProductUpdateWithoutQuoteRequestsInput>, Prisma.ProductUncheckedUpdateWithoutQuoteRequestsInput>
+}
+
 export type ProductCreateWithoutCategoryInput = {
   id?: string
   name: string
@@ -742,6 +770,7 @@ export type ProductCreateWithoutCategoryInput = {
   designOrigin?: $Enums.DesignOrigin
   images?: Prisma.ProductImageCreateNestedManyWithoutProductInput
   variants?: Prisma.ProductVariantCreateNestedManyWithoutProductInput
+  quoteRequests?: Prisma.QuoteRequestCreateNestedManyWithoutProductInput
 }
 
 export type ProductUncheckedCreateWithoutCategoryInput = {
@@ -764,6 +793,7 @@ export type ProductUncheckedCreateWithoutCategoryInput = {
   designOrigin?: $Enums.DesignOrigin
   images?: Prisma.ProductImageUncheckedCreateNestedManyWithoutProductInput
   variants?: Prisma.ProductVariantUncheckedCreateNestedManyWithoutProductInput
+  quoteRequests?: Prisma.QuoteRequestUncheckedCreateNestedManyWithoutProductInput
 }
 
 export type ProductCreateOrConnectWithoutCategoryInput = {
@@ -836,6 +866,7 @@ export type ProductCreateWithoutImagesInput = {
   designOrigin?: $Enums.DesignOrigin
   category: Prisma.CategoryCreateNestedOneWithoutProductsInput
   variants?: Prisma.ProductVariantCreateNestedManyWithoutProductInput
+  quoteRequests?: Prisma.QuoteRequestCreateNestedManyWithoutProductInput
 }
 
 export type ProductUncheckedCreateWithoutImagesInput = {
@@ -858,6 +889,7 @@ export type ProductUncheckedCreateWithoutImagesInput = {
   rightsReviewedAt?: Date | string | null
   designOrigin?: $Enums.DesignOrigin
   variants?: Prisma.ProductVariantUncheckedCreateNestedManyWithoutProductInput
+  quoteRequests?: Prisma.QuoteRequestUncheckedCreateNestedManyWithoutProductInput
 }
 
 export type ProductCreateOrConnectWithoutImagesInput = {
@@ -896,6 +928,7 @@ export type ProductUpdateWithoutImagesInput = {
   designOrigin?: Prisma.EnumDesignOriginFieldUpdateOperationsInput | $Enums.DesignOrigin
   category?: Prisma.CategoryUpdateOneRequiredWithoutProductsNestedInput
   variants?: Prisma.ProductVariantUpdateManyWithoutProductNestedInput
+  quoteRequests?: Prisma.QuoteRequestUpdateManyWithoutProductNestedInput
 }
 
 export type ProductUncheckedUpdateWithoutImagesInput = {
@@ -918,6 +951,7 @@ export type ProductUncheckedUpdateWithoutImagesInput = {
   rightsReviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   designOrigin?: Prisma.EnumDesignOriginFieldUpdateOperationsInput | $Enums.DesignOrigin
   variants?: Prisma.ProductVariantUncheckedUpdateManyWithoutProductNestedInput
+  quoteRequests?: Prisma.QuoteRequestUncheckedUpdateManyWithoutProductNestedInput
 }
 
 export type ProductCreateWithoutVariantsInput = {
@@ -940,6 +974,7 @@ export type ProductCreateWithoutVariantsInput = {
   designOrigin?: $Enums.DesignOrigin
   category: Prisma.CategoryCreateNestedOneWithoutProductsInput
   images?: Prisma.ProductImageCreateNestedManyWithoutProductInput
+  quoteRequests?: Prisma.QuoteRequestCreateNestedManyWithoutProductInput
 }
 
 export type ProductUncheckedCreateWithoutVariantsInput = {
@@ -962,6 +997,7 @@ export type ProductUncheckedCreateWithoutVariantsInput = {
   rightsReviewedAt?: Date | string | null
   designOrigin?: $Enums.DesignOrigin
   images?: Prisma.ProductImageUncheckedCreateNestedManyWithoutProductInput
+  quoteRequests?: Prisma.QuoteRequestUncheckedCreateNestedManyWithoutProductInput
 }
 
 export type ProductCreateOrConnectWithoutVariantsInput = {
@@ -1000,6 +1036,7 @@ export type ProductUpdateWithoutVariantsInput = {
   designOrigin?: Prisma.EnumDesignOriginFieldUpdateOperationsInput | $Enums.DesignOrigin
   category?: Prisma.CategoryUpdateOneRequiredWithoutProductsNestedInput
   images?: Prisma.ProductImageUpdateManyWithoutProductNestedInput
+  quoteRequests?: Prisma.QuoteRequestUpdateManyWithoutProductNestedInput
 }
 
 export type ProductUncheckedUpdateWithoutVariantsInput = {
@@ -1022,6 +1059,115 @@ export type ProductUncheckedUpdateWithoutVariantsInput = {
   rightsReviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   designOrigin?: Prisma.EnumDesignOriginFieldUpdateOperationsInput | $Enums.DesignOrigin
   images?: Prisma.ProductImageUncheckedUpdateManyWithoutProductNestedInput
+  quoteRequests?: Prisma.QuoteRequestUncheckedUpdateManyWithoutProductNestedInput
+}
+
+export type ProductCreateWithoutQuoteRequestsInput = {
+  id?: string
+  name: string
+  slug: string
+  description: string
+  status?: $Enums.ProductStatus
+  saleMode?: $Enums.SaleMode
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sourcePlatform?: string | null
+  sourceModelId?: string | null
+  sourceUrl?: string | null
+  sourceDesigner?: string | null
+  sourceLicense?: string | null
+  commercialPermission?: boolean
+  rightsEvidence?: string | null
+  rightsReviewedAt?: Date | string | null
+  designOrigin?: $Enums.DesignOrigin
+  category: Prisma.CategoryCreateNestedOneWithoutProductsInput
+  images?: Prisma.ProductImageCreateNestedManyWithoutProductInput
+  variants?: Prisma.ProductVariantCreateNestedManyWithoutProductInput
+}
+
+export type ProductUncheckedCreateWithoutQuoteRequestsInput = {
+  id?: string
+  name: string
+  slug: string
+  description: string
+  status?: $Enums.ProductStatus
+  saleMode?: $Enums.SaleMode
+  categoryId: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sourcePlatform?: string | null
+  sourceModelId?: string | null
+  sourceUrl?: string | null
+  sourceDesigner?: string | null
+  sourceLicense?: string | null
+  commercialPermission?: boolean
+  rightsEvidence?: string | null
+  rightsReviewedAt?: Date | string | null
+  designOrigin?: $Enums.DesignOrigin
+  images?: Prisma.ProductImageUncheckedCreateNestedManyWithoutProductInput
+  variants?: Prisma.ProductVariantUncheckedCreateNestedManyWithoutProductInput
+}
+
+export type ProductCreateOrConnectWithoutQuoteRequestsInput = {
+  where: Prisma.ProductWhereUniqueInput
+  create: Prisma.XOR<Prisma.ProductCreateWithoutQuoteRequestsInput, Prisma.ProductUncheckedCreateWithoutQuoteRequestsInput>
+}
+
+export type ProductUpsertWithoutQuoteRequestsInput = {
+  update: Prisma.XOR<Prisma.ProductUpdateWithoutQuoteRequestsInput, Prisma.ProductUncheckedUpdateWithoutQuoteRequestsInput>
+  create: Prisma.XOR<Prisma.ProductCreateWithoutQuoteRequestsInput, Prisma.ProductUncheckedCreateWithoutQuoteRequestsInput>
+  where?: Prisma.ProductWhereInput
+}
+
+export type ProductUpdateToOneWithWhereWithoutQuoteRequestsInput = {
+  where?: Prisma.ProductWhereInput
+  data: Prisma.XOR<Prisma.ProductUpdateWithoutQuoteRequestsInput, Prisma.ProductUncheckedUpdateWithoutQuoteRequestsInput>
+}
+
+export type ProductUpdateWithoutQuoteRequestsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
+  saleMode?: Prisma.EnumSaleModeFieldUpdateOperationsInput | $Enums.SaleMode
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sourcePlatform?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceModelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceDesigner?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceLicense?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  commercialPermission?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  rightsEvidence?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rightsReviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  designOrigin?: Prisma.EnumDesignOriginFieldUpdateOperationsInput | $Enums.DesignOrigin
+  category?: Prisma.CategoryUpdateOneRequiredWithoutProductsNestedInput
+  images?: Prisma.ProductImageUpdateManyWithoutProductNestedInput
+  variants?: Prisma.ProductVariantUpdateManyWithoutProductNestedInput
+}
+
+export type ProductUncheckedUpdateWithoutQuoteRequestsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
+  saleMode?: Prisma.EnumSaleModeFieldUpdateOperationsInput | $Enums.SaleMode
+  categoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sourcePlatform?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceModelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceDesigner?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceLicense?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  commercialPermission?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  rightsEvidence?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rightsReviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  designOrigin?: Prisma.EnumDesignOriginFieldUpdateOperationsInput | $Enums.DesignOrigin
+  images?: Prisma.ProductImageUncheckedUpdateManyWithoutProductNestedInput
+  variants?: Prisma.ProductVariantUncheckedUpdateManyWithoutProductNestedInput
 }
 
 export type ProductCreateManyCategoryInput = {
@@ -1064,6 +1210,7 @@ export type ProductUpdateWithoutCategoryInput = {
   designOrigin?: Prisma.EnumDesignOriginFieldUpdateOperationsInput | $Enums.DesignOrigin
   images?: Prisma.ProductImageUpdateManyWithoutProductNestedInput
   variants?: Prisma.ProductVariantUpdateManyWithoutProductNestedInput
+  quoteRequests?: Prisma.QuoteRequestUpdateManyWithoutProductNestedInput
 }
 
 export type ProductUncheckedUpdateWithoutCategoryInput = {
@@ -1086,6 +1233,7 @@ export type ProductUncheckedUpdateWithoutCategoryInput = {
   designOrigin?: Prisma.EnumDesignOriginFieldUpdateOperationsInput | $Enums.DesignOrigin
   images?: Prisma.ProductImageUncheckedUpdateManyWithoutProductNestedInput
   variants?: Prisma.ProductVariantUncheckedUpdateManyWithoutProductNestedInput
+  quoteRequests?: Prisma.QuoteRequestUncheckedUpdateManyWithoutProductNestedInput
 }
 
 export type ProductUncheckedUpdateManyWithoutCategoryInput = {
@@ -1116,11 +1264,13 @@ export type ProductUncheckedUpdateManyWithoutCategoryInput = {
 export type ProductCountOutputType = {
   images: number
   variants: number
+  quoteRequests: number
 }
 
 export type ProductCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   images?: boolean | ProductCountOutputTypeCountImagesArgs
   variants?: boolean | ProductCountOutputTypeCountVariantsArgs
+  quoteRequests?: boolean | ProductCountOutputTypeCountQuoteRequestsArgs
 }
 
 /**
@@ -1147,6 +1297,13 @@ export type ProductCountOutputTypeCountVariantsArgs<ExtArgs extends runtime.Type
   where?: Prisma.ProductVariantWhereInput
 }
 
+/**
+ * ProductCountOutputType without action
+ */
+export type ProductCountOutputTypeCountQuoteRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.QuoteRequestWhereInput
+}
+
 
 export type ProductSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1170,6 +1327,7 @@ export type ProductSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
   images?: boolean | Prisma.Product$imagesArgs<ExtArgs>
   variants?: boolean | Prisma.Product$variantsArgs<ExtArgs>
+  quoteRequests?: boolean | Prisma.Product$quoteRequestsArgs<ExtArgs>
   _count?: boolean | Prisma.ProductCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["product"]>
 
@@ -1243,6 +1401,7 @@ export type ProductInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs
   category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
   images?: boolean | Prisma.Product$imagesArgs<ExtArgs>
   variants?: boolean | Prisma.Product$variantsArgs<ExtArgs>
+  quoteRequests?: boolean | Prisma.Product$quoteRequestsArgs<ExtArgs>
   _count?: boolean | Prisma.ProductCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ProductIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1258,6 +1417,7 @@ export type $ProductPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     category: Prisma.$CategoryPayload<ExtArgs>
     images: Prisma.$ProductImagePayload<ExtArgs>[]
     variants: Prisma.$ProductVariantPayload<ExtArgs>[]
+    quoteRequests: Prisma.$QuoteRequestPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1675,6 +1835,7 @@ export interface Prisma__ProductClient<T, Null = never, ExtArgs extends runtime.
   category<T extends Prisma.CategoryDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CategoryDefaultArgs<ExtArgs>>): Prisma.Prisma__CategoryClient<runtime.Types.Result.GetResult<Prisma.$CategoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   images<T extends Prisma.Product$imagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Product$imagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProductImagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   variants<T extends Prisma.Product$variantsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Product$variantsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProductVariantPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  quoteRequests<T extends Prisma.Product$quoteRequestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Product$quoteRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$QuoteRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2168,6 +2329,30 @@ export type Product$variantsArgs<ExtArgs extends runtime.Types.Extensions.Intern
   take?: number
   skip?: number
   distinct?: Prisma.ProductVariantScalarFieldEnum | Prisma.ProductVariantScalarFieldEnum[]
+}
+
+/**
+ * Product.quoteRequests
+ */
+export type Product$quoteRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the QuoteRequest
+   */
+  select?: Prisma.QuoteRequestSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the QuoteRequest
+   */
+  omit?: Prisma.QuoteRequestOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.QuoteRequestInclude<ExtArgs> | null
+  where?: Prisma.QuoteRequestWhereInput
+  orderBy?: Prisma.QuoteRequestOrderByWithRelationInput | Prisma.QuoteRequestOrderByWithRelationInput[]
+  cursor?: Prisma.QuoteRequestWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.QuoteRequestScalarFieldEnum | Prisma.QuoteRequestScalarFieldEnum[]
 }
 
 /**
