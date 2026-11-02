@@ -20,9 +20,24 @@ async function product(slug: string) {
 }
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const p = await product((await params).slug);
-  return p
-    ? { title: p.name, description: p.description.slice(0, 155) }
-    : { title: 'Producto no disponible' };
+  if (!p) return {title:'Producto no disponible',robots:{index:false,follow:false}};
+  const path = `/tienda/${encodeURIComponent(p.slug)}`;
+  const base = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/,'');
+  const socialImage = p.socialImageUrl || p.images[0]?.url;
+  return {
+    title: p.seoTitle || p.name,
+    description: p.seoDescription || p.shortDescription || p.description.slice(0,155),
+    alternates: base ? {canonical:`${base}${path}`} : undefined,
+    openGraph: {
+      type:'website', title:p.socialTitle || p.seoTitle || p.name,
+      description:p.socialDescription || p.seoDescription || p.shortDescription || p.description.slice(0,155),
+      ...(base?{url:`${base}${path}`}:{ } ),
+      ...(socialImage?{images:[{url:socialImage,alt:p.images[0]?.alt||p.name}]}:{}),
+    },
+    twitter: {card:socialImage?'summary_large_image':'summary',title:p.socialTitle || p.seoTitle || p.name,
+      description:p.socialDescription || p.seoDescription || p.shortDescription || p.description.slice(0,155),
+      ...(socialImage?{images:[socialImage]}:{})},
+  };
 }
 export default async function ProductPage({ params }: Props) {
   const p = await product((await params).slug);
@@ -43,6 +58,7 @@ export default async function ProductPage({ params }: Props) {
             {p.category.name}
           </p>
           <h1 className='mt-3 text-4xl font-black'>{p.name}</h1>
+          {p.shortDescription && <p className='mt-4 text-lg text-white/85'>{p.shortDescription}</p>}
           <p className='mt-5 whitespace-pre-line leading-8 text-white/70'>
             {p.description}
           </p>

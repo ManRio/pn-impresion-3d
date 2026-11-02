@@ -29,6 +29,13 @@ export type ProductMinAggregateOutputType = {
   name: string | null
   slug: string | null
   description: string | null
+  shortDescription: string | null
+  seoTitle: string | null
+  seoDescription: string | null
+  seoKeywords: string | null
+  socialTitle: string | null
+  socialDescription: string | null
+  socialImageUrl: string | null
   status: $Enums.ProductStatus | null
   saleMode: $Enums.SaleMode | null
   categoryId: string | null
@@ -50,6 +57,13 @@ export type ProductMaxAggregateOutputType = {
   name: string | null
   slug: string | null
   description: string | null
+  shortDescription: string | null
+  seoTitle: string | null
+  seoDescription: string | null
+  seoKeywords: string | null
+  socialTitle: string | null
+  socialDescription: string | null
+  socialImageUrl: string | null
   status: $Enums.ProductStatus | null
   saleMode: $Enums.SaleMode | null
   categoryId: string | null
@@ -71,6 +85,13 @@ export type ProductCountAggregateOutputType = {
   name: number
   slug: number
   description: number
+  shortDescription: number
+  seoTitle: number
+  seoDescription: number
+  seoKeywords: number
+  socialTitle: number
+  socialDescription: number
+  socialImageUrl: number
   status: number
   saleMode: number
   categoryId: number
@@ -94,6 +115,13 @@ export type ProductMinAggregateInputType = {
   name?: true
   slug?: true
   description?: true
+  shortDescription?: true
+  seoTitle?: true
+  seoDescription?: true
+  seoKeywords?: true
+  socialTitle?: true
+  socialDescription?: true
+  socialImageUrl?: true
   status?: true
   saleMode?: true
   categoryId?: true
@@ -115,6 +143,13 @@ export type ProductMaxAggregateInputType = {
   name?: true
   slug?: true
   description?: true
+  shortDescription?: true
+  seoTitle?: true
+  seoDescription?: true
+  seoKeywords?: true
+  socialTitle?: true
+  socialDescription?: true
+  socialImageUrl?: true
   status?: true
   saleMode?: true
   categoryId?: true
@@ -136,6 +171,13 @@ export type ProductCountAggregateInputType = {
   name?: true
   slug?: true
   description?: true
+  shortDescription?: true
+  seoTitle?: true
+  seoDescription?: true
+  seoKeywords?: true
+  socialTitle?: true
+  socialDescription?: true
+  socialImageUrl?: true
   status?: true
   saleMode?: true
   categoryId?: true
@@ -230,6 +272,13 @@ export type ProductGroupByOutputType = {
   name: string
   slug: string
   description: string
+  shortDescription: string | null
+  seoTitle: string | null
+  seoDescription: string | null
+  seoKeywords: string | null
+  socialTitle: string | null
+  socialDescription: string | null
+  socialImageUrl: string | null
   status: $Enums.ProductStatus
   saleMode: $Enums.SaleMode
   categoryId: string
@@ -272,6 +321,13 @@ export type ProductWhereInput = {
   name?: Prisma.StringFilter<"Product"> | string
   slug?: Prisma.StringFilter<"Product"> | string
   description?: Prisma.StringFilter<"Product"> | string
+  shortDescription?: Prisma.StringNullableFilter<"Product"> | string | null
+  seoTitle?: Prisma.StringNullableFilter<"Product"> | string | null
+  seoDescription?: Prisma.StringNullableFilter<"Product"> | string | null
+  seoKeywords?: Prisma.StringNullableFilter<"Product"> | string | null
+  socialTitle?: Prisma.StringNullableFilter<"Product"> | string | null
+  socialDescription?: Prisma.StringNullableFilter<"Product"> | string | null
+  socialImageUrl?: Prisma.StringNullableFilter<"Product"> | string | null
   status?: Prisma.EnumProductStatusFilter<"Product"> | $Enums.ProductStatus
   saleMode?: Prisma.EnumSaleModeFilter<"Product"> | $Enums.SaleMode
   categoryId?: Prisma.StringFilter<"Product"> | string
@@ -297,6 +353,13 @@ export type ProductOrderByWithRelationInput = {
   name?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  shortDescription?: Prisma.SortOrderInput | Prisma.SortOrder
+  seoTitle?: Prisma.SortOrderInput | Prisma.SortOrder
+  seoDescription?: Prisma.SortOrderInput | Prisma.SortOrder
+  seoKeywords?: Prisma.SortOrderInput | Prisma.SortOrder
+  socialTitle?: Prisma.SortOrderInput | Prisma.SortOrder
+  socialDescription?: Prisma.SortOrderInput | Prisma.SortOrder
+  socialImageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   saleMode?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
@@ -326,6 +389,13 @@ export type ProductWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.ProductWhereInput | Prisma.ProductWhereInput[]
   name?: Prisma.StringFilter<"Product"> | string
   description?: Prisma.StringFilter<"Product"> | string
+  shortDescription?: Prisma.StringNullableFilter<"Product"> | string | null
+  seoTitle?: Prisma.StringNullableFilter<"Product"> | string | null
+  seoDescription?: Prisma.StringNullableFilter<"Product"> | string | null
+  seoKeywords?: Prisma.StringNullableFilter<"Product"> | string | null
+  socialTitle?: Prisma.StringNullableFilter<"Product"> | string | null
+  socialDescription?: Prisma.StringNullableFilter<"Product"> | string | null
+  socialImageUrl?: Prisma.StringNullableFilter<"Product"> | string | null
   status?: Prisma.EnumProductStatusFilter<"Product"> | $Enums.ProductStatus
   saleMode?: Prisma.EnumSaleModeFilter<"Product"> | $Enums.SaleMode
   categoryId?: Prisma.StringFilter<"Product"> | string
@@ -351,6 +421,13 @@ export type ProductOrderByWithAggregationInput = {
   name?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  shortDescription?: Prisma.SortOrderInput | Prisma.SortOrder
+  seoTitle?: Prisma.SortOrderInput | Prisma.SortOrder
+  seoDescription?: Prisma.SortOrderInput | Prisma.SortOrder
+  seoKeywords?: Prisma.SortOrderInput | Prisma.SortOrder
+  socialTitle?: Prisma.SortOrderInput | Prisma.SortOrder
+  socialDescription?: Prisma.SortOrderInput | Prisma.SortOrder
+  socialImageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   saleMode?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
@@ -378,6 +455,13 @@ export type ProductScalarWhereWithAggregatesInput = {
   name?: Prisma.StringWithAggregatesFilter<"Product"> | string
   slug?: Prisma.StringWithAggregatesFilter<"Product"> | string
   description?: Prisma.StringWithAggregatesFilter<"Product"> | string
+  shortDescription?: Prisma.StringNullableWithAggregatesFilter<"Product"> | string | null
+  seoTitle?: Prisma.StringNullableWithAggregatesFilter<"Product"> | string | null
+  seoDescription?: Prisma.StringNullableWithAggregatesFilter<"Product"> | string | null
+  seoKeywords?: Prisma.StringNullableWithAggregatesFilter<"Product"> | string | null
+  socialTitle?: Prisma.StringNullableWithAggregatesFilter<"Product"> | string | null
+  socialDescription?: Prisma.StringNullableWithAggregatesFilter<"Product"> | string | null
+  socialImageUrl?: Prisma.StringNullableWithAggregatesFilter<"Product"> | string | null
   status?: Prisma.EnumProductStatusWithAggregatesFilter<"Product"> | $Enums.ProductStatus
   saleMode?: Prisma.EnumSaleModeWithAggregatesFilter<"Product"> | $Enums.SaleMode
   categoryId?: Prisma.StringWithAggregatesFilter<"Product"> | string
@@ -399,6 +483,13 @@ export type ProductCreateInput = {
   name: string
   slug: string
   description: string
+  shortDescription?: string | null
+  seoTitle?: string | null
+  seoDescription?: string | null
+  seoKeywords?: string | null
+  socialTitle?: string | null
+  socialDescription?: string | null
+  socialImageUrl?: string | null
   status?: $Enums.ProductStatus
   saleMode?: $Enums.SaleMode
   createdAt?: Date | string
@@ -423,6 +514,13 @@ export type ProductUncheckedCreateInput = {
   name: string
   slug: string
   description: string
+  shortDescription?: string | null
+  seoTitle?: string | null
+  seoDescription?: string | null
+  seoKeywords?: string | null
+  socialTitle?: string | null
+  socialDescription?: string | null
+  socialImageUrl?: string | null
   status?: $Enums.ProductStatus
   saleMode?: $Enums.SaleMode
   categoryId: string
@@ -447,6 +545,13 @@ export type ProductUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  shortDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  seoTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  seoDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  seoKeywords?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  socialTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  socialDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  socialImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
   saleMode?: Prisma.EnumSaleModeFieldUpdateOperationsInput | $Enums.SaleMode
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -471,6 +576,13 @@ export type ProductUncheckedUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  shortDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  seoTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  seoDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  seoKeywords?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  socialTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  socialDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  socialImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
   saleMode?: Prisma.EnumSaleModeFieldUpdateOperationsInput | $Enums.SaleMode
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -495,6 +607,13 @@ export type ProductCreateManyInput = {
   name: string
   slug: string
   description: string
+  shortDescription?: string | null
+  seoTitle?: string | null
+  seoDescription?: string | null
+  seoKeywords?: string | null
+  socialTitle?: string | null
+  socialDescription?: string | null
+  socialImageUrl?: string | null
   status?: $Enums.ProductStatus
   saleMode?: $Enums.SaleMode
   categoryId: string
@@ -516,6 +635,13 @@ export type ProductUpdateManyMutationInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  shortDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  seoTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  seoDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  seoKeywords?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  socialTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  socialDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  socialImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
   saleMode?: Prisma.EnumSaleModeFieldUpdateOperationsInput | $Enums.SaleMode
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -536,6 +662,13 @@ export type ProductUncheckedUpdateManyInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  shortDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  seoTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  seoDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  seoKeywords?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  socialTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  socialDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  socialImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
   saleMode?: Prisma.EnumSaleModeFieldUpdateOperationsInput | $Enums.SaleMode
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -572,6 +705,13 @@ export type ProductCountOrderByAggregateInput = {
   name?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  shortDescription?: Prisma.SortOrder
+  seoTitle?: Prisma.SortOrder
+  seoDescription?: Prisma.SortOrder
+  seoKeywords?: Prisma.SortOrder
+  socialTitle?: Prisma.SortOrder
+  socialDescription?: Prisma.SortOrder
+  socialImageUrl?: Prisma.SortOrder
   status?: Prisma.SortOrder
   saleMode?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
@@ -593,6 +733,13 @@ export type ProductMaxOrderByAggregateInput = {
   name?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  shortDescription?: Prisma.SortOrder
+  seoTitle?: Prisma.SortOrder
+  seoDescription?: Prisma.SortOrder
+  seoKeywords?: Prisma.SortOrder
+  socialTitle?: Prisma.SortOrder
+  socialDescription?: Prisma.SortOrder
+  socialImageUrl?: Prisma.SortOrder
   status?: Prisma.SortOrder
   saleMode?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
@@ -614,6 +761,13 @@ export type ProductMinOrderByAggregateInput = {
   name?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  shortDescription?: Prisma.SortOrder
+  seoTitle?: Prisma.SortOrder
+  seoDescription?: Prisma.SortOrder
+  seoKeywords?: Prisma.SortOrder
+  socialTitle?: Prisma.SortOrder
+  socialDescription?: Prisma.SortOrder
+  socialImageUrl?: Prisma.SortOrder
   status?: Prisma.SortOrder
   saleMode?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
@@ -690,10 +844,6 @@ export type EnumSaleModeFieldUpdateOperationsInput = {
   set?: $Enums.SaleMode
 }
 
-export type NullableStringFieldUpdateOperationsInput = {
-  set?: string | null
-}
-
 export type BoolFieldUpdateOperationsInput = {
   set?: boolean
 }
@@ -755,6 +905,13 @@ export type ProductCreateWithoutCategoryInput = {
   name: string
   slug: string
   description: string
+  shortDescription?: string | null
+  seoTitle?: string | null
+  seoDescription?: string | null
+  seoKeywords?: string | null
+  socialTitle?: string | null
+  socialDescription?: string | null
+  socialImageUrl?: string | null
   status?: $Enums.ProductStatus
   saleMode?: $Enums.SaleMode
   createdAt?: Date | string
@@ -778,6 +935,13 @@ export type ProductUncheckedCreateWithoutCategoryInput = {
   name: string
   slug: string
   description: string
+  shortDescription?: string | null
+  seoTitle?: string | null
+  seoDescription?: string | null
+  seoKeywords?: string | null
+  socialTitle?: string | null
+  socialDescription?: string | null
+  socialImageUrl?: string | null
   status?: $Enums.ProductStatus
   saleMode?: $Enums.SaleMode
   createdAt?: Date | string
@@ -830,6 +994,13 @@ export type ProductScalarWhereInput = {
   name?: Prisma.StringFilter<"Product"> | string
   slug?: Prisma.StringFilter<"Product"> | string
   description?: Prisma.StringFilter<"Product"> | string
+  shortDescription?: Prisma.StringNullableFilter<"Product"> | string | null
+  seoTitle?: Prisma.StringNullableFilter<"Product"> | string | null
+  seoDescription?: Prisma.StringNullableFilter<"Product"> | string | null
+  seoKeywords?: Prisma.StringNullableFilter<"Product"> | string | null
+  socialTitle?: Prisma.StringNullableFilter<"Product"> | string | null
+  socialDescription?: Prisma.StringNullableFilter<"Product"> | string | null
+  socialImageUrl?: Prisma.StringNullableFilter<"Product"> | string | null
   status?: Prisma.EnumProductStatusFilter<"Product"> | $Enums.ProductStatus
   saleMode?: Prisma.EnumSaleModeFilter<"Product"> | $Enums.SaleMode
   categoryId?: Prisma.StringFilter<"Product"> | string
@@ -851,6 +1022,13 @@ export type ProductCreateWithoutImagesInput = {
   name: string
   slug: string
   description: string
+  shortDescription?: string | null
+  seoTitle?: string | null
+  seoDescription?: string | null
+  seoKeywords?: string | null
+  socialTitle?: string | null
+  socialDescription?: string | null
+  socialImageUrl?: string | null
   status?: $Enums.ProductStatus
   saleMode?: $Enums.SaleMode
   createdAt?: Date | string
@@ -874,6 +1052,13 @@ export type ProductUncheckedCreateWithoutImagesInput = {
   name: string
   slug: string
   description: string
+  shortDescription?: string | null
+  seoTitle?: string | null
+  seoDescription?: string | null
+  seoKeywords?: string | null
+  socialTitle?: string | null
+  socialDescription?: string | null
+  socialImageUrl?: string | null
   status?: $Enums.ProductStatus
   saleMode?: $Enums.SaleMode
   categoryId: string
@@ -913,6 +1098,13 @@ export type ProductUpdateWithoutImagesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  shortDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  seoTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  seoDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  seoKeywords?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  socialTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  socialDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  socialImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
   saleMode?: Prisma.EnumSaleModeFieldUpdateOperationsInput | $Enums.SaleMode
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -936,6 +1128,13 @@ export type ProductUncheckedUpdateWithoutImagesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  shortDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  seoTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  seoDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  seoKeywords?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  socialTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  socialDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  socialImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
   saleMode?: Prisma.EnumSaleModeFieldUpdateOperationsInput | $Enums.SaleMode
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -959,6 +1158,13 @@ export type ProductCreateWithoutVariantsInput = {
   name: string
   slug: string
   description: string
+  shortDescription?: string | null
+  seoTitle?: string | null
+  seoDescription?: string | null
+  seoKeywords?: string | null
+  socialTitle?: string | null
+  socialDescription?: string | null
+  socialImageUrl?: string | null
   status?: $Enums.ProductStatus
   saleMode?: $Enums.SaleMode
   createdAt?: Date | string
@@ -982,6 +1188,13 @@ export type ProductUncheckedCreateWithoutVariantsInput = {
   name: string
   slug: string
   description: string
+  shortDescription?: string | null
+  seoTitle?: string | null
+  seoDescription?: string | null
+  seoKeywords?: string | null
+  socialTitle?: string | null
+  socialDescription?: string | null
+  socialImageUrl?: string | null
   status?: $Enums.ProductStatus
   saleMode?: $Enums.SaleMode
   categoryId: string
@@ -1021,6 +1234,13 @@ export type ProductUpdateWithoutVariantsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  shortDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  seoTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  seoDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  seoKeywords?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  socialTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  socialDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  socialImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
   saleMode?: Prisma.EnumSaleModeFieldUpdateOperationsInput | $Enums.SaleMode
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1044,6 +1264,13 @@ export type ProductUncheckedUpdateWithoutVariantsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  shortDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  seoTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  seoDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  seoKeywords?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  socialTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  socialDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  socialImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
   saleMode?: Prisma.EnumSaleModeFieldUpdateOperationsInput | $Enums.SaleMode
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1067,6 +1294,13 @@ export type ProductCreateWithoutQuoteRequestsInput = {
   name: string
   slug: string
   description: string
+  shortDescription?: string | null
+  seoTitle?: string | null
+  seoDescription?: string | null
+  seoKeywords?: string | null
+  socialTitle?: string | null
+  socialDescription?: string | null
+  socialImageUrl?: string | null
   status?: $Enums.ProductStatus
   saleMode?: $Enums.SaleMode
   createdAt?: Date | string
@@ -1090,6 +1324,13 @@ export type ProductUncheckedCreateWithoutQuoteRequestsInput = {
   name: string
   slug: string
   description: string
+  shortDescription?: string | null
+  seoTitle?: string | null
+  seoDescription?: string | null
+  seoKeywords?: string | null
+  socialTitle?: string | null
+  socialDescription?: string | null
+  socialImageUrl?: string | null
   status?: $Enums.ProductStatus
   saleMode?: $Enums.SaleMode
   categoryId: string
@@ -1129,6 +1370,13 @@ export type ProductUpdateWithoutQuoteRequestsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  shortDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  seoTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  seoDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  seoKeywords?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  socialTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  socialDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  socialImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
   saleMode?: Prisma.EnumSaleModeFieldUpdateOperationsInput | $Enums.SaleMode
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1152,6 +1400,13 @@ export type ProductUncheckedUpdateWithoutQuoteRequestsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  shortDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  seoTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  seoDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  seoKeywords?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  socialTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  socialDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  socialImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
   saleMode?: Prisma.EnumSaleModeFieldUpdateOperationsInput | $Enums.SaleMode
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1175,6 +1430,13 @@ export type ProductCreateManyCategoryInput = {
   name: string
   slug: string
   description: string
+  shortDescription?: string | null
+  seoTitle?: string | null
+  seoDescription?: string | null
+  seoKeywords?: string | null
+  socialTitle?: string | null
+  socialDescription?: string | null
+  socialImageUrl?: string | null
   status?: $Enums.ProductStatus
   saleMode?: $Enums.SaleMode
   createdAt?: Date | string
@@ -1195,6 +1457,13 @@ export type ProductUpdateWithoutCategoryInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  shortDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  seoTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  seoDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  seoKeywords?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  socialTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  socialDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  socialImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
   saleMode?: Prisma.EnumSaleModeFieldUpdateOperationsInput | $Enums.SaleMode
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1218,6 +1487,13 @@ export type ProductUncheckedUpdateWithoutCategoryInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  shortDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  seoTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  seoDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  seoKeywords?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  socialTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  socialDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  socialImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
   saleMode?: Prisma.EnumSaleModeFieldUpdateOperationsInput | $Enums.SaleMode
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1241,6 +1517,13 @@ export type ProductUncheckedUpdateManyWithoutCategoryInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  shortDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  seoTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  seoDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  seoKeywords?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  socialTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  socialDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  socialImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
   saleMode?: Prisma.EnumSaleModeFieldUpdateOperationsInput | $Enums.SaleMode
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1310,6 +1593,13 @@ export type ProductSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   name?: boolean
   slug?: boolean
   description?: boolean
+  shortDescription?: boolean
+  seoTitle?: boolean
+  seoDescription?: boolean
+  seoKeywords?: boolean
+  socialTitle?: boolean
+  socialDescription?: boolean
+  socialImageUrl?: boolean
   status?: boolean
   saleMode?: boolean
   categoryId?: boolean
@@ -1336,6 +1626,13 @@ export type ProductSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   name?: boolean
   slug?: boolean
   description?: boolean
+  shortDescription?: boolean
+  seoTitle?: boolean
+  seoDescription?: boolean
+  seoKeywords?: boolean
+  socialTitle?: boolean
+  socialDescription?: boolean
+  socialImageUrl?: boolean
   status?: boolean
   saleMode?: boolean
   categoryId?: boolean
@@ -1358,6 +1655,13 @@ export type ProductSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   name?: boolean
   slug?: boolean
   description?: boolean
+  shortDescription?: boolean
+  seoTitle?: boolean
+  seoDescription?: boolean
+  seoKeywords?: boolean
+  socialTitle?: boolean
+  socialDescription?: boolean
+  socialImageUrl?: boolean
   status?: boolean
   saleMode?: boolean
   categoryId?: boolean
@@ -1380,6 +1684,13 @@ export type ProductSelectScalar = {
   name?: boolean
   slug?: boolean
   description?: boolean
+  shortDescription?: boolean
+  seoTitle?: boolean
+  seoDescription?: boolean
+  seoKeywords?: boolean
+  socialTitle?: boolean
+  socialDescription?: boolean
+  socialImageUrl?: boolean
   status?: boolean
   saleMode?: boolean
   categoryId?: boolean
@@ -1396,7 +1707,7 @@ export type ProductSelectScalar = {
   designOrigin?: boolean
 }
 
-export type ProductOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "slug" | "description" | "status" | "saleMode" | "categoryId" | "createdAt" | "updatedAt" | "sourcePlatform" | "sourceModelId" | "sourceUrl" | "sourceDesigner" | "sourceLicense" | "commercialPermission" | "rightsEvidence" | "rightsReviewedAt" | "designOrigin", ExtArgs["result"]["product"]>
+export type ProductOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "slug" | "description" | "shortDescription" | "seoTitle" | "seoDescription" | "seoKeywords" | "socialTitle" | "socialDescription" | "socialImageUrl" | "status" | "saleMode" | "categoryId" | "createdAt" | "updatedAt" | "sourcePlatform" | "sourceModelId" | "sourceUrl" | "sourceDesigner" | "sourceLicense" | "commercialPermission" | "rightsEvidence" | "rightsReviewedAt" | "designOrigin", ExtArgs["result"]["product"]>
 export type ProductInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
   images?: boolean | Prisma.Product$imagesArgs<ExtArgs>
@@ -1424,6 +1735,13 @@ export type $ProductPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     name: string
     slug: string
     description: string
+    shortDescription: string | null
+    seoTitle: string | null
+    seoDescription: string | null
+    seoKeywords: string | null
+    socialTitle: string | null
+    socialDescription: string | null
+    socialImageUrl: string | null
     status: $Enums.ProductStatus
     saleMode: $Enums.SaleMode
     categoryId: string
@@ -1869,6 +2187,13 @@ export interface ProductFieldRefs {
   readonly name: Prisma.FieldRef<"Product", 'String'>
   readonly slug: Prisma.FieldRef<"Product", 'String'>
   readonly description: Prisma.FieldRef<"Product", 'String'>
+  readonly shortDescription: Prisma.FieldRef<"Product", 'String'>
+  readonly seoTitle: Prisma.FieldRef<"Product", 'String'>
+  readonly seoDescription: Prisma.FieldRef<"Product", 'String'>
+  readonly seoKeywords: Prisma.FieldRef<"Product", 'String'>
+  readonly socialTitle: Prisma.FieldRef<"Product", 'String'>
+  readonly socialDescription: Prisma.FieldRef<"Product", 'String'>
+  readonly socialImageUrl: Prisma.FieldRef<"Product", 'String'>
   readonly status: Prisma.FieldRef<"Product", 'ProductStatus'>
   readonly saleMode: Prisma.FieldRef<"Product", 'SaleMode'>
   readonly categoryId: Prisma.FieldRef<"Product", 'String'>

@@ -1,4 +1,6 @@
 import PublicationPanel from './PublicationPanel';
+import ProductSEOFields from '@/components/admin/ProductSEOFields';
+import CategorySelector from '@/components/admin/CategorySelector';
 import ProductImagesPanel from './ProductImagesPanel';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
@@ -34,7 +36,11 @@ export default async function EditProductPage({ params, searchParams }: Props) {
       },
     }),
     prisma.category.findMany({
-      select: { id: true, name: true },
+      select: {
+        id: true,
+        name: true,
+        parentId: true,
+      },
       orderBy: { name: 'asc' },
     }),
   ]);
@@ -113,22 +119,11 @@ export default async function EditProductPage({ params, searchParams }: Props) {
             />
           </div>
           <div className='grid gap-4 sm:grid-cols-2'>
-            <div>
-              <label htmlFor='category' className={caption}>
-                Categoría
-              </label>
-              <select
-                id='category'
-                name='categoryId'
+            <div className='space-y-4'>
+              <CategorySelector
+                categories={categories}
                 defaultValue={product.categoryId}
-                className={field}
-              >
-                {categories.map((c) => (
-                  <option key={c.id} value={c.id}>
-                    {c.name}
-                  </option>
-                ))}
-              </select>
+              />
             </div>
             <div>
               <label htmlFor='saleMode' className={caption}>
@@ -145,6 +140,7 @@ export default async function EditProductPage({ params, searchParams }: Props) {
               </select>
             </div>
           </div>
+          <ProductSEOFields initial={product} />
           <button
             className='inline-flex items-center gap-2 rounded-lg bg-[#B5FF67] px-4 py-3 font-bold text-[#101319]'
             type='submit'

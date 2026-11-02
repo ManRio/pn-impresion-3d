@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { Prisma } from "@/generated/prisma/client";
 import { prisma } from "@/lib/prisma";
+import { parseProductSEO } from "@/lib/product-seo";
 import { requireAdmin } from "@/lib/require-admin";
 
 const value = (data: FormData, key: string) => {
@@ -33,9 +34,10 @@ export async function updateProduct(form: FormData) {
   if (description.length < 10 || description.length > 5000) send(id, "error", "Descripción: entre 10 y 5000 caracteres.");
   if (!["DIRECT", "QUOTE"].includes(saleMode)) send(id, "error", "Modalidad incorrecta.");
   if (!await prisma.category.findUnique({ where: { id: categoryId }, select: { id: true } })) send(id, "error", "Categoría inexistente.");
+  let seo:ReturnType<typeof parseProductSEO>;try {seo=parseProductSEO(form)}catch(err){send(id,"error",err instanceof Error?err.message:"Error de SEO")};
   // Mantener el slug al renombrar protege enlaces existentes y evita colisiones.
   try {
-    await prisma.product.update({ where: { id }, data: { name, description, categoryId, saleMode: saleMode as "DIRECT" | "QUOTE" } });
+    await prisma.product.update({ where: { id }, data: { name, description, ...seo, categoryId, saleMode: saleMode as "DIRECT" | "QUOTE" } });
   } catch (err) { console.error("updateProduct", err); send(id, "error", errorMessage(err)); }
   revalidatePath("/admin/productos"); revalidatePath("/admin"); revalidatePath(`/admin/productos/${id}`);
   send(id, "ok", "Información del producto actualizada.");

@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { authClient } from '@/lib/auth-client';
-export default function AccountAccess({ next }: { next: string }) {
+export default function AccountAccess() {
   const router = useRouter();
   const [signup, setSignup] = useState(false);
   const [name, setName] = useState('');

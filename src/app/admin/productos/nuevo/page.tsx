@@ -4,7 +4,9 @@ import { requireAdmin } from '@/lib/require-admin';
 import { prisma } from '@/lib/prisma';
 import { createAndUpload } from './create-and-upload';
 import PricePreview from './PricePreview';
+import ProductSEOFields from '@/components/admin/ProductSEOFields';
 import PhotoSelector from './PhotoSelector';
+import CategorySelector from '@/components/admin/CategorySelector';
 
 export default async function NewProductPage({
   searchParams,
@@ -15,7 +17,11 @@ export default async function NewProductPage({
   const [categories, params] = await Promise.all([
     prisma.category.findMany({
       orderBy: { name: 'asc' },
-      select: { id: true, name: true },
+      select: {
+        id: true,
+        name: true,
+        parentId: true,
+      },
     }),
     searchParams,
   ]);
@@ -80,24 +86,9 @@ export default async function NewProductPage({
                 />
               </label>
               <div className='grid gap-4 sm:grid-cols-2'>
-                <label className='block text-sm'>
-                  Categoría
-                  <select
-                    name='categoryId'
-                    required
-                    defaultValue=''
-                    className={input}
-                  >
-                    <option value='' disabled>
-                      Selecciona una categoría
-                    </option>
-                    {categories.map((c) => (
-                      <option key={c.id} value={c.id}>
-                        {c.name}
-                      </option>
-                    ))}
-                  </select>
-                </label>
+                <div className='space-y-4'>
+                  <CategorySelector categories={categories} />
+                </div>
                 <label className='block text-sm'>
                   Modalidad
                   <select
@@ -171,6 +162,7 @@ export default async function NewProductPage({
               </div>
               <PricePreview />
             </section>
+            <ProductSEOFields />
             <PhotoSelector />
             <div className='flex flex-wrap items-center justify-between gap-3'>
               <p className='text-sm text-amber-200'>Estado: BORRADOR</p>

@@ -1,81 +1,53 @@
 "use server";
-
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { Prisma } from "@/generated/prisma/client";
 import { requireAdmin } from "@/lib/require-admin";
 import { prisma } from "@/lib/prisma";
-
-function normalizeName(input: FormDataEntryValue | null) {
-  if (typeof input !== "string") return "";
-  return input.trim().replace(/\s+/g, " ");
+import { slugifyCategory } from "@/lib/category-tree";
+const get=(f:FormData,k:string)=>typeof f.get(k)==='string'?String(f.get(k)).trim().replace(/\s+/g,' '):'';
+function feedback(kind:'ok'|'error',text:string):never {redirect(`/admin/categorias?${kind}=${encodeURIComponent(text)}`);}
+async function checkParent(parentId:string, currentId?:string) {
+ if (!parentId) return null;
+ if (parentId===currentId) feedback('error','Una categoría no puede ser su propia subcategoría.');
+ const parent=await prisma.category.findUnique({where:{id:parentId},select:{id:true,parentId:true}});
+ if (!parent||parent.parentId) feedback('error','Solo puedes utilizar categorías principales como padre.');
+ return parent.id;
 }
-
-function toSlug(value: string) {
-  return value
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-|-$/g, "");
+function bust(){revalidatePath('/admin/categorias');revalidatePath('/tienda');revalidatePath('/admin/productos/nuevo');}
+export async function createCategory(form:FormData) {
+ await requireAdmin();const name=get(form,'name');const parentId=await checkParent(get(form,'parentId'));
+ if(name.length<2||name.length>80) feedback('error','Nombre de 2 a 80 caracteres.');
+ const base=slugifyCategory(name);if(!base)feedback('error','Nombre inválido.');
+ const parent=parentId?await prisma.category.findUnique({where:{id:parentId},select:{slug:true}}):null;
+ const slug=parent?`${parent.slug}-${base}`:base;
+ try{await prisma.category.create({data:{name,slug,parentId}});}catch(e){
+  if(e instanceof Prisma.PrismaClientKnownRequestError&&e.code==='P2002')feedback('error','Ya existe esa URL.');
+  feedback('error','No se pudo crear. Comprueba el nombre o la categoría padre.');
+ }
+ bust();feedback('ok','Categoría creada.');
 }
-
-function result(kind: "ok" | "error", message: string): never {
-  redirect(`/admin/categorias?${kind}=${encodeURIComponent(message)}`);
+export async function renameCategory(form:FormData) {
+ await requireAdmin();const id=get(form,'id');const name=get(form,'name');const parentId=await checkParent(get(form,'parentId'),id);
+ if(name.length<2||name.length>80)feedback('error','Nombre de 2 a 80 caracteres.');
+ const existing=await prisma.category.findUnique({where:{id},include:{_count:{select:{children:true}}}});
+ if(!existing)feedback('error','Categoría inexistente.');
+ if(parentId&&existing._count.children)feedback('error','No se puede convertir en subcategoría una categoría que ya tenga subcategorías.');
+ const base=slugifyCategory(name);
+ const parent=parentId?await prisma.category.findUnique({where:{id:parentId},select:{slug:true}}):null;
+ const slug=parent?`${parent.slug}-${base}`:base;
+ if(slug!==existing.slug && existing._count.children)feedback('error','Para cambiar la URL de una categoría con subcategorías, mueve o renombra primero las hijas.');
+ try{await prisma.category.update({where:{id},data:{name,parentId,slug}});}catch(e){
+  if(e instanceof Prisma.PrismaClientKnownRequestError&&e.code==='P2002')feedback('error','La URL ya existe.');
+  feedback('error','No se pudo actualizar.');
+ }
+ bust();feedback('ok','Categoría actualizada.');
 }
-
-export async function createCategory(formData: FormData) {
-  await requireAdmin();
-  const name = normalizeName(formData.get("name"));
-  if (name.length < 2 || name.length > 80) result("error", "El nombre debe tener entre 2 y 80 caracteres.");
-  const slug = toSlug(name);
-  if (slug.length < 2) result("error", "Utiliza un nombre con letras o números.");
-
-  const exists = await prisma.category.findUnique({ where: { slug }, select: { id: true } });
-  if (exists) result("error", "Ya existe una categoría con ese nombre o URL.");
-  try {
-    await prisma.category.create({ data: { name, slug } });
-  } catch {
-    result("error", "No se pudo crear la categoría. Comprueba que no exista otra igual.");
-  }
-  revalidatePath("/admin/categorias");
-  result("ok", "Categoría creada correctamente.");
-}
-
-export async function renameCategory(formData: FormData) {
-  await requireAdmin();
-  const id = formData.get("id");
-  const name = normalizeName(formData.get("name"));
-  if (typeof id !== "string" || !id) result("error", "Identificador inválido.");
-  if (name.length < 2 || name.length > 80) result("error", "El nombre debe tener entre 2 y 80 caracteres.");
-  const slug = toSlug(name);
-  if (slug.length < 2) result("error", "Utiliza un nombre con letras o números.");
-  const existing = await prisma.category.findUnique({ where: { id }, select: { id: true } });
-  if (!existing) result("error", "Esa categoría ya no existe.");
-  const collision = await prisma.category.findUnique({ where: { slug }, select: { id: true } });
-  if (collision && collision.id !== id) result("error", "Otra categoría ya utiliza esa URL.");
-  try {
-    await prisma.category.update({ where: { id }, data: { name, slug } });
-  } catch {
-    result("error", "No se pudo guardar la categoría.");
-  }
-  revalidatePath("/admin/categorias");
-  revalidatePath("/tienda");
-  result("ok", "Categoría actualizada.");
-}
-
-export async function deleteCategory(formData: FormData) {
-  await requireAdmin();
-  const id = formData.get("id");
-  if (typeof id !== "string" || !id) result("error", "Identificador inválido.");
-  // Comprobación de negocio: no borrar categorías con productos vinculados.
-  const category = await prisma.category.findUnique({ where: { id }, select: { _count: { select: { products: true } } } });
-  if (!category) result("error", "Esa categoría ya no existe.");
-  if (category._count.products > 0) result("error", "No puedes eliminar una categoría con productos.");
-  try {
-    await prisma.category.delete({ where: { id } });
-  } catch {
-    result("error", "No se pudo eliminar; puede haber productos vinculados.");
-  }
-  revalidatePath("/admin/categorias");
-  result("ok", "Categoría eliminada.");
+export async function deleteCategory(form:FormData) {
+ await requireAdmin();const id=get(form,'id');
+ const cat=await prisma.category.findUnique({where:{id},include:{_count:{select:{products:true,children:true}}}});
+ if(!cat)feedback('error','Categoría no encontrada.');
+ if(cat._count.products||cat._count.children)feedback('error','No se puede borrar una categoría que tenga productos o subcategorías.');
+ try{await prisma.category.delete({where:{id}});}catch{feedback('error','No se pudo borrar: comprueba las relaciones.');}
+ bust();feedback('ok','Categoría eliminada.');
 }

@@ -89,6 +89,7 @@ export const CategoryScalarFieldEnum = {
   id: 'id',
   name: 'name',
   slug: 'slug',
+  parentId: 'parentId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -101,6 +102,13 @@ export const ProductScalarFieldEnum = {
   name: 'name',
   slug: 'slug',
   description: 'description',
+  shortDescription: 'shortDescription',
+  seoTitle: 'seoTitle',
+  seoDescription: 'seoDescription',
+  seoKeywords: 'seoKeywords',
+  socialTitle: 'socialTitle',
+  socialDescription: 'socialDescription',
+  socialImageUrl: 'socialImageUrl',
   status: 'status',
   saleMode: 'saleMode',
   categoryId: 'categoryId',
