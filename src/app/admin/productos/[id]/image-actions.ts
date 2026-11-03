@@ -1,100 +1,192 @@
-"use server";
+'use server';
 
-import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
-import { prisma } from "@/lib/prisma";
-import { requireAdmin } from "@/lib/require-admin";
-import { uploadProductImage, removeProductImage, publicIdFromProductUrl } from "@/lib/cloudinary";
+import { revalidatePath } from 'next/cache';
+import { redirect } from 'next/navigation';
+import { prisma } from '@/lib/prisma';
+import { requireAdmin } from '@/lib/require-admin';
+import {
+  removeProductImage,
+  publicIdFromProductUrl,
+  inspectDirectProductImage,
+} from '@/lib/cloudinary';
 
 const val = (form: FormData, key: string) => {
   const value = form.get(key);
-  return typeof value === "string" ? value.trim() : "";
+  return typeof value === 'string' ? value.trim() : '';
 };
-function toProduct(id: string, kind: "ok" | "error", message: string): never {
-  redirect(`/admin/productos/${encodeURIComponent(id)}?${kind}=${encodeURIComponent(message)}`);
+function toProduct(id: string, kind: 'ok' | 'error', message: string): never {
+  redirect(
+    `/admin/productos/${encodeURIComponent(id)}?${kind}=${encodeURIComponent(message)}`,
+  );
 }
-function imageType(bytes: Buffer): string | null {
-  if (bytes.subarray(0, 3).equals(Buffer.from([0xff, 0xd8, 0xff]))) return "image/jpeg";
-  if (bytes.subarray(0, 8).equals(Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]))) return "image/png";
-  if (bytes.toString("ascii", 0, 4) === "RIFF" && bytes.toString("ascii", 8, 12) === "WEBP") return "image/webp";
-  return null;
-}
-
-export async function addProductImage(form: FormData) {
+/** Register only a real asset in this product folder, verified via Cloudinary Admin API. */
+export async function registerDirectProductImage(
+  productId: string,
+  publicId: string,
+  alt: string,
+): Promise<{ ok: true } | { ok: false; error: string }> {
   await requireAdmin();
-  const id = val(form, "productId");
-  const alt = val(form, "alt").replace(/\s+/g, " ");
-  const file = form.get("file");
-  if (!await prisma.product.findUnique({ where: { id }, select: { id: true } })) redirect("/admin/productos");
-  if (alt.length < 8 || alt.length > 180) toProduct(id, "error", "ALT: entre 8 y 180 caracteres.");
-  if (!(file instanceof File) || file.size === 0 || file.size > 5 * 1024 * 1024) {
-    toProduct(id, "error", "Selecciona una imagen JPG, PNG o WebP de hasta 5 MB.");
+  const safeAlt = alt.trim().replace(/\s+/g, ' ');
+  if (!/^[a-z0-9_-]{10,60}$/i.test(productId) ||
+      !new RegExp(`^pn-impresion-3d/productos/${productId}/[a-f0-9-]{36}$`, 'i').test(publicId)) {
+    return { ok: false, error: 'Referencia de imagen incorrecta.' };
   }
-  if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
-    toProduct(id, "error", "Formato no permitido. Usa JPG, PNG o WebP.");
+  if (safeAlt.length < 8 || safeAlt.length > 180) {
+    return { ok: false, error: 'El ALT debe tener entre 8 y 180 caracteres.' };
   }
-  const bytes = Buffer.from(await file.arrayBuffer());
-  if (imageType(bytes) !== file.type) toProduct(id, "error", "El archivo no corresponde al tipo de imagen declarado.");
-  const count = await prisma.productImage.count({ where: { productId: id } });
-  if (count >= 8) toProduct(id, "error", "Máximo 8 fotografías por producto.");
-  let uploaded: Awaited<ReturnType<typeof uploadProductImage>>;
-  try {
-    uploaded = await uploadProductImage(bytes, id);
-  } catch (error) {
-    console.error("Cloudinary upload", error);
-    toProduct(id, "error", "No se pudo subir la fotografía. Revisa la configuración de Cloudinary.");
+  const product = await prisma.product.findUnique({ where: { id: productId }, select: { id: true } });
+  if (!product) return { ok: false, error: 'Producto inexistente.' };
+  let asset: Awaited<ReturnType<typeof inspectDirectProductImage>>;
+  try { asset = await inspectDirectProductImage(publicId); }
+  catch { return { ok: false, error: 'No se pudo verificar la imagen en Cloudinary.' }; }
+  if (asset.publicId !== publicId || asset.resourceType !== 'image' ||
+      asset.bytes <= 0 || asset.bytes > 5 * 1024 * 1024 ||
+      !['jpg','jpeg','png','webp'].includes(asset.format) ||
+      !asset.secureUrl.startsWith('https://res.cloudinary.com/') ||
+      publicIdFromProductUrl(asset.secureUrl, productId) !== publicId) {
+    return { ok: false, error: 'La imagen no cumple las condiciones de seguridad.' };
   }
   try {
-    const last = await prisma.productImage.aggregate({ where: { productId: id }, _max: { position: true } });
-    await prisma.productImage.create({
-      data: { productId: id, url: uploaded.secure_url, alt, position: (last._max.position ?? -1) + 1 },
+    await prisma.$transaction(async (tx) => {
+      const images = await tx.productImage.findMany({
+        where: { productId }, select: { url: true, position: true }, orderBy: { position: 'desc' },
+      });
+      if (images.length >= 8) throw new Error('LIMIT');
+      if (images.some(img => img.url === asset.secureUrl)) throw new Error('DUPLICATE');
+      await tx.productImage.create({
+        data: { productId, url: asset.secureUrl, alt: safeAlt, position: (images[0]?.position ?? -1) + 1 },
+      });
     });
   } catch (error) {
-    console.error("Save ProductImage", error);
-    await removeProductImage(uploaded.public_id).catch(err => console.error("Cleanup Cloudinary", err));
-    toProduct(id, "error", "Imagen subida, pero no se pudo guardar en Neon.");
+    return { ok: false, error: error instanceof Error && error.message === 'LIMIT'
+      ? 'Máximo 8 fotografías.' : 'No se pudo guardar la imagen en Neon.' };
   }
-  revalidatePath(`/admin/productos/${id}`);
-  toProduct(id, "ok", "Fotografía añadida.");
+  revalidatePath(`/admin/productos/${productId}`);
+  revalidatePath('/tienda');
+  return { ok: true };
 }
 
 export async function updateProductImageAlt(form: FormData) {
   await requireAdmin();
-  const id = val(form, "productId");
-  const imageId = val(form, "imageId");
-  const alt = val(form, "alt").replace(/\s+/g, " ");
-  if (alt.length < 8 || alt.length > 180) toProduct(id, "error", "ALT: entre 8 y 180 caracteres.");
-  const result = await prisma.productImage.updateMany({ where: { id: imageId, productId: id }, data: { alt } });
-  if (!result.count) toProduct(id, "error", "Imagen no encontrada.");
+  const id = val(form, 'productId');
+  const imageId = val(form, 'imageId');
+  const alt = val(form, 'alt').replace(/\s+/g, ' ');
+  if (alt.length < 8 || alt.length > 180)
+    toProduct(id, 'error', 'ALT: entre 8 y 180 caracteres.');
+  const result = await prisma.productImage.updateMany({
+    where: { id: imageId, productId: id },
+    data: { alt },
+  });
+  if (!result.count) toProduct(id, 'error', 'Imagen no encontrada.');
   revalidatePath(`/admin/productos/${id}`);
-  toProduct(id, "ok", "Texto alternativo actualizado.");
+  toProduct(id, 'ok', 'Texto alternativo actualizado.');
 }
 
 export async function setMainProductImage(form: FormData) {
   await requireAdmin();
-  const id = val(form, "productId");
-  const imageId = val(form, "imageId");
-  const images = await prisma.productImage.findMany({ where: { productId: id }, orderBy: [{position:"asc"},{id:"asc"}], select: { id: true } });
-  if (!images.some(img => img.id === imageId)) toProduct(id, "error", "Imagen no encontrada.");
-  const reordered = [imageId, ...images.filter(img => img.id !== imageId).map(img => img.id)];
-  await prisma.$transaction(reordered.map((imgId, position) =>
-    prisma.productImage.update({ where: { id: imgId }, data: { position } })
-  ));
+  const id = val(form, 'productId');
+  const imageId = val(form, 'imageId');
+  const images = await prisma.productImage.findMany({
+    where: { productId: id },
+    orderBy: [{ position: 'asc' }, { id: 'asc' }],
+    select: { id: true },
+  });
+  if (!images.some((img) => img.id === imageId))
+    toProduct(id, 'error', 'Imagen no encontrada.');
+  const reordered = [
+    imageId,
+    ...images.filter((img) => img.id !== imageId).map((img) => img.id),
+  ];
+  await prisma.$transaction(
+    reordered.map((imgId, position) =>
+      prisma.productImage.update({ where: { id: imgId }, data: { position } }),
+    ),
+  );
   revalidatePath(`/admin/productos/${id}`);
-  toProduct(id, "ok", "Portada principal actualizada.");
+  toProduct(id, 'ok', 'Portada principal actualizada.');
 }
 
 export async function deleteProductImage(form: FormData) {
   await requireAdmin();
-  const id = val(form, "productId");
-  const imageId = val(form, "imageId");
-  const image = await prisma.productImage.findFirst({ where: { id: imageId, productId: id }, select: { url: true } });
-  if (!image) toProduct(id, "error", "Imagen no encontrada.");
+
+  const id = val(form, 'productId');
+  const imageId = val(form, 'imageId');
+
+  const image = await prisma.productImage.findFirst({
+    where: {
+      id: imageId,
+      productId: id,
+    },
+    select: {
+      id: true,
+      url: true,
+    },
+  });
+
+  if (!image) {
+    toProduct(id, 'error', 'Imagen no encontrada.');
+  }
+
   const publicId = publicIdFromProductUrl(image.url, id);
-  if (!publicId) toProduct(id, "error", "Esta imagen no fue subida con este gestor; no se eliminará automáticamente.");
-  try { await removeProductImage(publicId); }
-  catch (error) { console.error("Cloudinary destroy", error); toProduct(id, "error", "No se pudo eliminar en Cloudinary."); }
-  await prisma.productImage.deleteMany({ where: { id: imageId, productId: id } });
+
+  if (!publicId) {
+    toProduct(
+      id,
+      'error',
+      'Esta imagen no fue subida con este gestor; no se eliminará automáticamente.',
+    );
+  }
+
+  // 1. Eliminar primero la relación en Neon.
+  try {
+    const result = await prisma.productImage.deleteMany({
+      where: {
+        id: imageId,
+        productId: id,
+      },
+    });
+
+    if (result.count !== 1) {
+      toProduct(id, 'error', 'Imagen no encontrada.');
+    }
+  } catch (error) {
+    console.error('Error eliminando imagen en Neon:', error);
+
+    toProduct(
+      id,
+      'error',
+      'No se pudo eliminar la imagen de la base de datos.',
+    );
+  }
+
+  // 2. Eliminar el archivo en Cloudinary
+  // únicamente después de confirmar el borrado en Neon.
+  let cleanupPending = false;
+
+  try {
+    await removeProductImage(publicId);
+  } catch (error) {
+    cleanupPending = true;
+
+    console.error('Limpieza pendiente en Cloudinary:', {
+      productId: id,
+      imageId,
+      publicId,
+      error,
+    });
+  }
+
   revalidatePath(`/admin/productos/${id}`);
-  toProduct(id, "ok", "Fotografía eliminada.");
+  revalidatePath('/tienda');
+  revalidatePath('/api/productos');
+
+  if (cleanupPending) {
+    toProduct(
+      id,
+      'ok',
+      'Imagen retirada del producto. Queda pendiente eliminar el archivo de Cloudinary; revisa el registro del servidor.',
+    );
+  }
+
+  toProduct(id, 'ok', 'Fotografía eliminada correctamente.');
 }

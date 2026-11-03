@@ -3,7 +3,6 @@ import { prisma } from "@/lib/prisma";
 import { parseProductSEO } from "@/lib/product-seo";
 import { requireAdmin } from "@/lib/require-admin";
 import { publicationFailures } from "@/lib/publication-checks";
-import { uploadProductImage, removeProductImage } from "@/lib/cloudinary";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 const val=(form:FormData,k:string)=>String(form.get(k)||"").trim();
@@ -21,18 +20,26 @@ export async function createAndUpload(form:FormData){
  const priceCents=priceRaw?n(priceRaw,0,100000000):weightGrams*rateCents;
  if(priceCents===null||priceCents>100000000||(saleMode==="DIRECT"&&priceCents===0))fail("Precio incorrecto.");
  let seo:ReturnType<typeof parseProductSEO>;try {seo=parseProductSEO(form)}catch(e){fail(e instanceof Error?e.message:"Error de SEO")};
- const files=form.getAll("photos").filter((f):f is File=>f instanceof File&&f.size>0);
- if(files.length>8)fail("Máximo 8 fotografías.");
- const checked:{bytes:Buffer;mime:string}[]=[];
- for(const file of files){if(file.size>5*1024*1024||!["image/jpeg","image/png","image/webp"].includes(file.type))fail("Fotografías: máximo 5MB, JPG/PNG/WebP.");const bytes=Buffer.from(await file.arrayBuffer());const mime=sniff(bytes);if(mime!==file.type)fail("Formato real de fotografía no válido.");checked.push({bytes,mime})}
- const intent=val(form,"intent")==="publish"?"publish":"draft";
  let productId="";
  try{const base=slugify(name);let slug=base;for(let k=2;k<200&&await prisma.product.findUnique({where:{slug}});k++)slug=`${base}-${k}`;
  const p=await prisma.product.create({data:{name,description,...seo,categoryId,slug,status:"DRAFT",designOrigin:"OWN",saleMode:saleMode as "DIRECT"|"QUOTE",variants:{create:{sku,label,color,material:material as "PLA"|"PETG"|"TPU"|"OTHER",weightGrams,priceCents,productionMins}}}});productId=p.id;
  }catch(e){console.error("createAndUpload create",e);fail("No se pudo crear. Revisa que el SKU no esté duplicado.")}
- let warning="";
- for(let i=0;i<checked.length;i++){let uploaded:{secure_url:string;public_id:string}|undefined;try{uploaded=await uploadProductImage(checked[i].bytes,productId);await prisma.productImage.create({data:{productId,url:uploaded.secure_url,alt:`${name} - fotografía ${i+1}`,position:i}})}catch(e){console.error("createAndUpload photo",e);if(uploaded)await removeProductImage(uploaded.public_id).catch(()=>{});warning=" Alguna fotografía no pudo subirse; revisa la galería.";break}}
- if(intent==="publish")try{const product=await prisma.product.findUnique({where:{id:productId},include:{category:true,variants:true,images:true}});if(product&&!publicationFailures(product).length)await prisma.product.update({where:{id:productId},data:{status:"ACTIVE"}});else warning+=" No pudo publicarse; revisa los requisitos."}catch(e){console.error("createAndUpload publish",e);warning+=" No pudo publicarse."}
- revalidatePath("/admin/productos");revalidatePath("/tienda");revalidatePath("/api/productos");
- redirect(`/admin/productos/${encodeURIComponent(productId)}?ok=${encodeURIComponent("Producto creado."+warning)}`)
+ revalidatePath('/admin/productos');
+ return productId;
+}
+
+export async function finishNewProduct(productId: string, publish: boolean) {
+ await requireAdmin();
+ const product = await prisma.product.findUnique({
+   where: { id: productId }, include: { category: true, variants: true, images: true },
+ });
+ if (!product) return { published: false, message: 'Producto inexistente.' };
+ if (!publish) return { published: false, message: 'Borrador guardado.' };
+ const failures = publicationFailures(product);
+ if (failures.length) return { published: false, message: 'Borrador guardado; revisa los requisitos para publicarlo.' };
+ await prisma.product.update({ where: { id: productId }, data: { status: 'ACTIVE' } });
+ revalidatePath('/tienda');
+ revalidatePath('/api/productos');
+ revalidatePath(`/tienda/${product.slug}`);
+ return { published: true, message: 'Producto publicado.' };
 }

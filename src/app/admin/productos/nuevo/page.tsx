@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 import { requireAdmin } from '@/lib/require-admin';
 import { prisma } from '@/lib/prisma';
-import { createAndUpload } from './create-and-upload';
+import NewProductForm from './NewProductForm';
 import PricePreview from './PricePreview';
 import ProductSEOFields from '@/components/admin/ProductSEOFields';
 import PhotoSelector from './PhotoSelector';
@@ -14,6 +14,7 @@ export default async function NewProductPage({
   searchParams: Promise<{ error?: string }>;
 }) {
   await requireAdmin();
+
   const [categories, params] = await Promise.all([
     prisma.category.findMany({
       orderBy: { name: 'asc' },
@@ -25,8 +26,10 @@ export default async function NewProductPage({
     }),
     searchParams,
   ]);
+
   const input =
     'mt-2 w-full rounded-lg border border-white/15 bg-[#101319] px-4 py-3 text-white outline-none focus:border-[#B5FF67]';
+
   return (
     <main className='min-h-screen bg-[#101319] px-4 py-12 text-white'>
       <div className='mx-auto max-w-3xl'>
@@ -36,12 +39,16 @@ export default async function NewProductPage({
         >
           <ArrowLeft size={16} /> Volver a productos
         </Link>
+
         <p className='text-sm font-bold text-[#B5FF67]'>P&N · CATÁLOGO</p>
+
         <h1 className='font-display text-3xl font-extrabold'>NUEVO PRODUCTO</h1>
+
         <p className='mb-8 mt-2 text-sm text-neutral-400'>
           Puedes guardar un borrador o publicar directamente. También puedes
           adjuntar fotografías.
         </p>
+
         {params.error && (
           <p
             role='alert'
@@ -50,6 +57,7 @@ export default async function NewProductPage({
             {params.error.slice(0, 180)}
           </p>
         )}
+
         {categories.length === 0 ? (
           <p>
             Primero crea una categoría:{' '}
@@ -58,11 +66,12 @@ export default async function NewProductPage({
             </Link>
           </p>
         ) : (
-          <form action={createAndUpload} className='space-y-6'>
+          <NewProductForm>
             <section className='space-y-4 rounded-xl border border-white/10 bg-[#1a211e] p-6'>
               <h2 className='font-display text-xl font-bold'>
                 INFORMACIÓN DEL PRODUCTO
               </h2>
+
               <label className='block text-sm'>
                 Nombre
                 <input
@@ -74,6 +83,7 @@ export default async function NewProductPage({
                   className={input}
                 />
               </label>
+
               <label className='block text-sm'>
                 Descripción
                 <textarea
@@ -85,10 +95,12 @@ export default async function NewProductPage({
                   className={input}
                 />
               </label>
+
               <div className='grid gap-4 sm:grid-cols-2'>
                 <div className='space-y-4'>
                   <CategorySelector categories={categories} />
                 </div>
+
                 <label className='block text-sm'>
                   Modalidad
                   <select
@@ -102,10 +114,12 @@ export default async function NewProductPage({
                 </label>
               </div>
             </section>
+
             <section className='space-y-4 rounded-xl border border-white/10 bg-[#1a211e] p-6'>
               <h2 className='font-display text-xl font-bold'>
                 PRIMERA VARIANTE
               </h2>
+
               <div className='grid gap-4 sm:grid-cols-2'>
                 <label className='block text-sm'>
                   SKU único
@@ -118,6 +132,7 @@ export default async function NewProductPage({
                     className={input}
                   />
                 </label>
+
                 <label className='block text-sm'>
                   Nombre de variante
                   <input
@@ -129,6 +144,7 @@ export default async function NewProductPage({
                     className={input}
                   />
                 </label>
+
                 <label className='block text-sm'>
                   Material
                   <select name='material' defaultValue='PLA' className={input}>
@@ -138,6 +154,7 @@ export default async function NewProductPage({
                     <option value='OTHER'>Otro</option>
                   </select>
                 </label>
+
                 <label className='block text-sm'>
                   Color / combinación
                   <input
@@ -149,6 +166,7 @@ export default async function NewProductPage({
                     className={input}
                   />
                 </label>
+
                 <label className='block text-sm'>
                   Tiempo (min, opcional)
                   <input
@@ -160,12 +178,17 @@ export default async function NewProductPage({
                   />
                 </label>
               </div>
+
               <PricePreview />
             </section>
+
             <ProductSEOFields />
+
             <PhotoSelector />
+
             <div className='flex flex-wrap items-center justify-between gap-3'>
               <p className='text-sm text-amber-200'>Estado: BORRADOR</p>
+
               <div className='flex flex-wrap gap-3'>
                 <button
                   type='submit'
@@ -175,6 +198,7 @@ export default async function NewProductPage({
                 >
                   Guardar borrador
                 </button>
+
                 <button
                   type='submit'
                   name='intent'
@@ -185,7 +209,7 @@ export default async function NewProductPage({
                 </button>
               </div>
             </div>
-          </form>
+          </NewProductForm>
         )}
       </div>
     </main>

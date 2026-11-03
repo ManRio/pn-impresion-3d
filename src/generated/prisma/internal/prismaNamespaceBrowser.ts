@@ -307,6 +307,7 @@ export type QuoteInternalNoteScalarFieldEnum = (typeof QuoteInternalNoteScalarFi
 
 export const OrderScalarFieldEnum = {
   id: 'id',
+  checkoutKey: 'checkoutKey',
   userId: 'userId',
   customerName: 'customerName',
   customerEmail: 'customerEmail',

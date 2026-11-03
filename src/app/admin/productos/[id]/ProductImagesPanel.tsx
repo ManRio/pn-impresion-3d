@@ -1,4 +1,5 @@
-import { addProductImage, deleteProductImage, setMainProductImage, updateProductImageAlt } from "./image-actions";
+import DirectImageUpload from "@/components/admin/DirectImageUpload";
+import { deleteProductImage, setMainProductImage, updateProductImageAlt } from "./image-actions";
 
 type Image = { id: string; url: string; alt: string; position: number };
 const input = "w-full rounded-lg border border-white/15 bg-[#101319] px-3 py-2.5 text-white";
@@ -9,14 +10,7 @@ export default function ProductImagesPanel({ productId, images }: { productId: s
         <h2 className="font-display text-xl font-bold">FOTOGRAFÍAS DEL PRODUCTO ({images.length}/8)</h2>
         <p className="mt-1 text-sm text-neutral-400">Sube fotos propias o con autorización. Máximo 5 MB por imagen, JPG, PNG o WebP.</p>
       </div>
-      {images.length < 8 && <form action={addProductImage} className="grid gap-4 sm:grid-cols-2">
-        <input type="hidden" name="productId" value={productId}/>
-        <div><label htmlFor="image-upload" className="mb-1 block text-sm">Fotografía</label>
-          <input id="image-upload" type="file" name="file" accept="image/jpeg,image/png,image/webp" required className={input}/></div>
-        <div><label htmlFor="image-alt" className="mb-1 block text-sm">Descripción ALT</label>
-          <input id="image-alt" name="alt" minLength={8} maxLength={180} required className={input} placeholder="Figura 3D de dragón articulado verde"/></div>
-        <button type="submit" className="rounded-lg bg-[#B5FF67] px-4 py-3 font-semibold text-[#101319] sm:col-span-2">Subir fotografía</button>
-      </form>}
+      {images.length < 8 && <DirectImageUpload productId={productId} />}
       <div className="grid gap-5 sm:grid-cols-2">
         {images.map((image, index) => <article key={image.id} className="overflow-hidden rounded-xl border border-white/15 bg-[#101319]">
           <div className="aspect-[4/3] bg-[#090b0a] bg-contain bg-center bg-no-repeat" role="img" aria-label={image.alt}

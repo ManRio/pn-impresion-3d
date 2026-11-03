@@ -301,6 +301,7 @@ enum OrderStatus {
 
 model Order {
   id               String         @id @default(cuid())
+  checkoutKey String? @unique
   userId           String
   user             User           @relation(fields: [userId], references: [id], onDelete: Restrict)
   customerName     String

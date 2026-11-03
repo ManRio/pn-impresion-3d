@@ -2,7 +2,7 @@
 
 **Tienda online de productos impresos en 3D y encargos personalizados**, orientada inicialmente al mercado español.
 
-> **Estado (2 de noviembre de 2026): MVP avanzado en desarrollo y pruebas locales.** Catálogo, administración, categorías y subcategorías, cuentas, presupuestos, carrito y registro/seguimiento de pedidos están implementados. Los campos SEO de producto se han incorporado, pero **la indexación, el rendimiento y la seguridad de producción siguen pendientes de auditoría**. El pago online, las reglas definitivas de envío y los requisitos legales/fiscales continúan pendientes. **La tienda aún no está preparada para un lanzamiento comercial abierto.**
+> **Estado (3 de noviembre de 2026): MVP avanzado en desarrollo y pruebas locales.** Catálogo, administración, categorías y subcategorías, cuentas, presupuestos, carrito y registro/seguimiento de pedidos están implementados. Los campos SEO de producto se han incorporado, pero **la indexación, el rendimiento y la seguridad de producción siguen pendientes de auditoría**. El pago online, las reglas definitivas de envío y los requisitos legales/fiscales continúan pendientes. **La tienda aún no está preparada para un lanzamiento comercial abierto.**
 
 ## 1. Tecnologías
 
@@ -12,7 +12,7 @@
 | Estilos                | Tailwind CSS 4, identidad P&N carbón/verde lima, Oxanium e Inter  |
 | Base de datos          | PostgreSQL en Neon, Prisma 7, `@prisma/adapter-pg`                |
 | Autenticación          | Better Auth, sesiones y plugin `admin`                            |
-| Imágenes               | Cloudinary; Neon guarda referencias, ALT y posición de galería    |
+| Imágenes               | Cloudinary (subida directa firmada); Neon guarda URL, ALT y orden |
 | Referencias de modelos | MakerWorld (integración interna basada en endpoints no oficiales) |
 | Impresión              | Bambu Lab A1 con AMS Lite; archivos técnicos de Bambu Studio      |
 
@@ -24,7 +24,9 @@
 - Dashboard con accesos a productos, categorías, presupuestos, pedidos y herramientas internas.
 - Crear, editar, publicar, despublicar, archivar y eliminar productos; eliminación múltiple con confirmación y comprobaciones de relaciones históricas.
 - Modalidades de venta directa (`DIRECT`) y bajo presupuesto (`QUOTE`), variantes, materiales, colores, consumos y precios.
-- Fotografías en Cloudinary: carga múltiple, galería, orden, imagen principal y textos alternativos. Los borrados remotos deben verificarse antes de eliminar registros.
+- Fotografías en Cloudinary: subida directa desde el navegador con firma temporal y comprobación administrativa en servidor; hasta 8 archivos de 5 MB por producto, JPG/PNG/WebP, galería, portada y textos ALT.
+- Alta de producto con campos comerciales y SEO separados del transporte de fotos: se crea un borrador, se registran imágenes verificadas y se intenta publicar si se solicitó y se cumplen los requisitos.
+- Borrado de fotografías y productos: primero se confirma el cambio en Neon y después se limpia Cloudinary; los fallos de limpieza se registran y requieren gestión posterior. No existe todavía una cola persistente de reintentos.
 - Distinción de diseños propios/personalizados y de terceros, con revisión de autorización comercial cuando proceda.
 - Importación de información técnica `.gcode.3mf` de Bambu Studio para apoyar estimaciones.
 
@@ -65,6 +67,7 @@
 - Perfil del cliente con contacto y direcciones.
 - Solicitudes en `/presupuesto` e historial privado en `/mi-cuenta/mis-presupuestos`.
 - Gestión administrativa con estado, referencia, importe, piezas, plazo, constancia manual de envío y notas internas con autor y fecha; las notas internas no se exponen al cliente.
+- Formulario público de presupuesto con honeypot y validaciones de servidor; limitación configurada con Upstash Redis (ventana deslizante, 3 solicitudes/hora por IP y, si hay sesión, 3 por usuario). **Pendiente de prueba funcional del límite y de verificar las credenciales Redis en producción.**
 
 ### Carrito y pedidos — sin pago online integrado
 
@@ -72,6 +75,8 @@
 - Cabecera con iconos de carrito/cuenta, contador, vista rápida y acceso a perfil, pedidos y presupuestos.
 - Carrito separado por cuenta mediante `localStorage` **en el mismo navegador**; no se sincroniza entre dispositivos ni persiste en Neon.
 - Registro de pedidos con recálculo de precios en el servidor y conservación de líneas históricas.
+- Idempotencia del checkout mediante `Order.checkoutKey` (UUID) con índice `UNIQUE` en PostgreSQL, reutilización de clave ante reintentos y gestión del conflicto `P2002`; comprobada en Neon la existencia del índice y una fila con la clave de un pedido de prueba. **Pendiente probar reintentos simultáneos de extremo a extremo.**
+- `/api/cart-preview` comprueba el JSON, limita el cuerpo a 16 KB y hasta 30 líneas, valida cantidades e identificadores, rechaza duplicados y vuelve a consultar las variantes activas en Neon; no constituye por sí solo un limitador de frecuencia.
 - Historial privado `/mi-cuenta/mis-pedidos`.
 - Administración `/admin/pedidos`: **Recibido, En fabricación, Terminado, Enviado**, transportista, seguimiento y notas internas.
 
@@ -82,6 +87,7 @@
 - Node.js 24 y npm; VS Code o equivalente.
 - Base de datos de desarrollo en Neon.
 - Better Auth y Cloudinary configurados en variables de entorno.
+- Upstash Redis configurado para la protección de solicitudes públicas de presupuestos.
 
 ## 4. Instalación local
 
@@ -101,6 +107,8 @@ BETTER_AUTH_SECRET="...secreto-aleatorio..."
 CLOUDINARY_CLOUD_NAME=tu_cloud_name
 CLOUDINARY_API_KEY=tu_api_key
 CLOUDINARY_API_SECRET=tu_api_secret
+UPSTASH_REDIS_REST_URL="https://tu-instancia.upstash.io"
+UPSTASH_REDIS_REST_TOKEN="tu_token_privado"
 ```
 
 **Nunca versionar `.env`, tokens, contraseñas, imágenes privadas ni archivos con datos personales.** Revisar scripts de importación y archivos de datos antes de incorporarlos al repositorio.
@@ -126,7 +134,7 @@ npm run build
 npx prisma migrate status
 ```
 
-**Última validación comunicada (2 de noviembre de 2026):** Prisma válido, TypeScript sin errores, lint con **0 errores y 4 advertencias** de uso de `<img>`, compilación de Next.js completada. No sustituye una auditoría de producción ni pruebas E2E.
+**Última validación comunicada (3 de noviembre de 2026):** TypeScript, lint y compilación de Next.js completados correctamente tras la adaptación a Cloudinary. Las comprobaciones previas de Prisma también se habían superado. La subida firmada y el registro de una fotografía existente en Neon se han verificado manualmente; la recuperación temporal se eliminó después. **Pendiente:** prueba integral de alta con varias imágenes y comprobación funcional del limitador Upstash. Esto no sustituye una auditoría de producción ni pruebas E2E.
 
 ## 6. Rutas principales
 
@@ -144,12 +152,13 @@ npx prisma migrate status
 | `/admin/presupuestos`, `/admin/pedidos`                                       | Gestión de solicitudes y pedidos               |
 | `/admin/importar`, `/admin/explorar`, `/admin/biblioteca`, `/admin/impresion` | Herramientas internas                          |
 | `/api/auth/[...all]`, `/api/productos`, `/api/cart-preview`                   | Endpoints de autenticación, catálogo y carrito |
+| `/api/admin/uploads/sign`                                                     | Firma de subida a Cloudinary, solo para admin  |
 
 ## 7. Datos y reglas comerciales
 
 - **Catálogo:** `Category`, `Product`, `ProductImage`, `ProductVariant`, `PricingConfig`.
 - **Presupuestos:** `QuoteRequest`, `QuoteInternalNote`.
-- **Pedidos:** `Order`, `OrderItem`, `OrderHistory`.
+- **Pedidos:** `Order` (incluye `checkoutKey` único), `OrderItem`, `OrderHistory`.
 - **Usuarios:** `User`, `Session`, `Account`, `Verification`, `CustomerProfile`.
 - **Biblioteca:** `SavedDesign`.
 
@@ -159,10 +168,15 @@ Precio orientativo inicial de referencia: **0,10–0,12 €/g**; el precio defin
 
 ## 8. Seguridad y despliegue
 
-- Comprobar autorizaciones de servidor en todas las rutas administrativas, APIs y Server Actions; verificar aislamiento entre cuentas de cliente.
-- Validar datos recibidos por el servidor, límites de peticiones, tamaños/formato de archivos y protección del almacenamiento de STL/3MF.
+- **Comprobado manualmente:** separación de pedidos y presupuestos entre dos cuentas de cliente y redirección al inicio al intentar acceder a páginas de administración sin rol admin. **Pendiente:** pruebas específicas de operaciones administrativas invocadas directamente por HTTP.
+- Mantener comprobación de rol administrativo en el servidor para rutas, APIs y Server Actions; la firma de Cloudinary no debe exponer `CLOUDINARY_API_SECRET` al navegador.
+- Server Actions limitadas a 1 MB después de separar las fotos; mantener revisión de cualquier formulario nuevo que requiera cargas grandes. API de vista previa del carrito limitada a 16 KB.
+- En fotos, conservar restricciones de formatos/tamaño y verificar en servidor las referencias recibidas de Cloudinary. Revisar validación de contenido y carreras en el máximo de imágenes antes de producción.
+- Protección de presupuestos con Upstash Redis y rechazo seguro si el servicio falla; **pendiente prueba funcional**, revisión de cabeceras de IP confiables en despliegue y mitigación de tráfico distribuido.
+- Revisar protección del almacenamiento de STL/3MF y demás endpoints públicos.
 - Revisar sesiones, cookies, roles, dependencias, secretos, cabeceras HTTP, backups y recuperación ante fallos.
-- Neon y Cloudinary no comparten una transacción: pueden requerirse medidas de compensación ante operaciones parciales.
+- Neon y Cloudinary no comparten una transacción: las operaciones parciales pueden dejar archivos sin referencia. **Pendiente:** limpieza recuperable/persistente o cola de reintentos y auditoría de imágenes huérfanas.
+- En desarrollo se corrigió `publicIdFromProductUrl` para reconocer IDs de producto con guiones y se recuperó una imagen previamente subida pero no registrada; la página temporal de recuperación fue eliminada.
 - Mantener `noindex` hasta el lanzamiento y habilitar indexación solo después de validar contenido, privacidad y SEO.
 - Antes de la apertura comercial, revisar identidad del vendedor, avisos legales, RGPD, privacidad, cookies cuando corresponda, condiciones de venta, desistimiento/excepciones y obligaciones fiscales con asesoramiento profesional.
 
@@ -172,7 +186,7 @@ Un túnel del puerto 3000 puede introducir una cabecera `x-forwarded-host` difer
 
 ## 9. Prioridades para el lanzamiento
 
-1. **Seguridad y funcionalidad:** auditoría de permisos, rutas, sesiones, ficheros y pruebas del recorrido cliente-administrador.
+1. **Seguridad y funcionalidad:** completar las pruebas de Upstash, reintentos de checkout, subida múltiple, permisos de acciones admin y limpieza fiable de Cloudinary; continuar auditoría de sesiones, archivos y endpoints.
 2. **Catálogo real:** revisar e importar los 30 borradores previstos, añadir fotografías, variantes confirmadas y textos finales.
 3. **Venta real:** definir método de cobro o validación manual, importes definitivos, costes de envío, impuestos y comunicaciones.
 4. **SEO y velocidad:** optimizar imágenes y consultas, medir Lighthouse/Core Web Vitals, confirmar metadatos, canónicas, sitemap, robots y datos estructurados.
