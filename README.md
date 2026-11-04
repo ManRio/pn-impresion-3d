@@ -112,7 +112,20 @@
 - Railway conectado a la rama main de GitHub.
 - Dominio temporal de Railway habilitado.
 - Las variables de entorno se configuran fuera del repositorio.
-- No se aceptan pagos reales todavía.
+
+### Integración de Stripe Checkout
+
+- Stripe SDK 23.1.0 instalado.
+- Checkout alojado por Stripe en modo de pruebas.
+- Importes calculados y validados en el servidor.
+- Pedidos asociados a sesiones de Stripe.
+- Endpoint de webhook preparado para verificar los pagos.
+- Los pedidos solo se marcarán como pagados tras la confirmación segura del pago.
+- Facturación realizada mediante un programa externo.
+
+**Estado:** integración en pruebas. Pendiente de configurar
+el webhook en Stripe, probar pagos completos y validar
+la seguridad antes de activar cobros reales.
 
 ## 3. Requisitos de desarrollo
 

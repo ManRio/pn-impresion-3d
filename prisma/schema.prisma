@@ -319,6 +319,9 @@ model Order {
   deliveryMethod   String?
   status           OrderStatus    @default(RECEIVED)
   paymentStatus    String         @default("PENDING")
+  stripeCheckoutSessionId String? @unique
+  stripePaymentIntentId   String?
+  paidAt                  DateTime?
   carrier          String?
   trackingNumber   String?
   items            OrderItem[]

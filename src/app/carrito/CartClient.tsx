@@ -2,16 +2,13 @@
 
 import Link from 'next/link';
 import { useCallback, useEffect, useRef, useState } from 'react';
-
 import PrivacyNotice from '@/components/legal/PrivacyNotice';
 import { readCart, saveCart, type CartData } from '@/lib/cart-store';
 import {
-  shippingCentsFor,
-  PICKUP_ADDRESS,
-  type DeliveryMethod,
+  shippingCentsFor, PICKUP_ADDRESS, type DeliveryMethod,
 } from '@/lib/checkout-config';
-import { placeOrder } from './actions';
 import { splitIncludedVat } from '@/lib/tax-config';
+import { startStripeCheckout } from './actions';
 
 type Preview = {
   id: string;
@@ -32,7 +29,6 @@ export default function CartClient() {
   const [preview, setPreview] = useState<Preview[]>([]);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
-  const [done, setDone] = useState<string | null>(null);
   const [deliveryMethod, setDeliveryMethod] = useState<DeliveryMethod | null>(null);
   const submitting = useRef(false);
   const initialized = useRef(false);
@@ -60,12 +56,11 @@ export default function CartClient() {
   useEffect(() => {
     if (initialized.current) return;
     initialized.current = true;
-    const loadCart = () => {
+    queueMicrotask(() => {
       const savedCart = readCart();
       setCart(savedCart);
       void refresh(savedCart);
-    };
-    queueMicrotask(loadCart);
+    });
   }, [refresh]);
 
   const update = (next: CartData) => {
@@ -108,41 +103,21 @@ export default function CartClient() {
         checkoutKey = crypto.randomUUID();
         sessionStorage.setItem(CHECKOUT_KEY, checkoutKey);
       }
-      const result = await placeOrder({
-        lines: cart.lines,
-        notes: cart.notes,
-        deliveryMethod,
-        checkoutKey,
+      const result = await startStripeCheckout({
+        lines: cart.lines, notes: cart.notes, deliveryMethod, checkoutKey,
       });
       if (!result.ok) {
         setError(result.error);
         return;
       }
-      sessionStorage.removeItem(CHECKOUT_KEY);
-      setDone(result.reference);
-      const emptyCart: CartData = { lines: [], notes: '' };
-      saveCart(emptyCart);
-      setCart(emptyCart);
-      setPreview([]);
+      // Conservar carrito y checkoutKey hasta recibir confirmación de pago.
+      window.location.assign(result.url);
     } catch {
-      // Conservar checkoutKey permite reintentar sin crear el mismo pedido dos veces.
-      setError('No se pudo confirmar el resultado del pedido. Puedes reintentarlo sin duplicarlo.');
+      setError('No se pudo iniciar Stripe. Puedes reintentar sin duplicar el pedido.');
     } finally {
       submitting.current = false;
       setBusy(false);
     }
-  }
-
-  if (done) {
-    return (
-      <section role='status' className='rounded-xl border border-[#B5FF67]/40 p-6'>
-        <h2 className='text-xl font-bold text-[#B5FF67]'>Pedido recibido: {done}</h2>
-        <p className='mt-2 text-white/70'>
-          Aún no se ha efectuado ningún pago. Contactaremos contigo para confirmar los siguientes pasos.
-        </p>
-        <Link href='/mi-cuenta/mis-pedidos' className='mt-4 inline-block underline'>Mis pedidos</Link>
-      </section>
-    );
   }
 
   return (
@@ -153,7 +128,6 @@ export default function CartClient() {
           <Link href='/tienda' className='text-[#B5FF67] underline'>Ver tienda</Link>
         </div>
       )}
-
       {cart.lines.map(line => {
         const product = preview.find(item => item.id === line.variantId);
         return (
@@ -252,15 +226,12 @@ export default function CartClient() {
               </div>
             )}
             <p className='text-xs leading-6 text-white/65'>
-              Los importes publicados y el transporte incluyen IVA. El desglose del 21 %
-              es provisional hasta verificar el tipo aplicable a todos los productos.
-              No se cobra online en esta fase.
+              Los precios y el transporte ya incluyen IVA. El tipo del 21 % debe
+              comprobarse para cada familia de productos antes de aceptar pagos reales.
             </p>
           </div>
-
           <p className='mt-3 text-xs text-amber-200'>
-            Este paso registra un pedido sin realizar ningún cobro.
-            El pago online se activará tras integrar Stripe y validar las condiciones comerciales.
+            Pago de prueba con Stripe. No se cobrará dinero real.
           </p>
           <p className='mt-2 text-xs text-white/60'>
             {deliveryMethod === 'PICKUP'
@@ -272,7 +243,7 @@ export default function CartClient() {
           <button type='button' onClick={submit}
             disabled={busy || !ready || !deliveryMethod}
             className='mt-4 rounded-lg bg-[#B5FF67] px-6 py-3 font-bold text-[#101319] disabled:opacity-50'>
-            {busy ? 'Registrando…' : 'Solicitar pedido sin pagar'}
+            {busy ? 'Abriendo Stripe…' : 'Pagar con Stripe (pruebas)'}
           </button>
         </section>
       )}

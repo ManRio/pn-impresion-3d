@@ -1,8 +1,6 @@
 'use server';
 
 import { headers } from 'next/headers';
-import { revalidatePath } from 'next/cache';
-
 import { Prisma } from '@/generated/prisma/client';
 import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
@@ -14,6 +12,7 @@ import {
   shippingCentsFor,
   type DeliveryMethod,
 } from '@/lib/checkout-config';
+import { checkoutBaseUrl, checkoutEnabled, getStripe } from '@/lib/stripe';
 
 type Input = {
   lines: { variantId: string; quantity: number }[];
@@ -22,38 +21,28 @@ type Input = {
   deliveryMethod: DeliveryMethod;
 };
 
-type Result = { ok: true; reference: string } | { ok: false; error: string };
+type Result =
+  | { ok: true; url: string }
+  | { ok: false; error: string };
 
 const uuidPattern =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
-export async function placeOrder(input: Input): Promise<Result> {
-  // No crear pedidos anónimos ni fiarse de importes proporcionados por el cliente.
-  const session = await auth.api.getSession({ headers: await headers() });
-  if (!session) {
-    return { ok: false, error: 'Inicia sesión en Mi cuenta antes de confirmar el pedido.' };
+export async function startStripeCheckout(input: Input): Promise<Result> {
+  if (!checkoutEnabled()) {
+    return { ok: false, error: 'Los pagos de prueba todavía no están habilitados.' };
   }
+
+  const session = await auth.api.getSession({ headers: await headers() });
+  if (!session) return { ok: false, error: 'Inicia sesión antes de pagar.' };
 
   if (!input || typeof input.checkoutKey !== 'string' || !uuidPattern.test(input.checkoutKey)) {
-    return { ok: false, error: 'Identificador de pedido inválido.' };
+    return { ok: false, error: 'Identificador del pedido inválido.' };
   }
-
-  // Primero idempotencia: una respuesta perdida debe devolver el pedido previo.
-  const previousOrder = await prisma.order.findUnique({
-    where: { checkoutKey: input.checkoutKey },
-    select: { id: true, userId: true },
-  });
-  if (previousOrder) {
-    return previousOrder.userId === session.user.id
-      ? { ok: true, reference: previousOrder.id.slice(-8).toUpperCase() }
-      : { ok: false, error: 'No se pudo validar este pedido.' };
-  }
-
   if (!isDeliveryMethod(input.deliveryMethod)) {
     return { ok: false, error: 'Selecciona envío o recogida presencial.' };
   }
-
-  if (!Array.isArray(input.lines) || input.lines.length === 0 || input.lines.length > 30 ||
+  if (!Array.isArray(input.lines) || !input.lines.length || input.lines.length > 30 ||
       typeof input.notes !== 'string' || input.notes.length > 2000) {
     return { ok: false, error: 'Carrito no válido.' };
   }
@@ -66,128 +55,185 @@ export async function placeOrder(input: Input): Promise<Result> {
     }
     quantities.set(line.variantId, (quantities.get(line.variantId) ?? 0) + line.quantity);
   }
-  if ([...quantities.values()].some(quantity => quantity > 20)) {
+  if ([...quantities.values()].some(qty => qty > 20)) {
     return { ok: false, error: 'Máximo 20 unidades por variante.' };
   }
 
-  const profile = await prisma.customerProfile.findUnique({
-    where: { userId: session.user.id },
+  let order = await prisma.order.findUnique({
+    where: { checkoutKey: input.checkoutKey },
+    include: { items: true },
   });
-  if (!profile) {
-    return { ok: false, error: 'Completa tus datos de cliente en Mi cuenta.' };
+  if (order && order.userId !== session.user.id) {
+    return { ok: false, error: 'No se pudo validar el pedido.' };
+  }
+  if (order?.paymentStatus === 'PAID') {
+    return { ok: false, error: 'Este pedido ya está pagado. Consúltalo en Mi cuenta.' };
   }
 
-  const shippingRequired = input.deliveryMethod === 'SHIPPING';
-  if (shippingRequired && (
-    !profile.shippingAddress.trim() || !profile.shippingCity.trim() ||
-    !profile.shippingProvince.trim() ||
-    !isSupportedShippingAddress(profile.shippingPostalCode, profile.shippingCountry)
-  )) {
-    return { ok: false, error: 'Completa una dirección de envío válida en Península o Baleares.' };
-  }
+  if (!order) {
+    const profile = await prisma.customerProfile.findUnique({
+      where: { userId: session.user.id },
+    });
+    if (!profile) return { ok: false, error: 'Completa tus datos en Mi cuenta.' };
 
-  // Solo usar datos de envío como sustitutos de facturación cuando existen.
-  // La recogida permite prescindir de dirección de envío, pero exige facturación completa.
-  const billingParts = [
-    profile.billingAddress || profile.shippingAddress,
-    profile.billingPostalCode || profile.shippingPostalCode,
-    profile.billingCity || profile.shippingCity,
-    profile.billingProvince || profile.shippingProvince,
-    profile.billingCountry || profile.shippingCountry,
-  ];
-  if (billingParts.some(part => !part.trim())) {
-    return { ok: false, error: 'Completa la dirección de facturación en Mi cuenta.' };
-  }
+    const shippingRequired = input.deliveryMethod === 'SHIPPING';
+    if (shippingRequired && (
+      !profile.shippingAddress.trim() || !profile.shippingCity.trim() ||
+      !profile.shippingProvince.trim() ||
+      !isSupportedShippingAddress(profile.shippingPostalCode, profile.shippingCountry)
+    )) {
+      return { ok: false, error: 'Indica una dirección de Península o Baleares.' };
+    }
 
-  const variants = await prisma.productVariant.findMany({
-    where: {
-      id: { in: [...quantities.keys()] },
-      active: true,
-      priceCents: { gt: 0 },
-      product: { status: 'ACTIVE', saleMode: 'DIRECT' },
-    },
-    include: { product: { select: { name: true } } },
-  });
-  if (variants.length !== quantities.size) {
-    return { ok: false, error: 'Algún producto ya no está disponible. Revisa tu carrito.' };
-  }
+    const billingParts = [
+      profile.billingAddress || profile.shippingAddress,
+      profile.billingPostalCode || profile.shippingPostalCode,
+      profile.billingCity || profile.shippingCity,
+      profile.billingProvince || profile.shippingProvince,
+      profile.billingCountry || profile.shippingCountry,
+    ];
+    if (billingParts.some(part => !part.trim())) {
+      return { ok: false, error: 'Completa la dirección de facturación en Mi cuenta.' };
+    }
 
-  const subtotal = variants.reduce(
-    (sum, variant) => sum + variant.priceCents * quantities.get(variant.id)!, 0,
-  );
-  const shipping = shippingCentsFor(input.deliveryMethod);
-  const total = subtotal + shipping;
-  const tax = splitIncludedVat(total);
-  if (!Number.isSafeInteger(subtotal) || subtotal <= 0 ||
-      !Number.isSafeInteger(total) || total > 100000000) {
-    return { ok: false, error: 'Total no válido.' };
-  }
+    const variants = await prisma.productVariant.findMany({
+      where: {
+        id: { in: [...quantities.keys()] }, active: true, priceCents: { gt: 0 },
+        product: { status: 'ACTIVE', saleMode: 'DIRECT' },
+      },
+      include: { product: { select: { name: true } } },
+    });
+    if (variants.length !== quantities.size) {
+      return { ok: false, error: 'Algún producto ya no está disponible.' };
+    }
 
-  let order: { id: string };
-  try {
-    order = await prisma.order.create({
-      data: {
-        checkoutKey: input.checkoutKey,
-        userId: session.user.id,
-        customerName: session.user.name,
-        customerEmail: session.user.email,
-        customerPhone: profile.phone,
-        shippingAddress: shippingRequired
-          ? [profile.shippingAddress, profile.shippingPostalCode, profile.shippingCity,
-              profile.shippingProvince, profile.shippingCountry].join(' | ')
-          : `Recogida presencial | ${PICKUP_ADDRESS}`,
-        billingAddress: billingParts.join(' | '),
-        customerNotes: input.notes,
-        subtotalCents: subtotal,
-        shippingCents: shipping,
-        deliveryMethod: input.deliveryMethod,
-        totalCents: total,
-        taxableBaseCents: tax.baseCents,
-        vatCents: tax.vatCents,
-        vatRatePercent: tax.vatRatePercent,
-        carrier: shippingRequired ? 'Correos' : null,
-        items: {
-          create: variants.map(variant => ({
-            variantId: variant.id,
-            productName: variant.product.name,
-            variantLabel: variant.label,
-            sku: variant.sku,
-            material: variant.material,
-            color: variant.color,
-            unitPriceCents: variant.priceCents,
-            quantity: quantities.get(variant.id)!,
-            lineTotalCents: variant.priceCents * quantities.get(variant.id)!,
-          })),
-        },
-        history: {
-          create: {
-            authorName: 'Sistema',
-            publicMessage: shippingRequired
-              ? 'Pedido recibido · envío con Correos'
-              : 'Pedido recibido · recogida presencial',
-            previousStatus: null,
-            newStatus: 'RECEIVED',
+    const subtotal = variants.reduce(
+      (sum, v) => sum + v.priceCents * quantities.get(v.id)!, 0,
+    );
+    const shipping = shippingCentsFor(input.deliveryMethod);
+    const total = subtotal + shipping;
+    if (!Number.isSafeInteger(subtotal) || subtotal <= 0 ||
+        !Number.isSafeInteger(total) || total > 100000000) {
+      return { ok: false, error: 'Total no válido.' };
+    }
+    const tax = splitIncludedVat(total);
+    try {
+      order = await prisma.order.create({
+        data: {
+          checkoutKey: input.checkoutKey,
+          userId: session.user.id,
+          customerName: session.user.name,
+          customerEmail: session.user.email,
+          customerPhone: profile.phone,
+          shippingAddress: shippingRequired
+            ? [profile.shippingAddress, profile.shippingPostalCode,
+               profile.shippingCity, profile.shippingProvince,
+               profile.shippingCountry].join(' | ')
+            : `Recogida presencial | ${PICKUP_ADDRESS}`,
+          billingAddress: billingParts.join(' | '),
+          customerNotes: input.notes,
+          subtotalCents: subtotal,
+          shippingCents: shipping,
+          deliveryMethod: input.deliveryMethod,
+          totalCents: total,
+          taxableBaseCents: tax.baseCents,
+          vatCents: tax.vatCents,
+          vatRatePercent: tax.vatRatePercent,
+          carrier: shippingRequired ? 'Correos' : null,
+          paymentStatus: 'PENDING',
+          items: {
+            create: variants.map(v => ({
+              variantId: v.id,
+              productName: v.product.name,
+              variantLabel: v.label,
+              sku: v.sku, material: v.material,
+              color: v.color,
+              unitPriceCents: v.priceCents,
+              quantity: quantities.get(v.id)!,
+              lineTotalCents: v.priceCents * quantities.get(v.id)!,
+            })),
+          },
+          history: {
+            create: {
+              authorName: 'Sistema',
+              previousStatus: null,
+              newStatus: 'RECEIVED',
+              publicMessage: 'Pedido creado · pago pendiente',
+            },
           },
         },
-      },
-      select: { id: true },
-    });
-  } catch (error) {
-    // Restricción UNIQUE checkoutKey: protege también reintentos simultáneos.
-    if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
-      const existing = await prisma.order.findUnique({
-        where: { checkoutKey: input.checkoutKey },
-        select: { id: true, userId: true },
+        include: { items: true },
       });
-      if (existing?.userId === session.user.id) {
-        return { ok: true, reference: existing.id.slice(-8).toUpperCase() };
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
+        order = await prisma.order.findUnique({
+          where: { checkoutKey: input.checkoutKey },
+          include: { items: true },
+        });
+        if (!order || order.userId !== session.user.id) {
+          return { ok: false, error: 'No se pudo recuperar el pedido.' };
+        }
+      } else {
+        console.error('Error creando pedido:', error);
+        return { ok: false, error: 'No se pudo registrar el pedido.' };
       }
     }
-    console.error('Error registrando pedido:', error);
-    return { ok: false, error: 'No se pudo registrar el pedido.' };
   }
 
-  revalidatePath('/admin/pedidos');
-  revalidatePath('/mi-cuenta/mis-pedidos');
-  return { ok: true, reference: order.id.slice(-8).toUpperCase() };
+  // Hay que comprobar de nuevo un pedido recuperado después de una carrera.
+  if (order.paymentStatus === 'PAID') {
+    return { ok: false, error: 'El pedido ya está pagado.' };
+  }
+
+  try {
+    const stripe = getStripe();
+    if (order.stripeCheckoutSessionId) {
+      const existing = await stripe.checkout.sessions.retrieve(order.stripeCheckoutSessionId);
+      if (existing.status === 'open' && existing.url) {
+        return { ok: true, url: existing.url };
+      }
+      return { ok: false, error: 'La sesión de pago ha terminado. Contacta con soporte antes de repetir este pedido.' };
+    }
+
+    const items = order.items.map(item => ({
+      price_data: {
+        currency: 'eur',
+        product_data: { name: `${item.productName} · ${item.variantLabel}`.slice(0, 127) },
+        unit_amount: item.unitPriceCents,
+      },
+      quantity: item.quantity,
+    }));
+    if ((order.shippingCents ?? 0) > 0) {
+      items.push({
+        price_data: {
+          currency: 'eur',
+          product_data: { name: 'Envío con Correos' },
+          unit_amount: order.shippingCents!,
+        },
+        quantity: 1,
+      });
+    }
+
+    const baseUrl = checkoutBaseUrl();
+    const stripeSession = await stripe.checkout.sessions.create({
+      mode: 'payment',
+      customer_email: order.customerEmail,
+      client_reference_id: order.id,
+      metadata: { orderId: order.id },
+      payment_intent_data: { metadata: { orderId: order.id } },
+      line_items: items,
+      success_url: `${baseUrl}/pago/exito?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${baseUrl}/carrito?stripe_cancel=1`,
+    }, { idempotencyKey: `pn3d-test-order-${order.id}` });
+
+    if (!stripeSession.url) return { ok: false, error: 'Stripe no devolvió una URL de pago.' };
+    await prisma.order.updateMany({
+      where: { id: order.id, stripeCheckoutSessionId: null, paymentStatus: 'PENDING' },
+      data: { stripeCheckoutSessionId: stripeSession.id },
+    });
+    return { ok: true, url: stripeSession.url };
+  } catch (error) {
+    console.error('No se pudo iniciar Stripe Checkout:', error);
+    return { ok: false, error: 'No se pudo abrir el pago. Reinténtalo; no se ha cobrado nada.' };
+  }
 }

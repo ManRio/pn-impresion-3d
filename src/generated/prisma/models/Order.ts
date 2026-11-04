@@ -63,6 +63,9 @@ export type OrderMinAggregateOutputType = {
   deliveryMethod: string | null
   status: $Enums.OrderStatus | null
   paymentStatus: string | null
+  stripeCheckoutSessionId: string | null
+  stripePaymentIntentId: string | null
+  paidAt: Date | null
   carrier: string | null
   trackingNumber: string | null
   createdAt: Date | null
@@ -88,6 +91,9 @@ export type OrderMaxAggregateOutputType = {
   deliveryMethod: string | null
   status: $Enums.OrderStatus | null
   paymentStatus: string | null
+  stripeCheckoutSessionId: string | null
+  stripePaymentIntentId: string | null
+  paidAt: Date | null
   carrier: string | null
   trackingNumber: string | null
   createdAt: Date | null
@@ -113,6 +119,9 @@ export type OrderCountAggregateOutputType = {
   deliveryMethod: number
   status: number
   paymentStatus: number
+  stripeCheckoutSessionId: number
+  stripePaymentIntentId: number
+  paidAt: number
   carrier: number
   trackingNumber: number
   createdAt: number
@@ -158,6 +167,9 @@ export type OrderMinAggregateInputType = {
   deliveryMethod?: true
   status?: true
   paymentStatus?: true
+  stripeCheckoutSessionId?: true
+  stripePaymentIntentId?: true
+  paidAt?: true
   carrier?: true
   trackingNumber?: true
   createdAt?: true
@@ -183,6 +195,9 @@ export type OrderMaxAggregateInputType = {
   deliveryMethod?: true
   status?: true
   paymentStatus?: true
+  stripeCheckoutSessionId?: true
+  stripePaymentIntentId?: true
+  paidAt?: true
   carrier?: true
   trackingNumber?: true
   createdAt?: true
@@ -208,6 +223,9 @@ export type OrderCountAggregateInputType = {
   deliveryMethod?: true
   status?: true
   paymentStatus?: true
+  stripeCheckoutSessionId?: true
+  stripePaymentIntentId?: true
+  paidAt?: true
   carrier?: true
   trackingNumber?: true
   createdAt?: true
@@ -320,6 +338,9 @@ export type OrderGroupByOutputType = {
   deliveryMethod: string | null
   status: $Enums.OrderStatus
   paymentStatus: string
+  stripeCheckoutSessionId: string | null
+  stripePaymentIntentId: string | null
+  paidAt: Date | null
   carrier: string | null
   trackingNumber: string | null
   createdAt: Date
@@ -368,6 +389,9 @@ export type OrderWhereInput = {
   deliveryMethod?: Prisma.StringNullableFilter<"Order"> | string | null
   status?: Prisma.EnumOrderStatusFilter<"Order"> | $Enums.OrderStatus
   paymentStatus?: Prisma.StringFilter<"Order"> | string
+  stripeCheckoutSessionId?: Prisma.StringNullableFilter<"Order"> | string | null
+  stripePaymentIntentId?: Prisma.StringNullableFilter<"Order"> | string | null
+  paidAt?: Prisma.DateTimeNullableFilter<"Order"> | Date | string | null
   carrier?: Prisma.StringNullableFilter<"Order"> | string | null
   trackingNumber?: Prisma.StringNullableFilter<"Order"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Order"> | Date | string
@@ -396,6 +420,9 @@ export type OrderOrderByWithRelationInput = {
   deliveryMethod?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   paymentStatus?: Prisma.SortOrder
+  stripeCheckoutSessionId?: Prisma.SortOrderInput | Prisma.SortOrder
+  stripePaymentIntentId?: Prisma.SortOrderInput | Prisma.SortOrder
+  paidAt?: Prisma.SortOrderInput | Prisma.SortOrder
   carrier?: Prisma.SortOrderInput | Prisma.SortOrder
   trackingNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -408,6 +435,7 @@ export type OrderOrderByWithRelationInput = {
 export type OrderWhereUniqueInput = Prisma.AtLeast<{
   id?: string
   checkoutKey?: string
+  stripeCheckoutSessionId?: string
   AND?: Prisma.OrderWhereInput | Prisma.OrderWhereInput[]
   OR?: Prisma.OrderWhereInput[]
   NOT?: Prisma.OrderWhereInput | Prisma.OrderWhereInput[]
@@ -427,6 +455,8 @@ export type OrderWhereUniqueInput = Prisma.AtLeast<{
   deliveryMethod?: Prisma.StringNullableFilter<"Order"> | string | null
   status?: Prisma.EnumOrderStatusFilter<"Order"> | $Enums.OrderStatus
   paymentStatus?: Prisma.StringFilter<"Order"> | string
+  stripePaymentIntentId?: Prisma.StringNullableFilter<"Order"> | string | null
+  paidAt?: Prisma.DateTimeNullableFilter<"Order"> | Date | string | null
   carrier?: Prisma.StringNullableFilter<"Order"> | string | null
   trackingNumber?: Prisma.StringNullableFilter<"Order"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Order"> | Date | string
@@ -434,7 +464,7 @@ export type OrderWhereUniqueInput = Prisma.AtLeast<{
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   items?: Prisma.OrderItemListRelationFilter
   history?: Prisma.OrderHistoryListRelationFilter
-}, "id" | "checkoutKey">
+}, "id" | "checkoutKey" | "stripeCheckoutSessionId">
 
 export type OrderOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -455,6 +485,9 @@ export type OrderOrderByWithAggregationInput = {
   deliveryMethod?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   paymentStatus?: Prisma.SortOrder
+  stripeCheckoutSessionId?: Prisma.SortOrderInput | Prisma.SortOrder
+  stripePaymentIntentId?: Prisma.SortOrderInput | Prisma.SortOrder
+  paidAt?: Prisma.SortOrderInput | Prisma.SortOrder
   carrier?: Prisma.SortOrderInput | Prisma.SortOrder
   trackingNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -488,6 +521,9 @@ export type OrderScalarWhereWithAggregatesInput = {
   deliveryMethod?: Prisma.StringNullableWithAggregatesFilter<"Order"> | string | null
   status?: Prisma.EnumOrderStatusWithAggregatesFilter<"Order"> | $Enums.OrderStatus
   paymentStatus?: Prisma.StringWithAggregatesFilter<"Order"> | string
+  stripeCheckoutSessionId?: Prisma.StringNullableWithAggregatesFilter<"Order"> | string | null
+  stripePaymentIntentId?: Prisma.StringNullableWithAggregatesFilter<"Order"> | string | null
+  paidAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Order"> | Date | string | null
   carrier?: Prisma.StringNullableWithAggregatesFilter<"Order"> | string | null
   trackingNumber?: Prisma.StringNullableWithAggregatesFilter<"Order"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Order"> | Date | string
@@ -512,6 +548,9 @@ export type OrderCreateInput = {
   deliveryMethod?: string | null
   status?: $Enums.OrderStatus
   paymentStatus?: string
+  stripeCheckoutSessionId?: string | null
+  stripePaymentIntentId?: string | null
+  paidAt?: Date | string | null
   carrier?: string | null
   trackingNumber?: string | null
   createdAt?: Date | string
@@ -540,6 +579,9 @@ export type OrderUncheckedCreateInput = {
   deliveryMethod?: string | null
   status?: $Enums.OrderStatus
   paymentStatus?: string
+  stripeCheckoutSessionId?: string | null
+  stripePaymentIntentId?: string | null
+  paidAt?: Date | string | null
   carrier?: string | null
   trackingNumber?: string | null
   createdAt?: Date | string
@@ -566,6 +608,9 @@ export type OrderUpdateInput = {
   deliveryMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   paymentStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  stripeCheckoutSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripePaymentIntentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   carrier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   trackingNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -594,6 +639,9 @@ export type OrderUncheckedUpdateInput = {
   deliveryMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   paymentStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  stripeCheckoutSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripePaymentIntentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   carrier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   trackingNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -621,6 +669,9 @@ export type OrderCreateManyInput = {
   deliveryMethod?: string | null
   status?: $Enums.OrderStatus
   paymentStatus?: string
+  stripeCheckoutSessionId?: string | null
+  stripePaymentIntentId?: string | null
+  paidAt?: Date | string | null
   carrier?: string | null
   trackingNumber?: string | null
   createdAt?: Date | string
@@ -645,6 +696,9 @@ export type OrderUpdateManyMutationInput = {
   deliveryMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   paymentStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  stripeCheckoutSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripePaymentIntentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   carrier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   trackingNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -670,6 +724,9 @@ export type OrderUncheckedUpdateManyInput = {
   deliveryMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   paymentStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  stripeCheckoutSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripePaymentIntentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   carrier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   trackingNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -705,6 +762,9 @@ export type OrderCountOrderByAggregateInput = {
   deliveryMethod?: Prisma.SortOrder
   status?: Prisma.SortOrder
   paymentStatus?: Prisma.SortOrder
+  stripeCheckoutSessionId?: Prisma.SortOrder
+  stripePaymentIntentId?: Prisma.SortOrder
+  paidAt?: Prisma.SortOrder
   carrier?: Prisma.SortOrder
   trackingNumber?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -739,6 +799,9 @@ export type OrderMaxOrderByAggregateInput = {
   deliveryMethod?: Prisma.SortOrder
   status?: Prisma.SortOrder
   paymentStatus?: Prisma.SortOrder
+  stripeCheckoutSessionId?: Prisma.SortOrder
+  stripePaymentIntentId?: Prisma.SortOrder
+  paidAt?: Prisma.SortOrder
   carrier?: Prisma.SortOrder
   trackingNumber?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -764,6 +827,9 @@ export type OrderMinOrderByAggregateInput = {
   deliveryMethod?: Prisma.SortOrder
   status?: Prisma.SortOrder
   paymentStatus?: Prisma.SortOrder
+  stripeCheckoutSessionId?: Prisma.SortOrder
+  stripePaymentIntentId?: Prisma.SortOrder
+  paidAt?: Prisma.SortOrder
   carrier?: Prisma.SortOrder
   trackingNumber?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -876,6 +942,9 @@ export type OrderCreateWithoutUserInput = {
   deliveryMethod?: string | null
   status?: $Enums.OrderStatus
   paymentStatus?: string
+  stripeCheckoutSessionId?: string | null
+  stripePaymentIntentId?: string | null
+  paidAt?: Date | string | null
   carrier?: string | null
   trackingNumber?: string | null
   createdAt?: Date | string
@@ -902,6 +971,9 @@ export type OrderUncheckedCreateWithoutUserInput = {
   deliveryMethod?: string | null
   status?: $Enums.OrderStatus
   paymentStatus?: string
+  stripeCheckoutSessionId?: string | null
+  stripePaymentIntentId?: string | null
+  paidAt?: Date | string | null
   carrier?: string | null
   trackingNumber?: string | null
   createdAt?: Date | string
@@ -958,6 +1030,9 @@ export type OrderScalarWhereInput = {
   deliveryMethod?: Prisma.StringNullableFilter<"Order"> | string | null
   status?: Prisma.EnumOrderStatusFilter<"Order"> | $Enums.OrderStatus
   paymentStatus?: Prisma.StringFilter<"Order"> | string
+  stripeCheckoutSessionId?: Prisma.StringNullableFilter<"Order"> | string | null
+  stripePaymentIntentId?: Prisma.StringNullableFilter<"Order"> | string | null
+  paidAt?: Prisma.DateTimeNullableFilter<"Order"> | Date | string | null
   carrier?: Prisma.StringNullableFilter<"Order"> | string | null
   trackingNumber?: Prisma.StringNullableFilter<"Order"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Order"> | Date | string
@@ -982,6 +1057,9 @@ export type OrderCreateWithoutItemsInput = {
   deliveryMethod?: string | null
   status?: $Enums.OrderStatus
   paymentStatus?: string
+  stripeCheckoutSessionId?: string | null
+  stripePaymentIntentId?: string | null
+  paidAt?: Date | string | null
   carrier?: string | null
   trackingNumber?: string | null
   createdAt?: Date | string
@@ -1009,6 +1087,9 @@ export type OrderUncheckedCreateWithoutItemsInput = {
   deliveryMethod?: string | null
   status?: $Enums.OrderStatus
   paymentStatus?: string
+  stripeCheckoutSessionId?: string | null
+  stripePaymentIntentId?: string | null
+  paidAt?: Date | string | null
   carrier?: string | null
   trackingNumber?: string | null
   createdAt?: Date | string
@@ -1050,6 +1131,9 @@ export type OrderUpdateWithoutItemsInput = {
   deliveryMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   paymentStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  stripeCheckoutSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripePaymentIntentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   carrier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   trackingNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1077,6 +1161,9 @@ export type OrderUncheckedUpdateWithoutItemsInput = {
   deliveryMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   paymentStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  stripeCheckoutSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripePaymentIntentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   carrier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   trackingNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1102,6 +1189,9 @@ export type OrderCreateWithoutHistoryInput = {
   deliveryMethod?: string | null
   status?: $Enums.OrderStatus
   paymentStatus?: string
+  stripeCheckoutSessionId?: string | null
+  stripePaymentIntentId?: string | null
+  paidAt?: Date | string | null
   carrier?: string | null
   trackingNumber?: string | null
   createdAt?: Date | string
@@ -1129,6 +1219,9 @@ export type OrderUncheckedCreateWithoutHistoryInput = {
   deliveryMethod?: string | null
   status?: $Enums.OrderStatus
   paymentStatus?: string
+  stripeCheckoutSessionId?: string | null
+  stripePaymentIntentId?: string | null
+  paidAt?: Date | string | null
   carrier?: string | null
   trackingNumber?: string | null
   createdAt?: Date | string
@@ -1170,6 +1263,9 @@ export type OrderUpdateWithoutHistoryInput = {
   deliveryMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   paymentStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  stripeCheckoutSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripePaymentIntentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   carrier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   trackingNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1197,6 +1293,9 @@ export type OrderUncheckedUpdateWithoutHistoryInput = {
   deliveryMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   paymentStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  stripeCheckoutSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripePaymentIntentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   carrier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   trackingNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1222,6 +1321,9 @@ export type OrderCreateManyUserInput = {
   deliveryMethod?: string | null
   status?: $Enums.OrderStatus
   paymentStatus?: string
+  stripeCheckoutSessionId?: string | null
+  stripePaymentIntentId?: string | null
+  paidAt?: Date | string | null
   carrier?: string | null
   trackingNumber?: string | null
   createdAt?: Date | string
@@ -1246,6 +1348,9 @@ export type OrderUpdateWithoutUserInput = {
   deliveryMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   paymentStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  stripeCheckoutSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripePaymentIntentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   carrier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   trackingNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1272,6 +1377,9 @@ export type OrderUncheckedUpdateWithoutUserInput = {
   deliveryMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   paymentStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  stripeCheckoutSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripePaymentIntentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   carrier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   trackingNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1298,6 +1406,9 @@ export type OrderUncheckedUpdateManyWithoutUserInput = {
   deliveryMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   paymentStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  stripeCheckoutSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripePaymentIntentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   carrier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   trackingNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1363,6 +1474,9 @@ export type OrderSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   deliveryMethod?: boolean
   status?: boolean
   paymentStatus?: boolean
+  stripeCheckoutSessionId?: boolean
+  stripePaymentIntentId?: boolean
+  paidAt?: boolean
   carrier?: boolean
   trackingNumber?: boolean
   createdAt?: boolean
@@ -1392,6 +1506,9 @@ export type OrderSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   deliveryMethod?: boolean
   status?: boolean
   paymentStatus?: boolean
+  stripeCheckoutSessionId?: boolean
+  stripePaymentIntentId?: boolean
+  paidAt?: boolean
   carrier?: boolean
   trackingNumber?: boolean
   createdAt?: boolean
@@ -1418,6 +1535,9 @@ export type OrderSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   deliveryMethod?: boolean
   status?: boolean
   paymentStatus?: boolean
+  stripeCheckoutSessionId?: boolean
+  stripePaymentIntentId?: boolean
+  paidAt?: boolean
   carrier?: boolean
   trackingNumber?: boolean
   createdAt?: boolean
@@ -1444,13 +1564,16 @@ export type OrderSelectScalar = {
   deliveryMethod?: boolean
   status?: boolean
   paymentStatus?: boolean
+  stripeCheckoutSessionId?: boolean
+  stripePaymentIntentId?: boolean
+  paidAt?: boolean
   carrier?: boolean
   trackingNumber?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type OrderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "checkoutKey" | "userId" | "customerName" | "customerEmail" | "customerPhone" | "shippingAddress" | "billingAddress" | "customerNotes" | "totalCents" | "taxableBaseCents" | "vatCents" | "vatRatePercent" | "subtotalCents" | "shippingCents" | "deliveryMethod" | "status" | "paymentStatus" | "carrier" | "trackingNumber" | "createdAt" | "updatedAt", ExtArgs["result"]["order"]>
+export type OrderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "checkoutKey" | "userId" | "customerName" | "customerEmail" | "customerPhone" | "shippingAddress" | "billingAddress" | "customerNotes" | "totalCents" | "taxableBaseCents" | "vatCents" | "vatRatePercent" | "subtotalCents" | "shippingCents" | "deliveryMethod" | "status" | "paymentStatus" | "stripeCheckoutSessionId" | "stripePaymentIntentId" | "paidAt" | "carrier" | "trackingNumber" | "createdAt" | "updatedAt", ExtArgs["result"]["order"]>
 export type OrderInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   items?: boolean | Prisma.Order$itemsArgs<ExtArgs>
@@ -1490,6 +1613,9 @@ export type $OrderPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     deliveryMethod: string | null
     status: $Enums.OrderStatus
     paymentStatus: string
+    stripeCheckoutSessionId: string | null
+    stripePaymentIntentId: string | null
+    paidAt: Date | null
     carrier: string | null
     trackingNumber: string | null
     createdAt: Date
@@ -1938,6 +2064,9 @@ export interface OrderFieldRefs {
   readonly deliveryMethod: Prisma.FieldRef<"Order", 'String'>
   readonly status: Prisma.FieldRef<"Order", 'OrderStatus'>
   readonly paymentStatus: Prisma.FieldRef<"Order", 'String'>
+  readonly stripeCheckoutSessionId: Prisma.FieldRef<"Order", 'String'>
+  readonly stripePaymentIntentId: Prisma.FieldRef<"Order", 'String'>
+  readonly paidAt: Prisma.FieldRef<"Order", 'DateTime'>
   readonly carrier: Prisma.FieldRef<"Order", 'String'>
   readonly trackingNumber: Prisma.FieldRef<"Order", 'String'>
   readonly createdAt: Prisma.FieldRef<"Order", 'DateTime'>
