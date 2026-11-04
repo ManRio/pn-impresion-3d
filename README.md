@@ -93,7 +93,26 @@
 - Historial privado `/mi-cuenta/mis-pedidos`.
 - Administración `/admin/pedidos`: **Recibido, En fabricación, Terminado, Enviado**, transportista, seguimiento y notas internas.
 
-**Atención:** crear un pedido no significa haber cobrado. Antes de vender deben cerrarse el sistema de pago, tarifas de envío, impuestos, importes definitivos, condiciones de compra y comunicaciones al cliente.
+### Checkout, entrega e impuestos
+
+- Selección obligatoria del método de entrega:
+  - Correos: 8,00 € por pedido.
+  - Recogida presencial: gratuita.
+- Envíos disponibles a España peninsular e Islas Baleares.
+- Precios de catálogo con IVA incluido.
+- Cálculo del subtotal, desglose de IVA y total final.
+- Validación de productos, cantidades y precios en el servidor.
+- Conservación del método de entrega y los importes en cada pedido.
+- Protección contra pedidos duplicados mediante checkoutKey.
+- Facturación mediante un programa externo.
+
+### Pagos y despliegue
+
+- Stripe SDK instalado; integración del cobro pendiente.
+- Railway conectado a la rama main de GitHub.
+- Dominio temporal de Railway habilitado.
+- Las variables de entorno se configuran fuera del repositorio.
+- No se aceptan pagos reales todavía.
 
 ## 3. Requisitos de desarrollo
 

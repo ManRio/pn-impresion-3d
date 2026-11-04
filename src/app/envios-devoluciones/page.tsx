@@ -1,80 +1,40 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import { LegalPage } from '@/components/legal/LegalPage';
+
 export const metadata: Metadata = {
   title: 'Envíos y devoluciones',
   robots: { index: false, follow: false },
 };
+
 export default function Page() {
   return (
-    <LegalPage
-      title='Envíos y devoluciones'
-      intro='Borrador sobre fabricación, entregas, devoluciones e incidencias en P&N Impresión 3D.'
-    >
+    <LegalPage title='Envíos y devoluciones'
+      intro='Información sobre entregas, recogida, desistimiento e incidencias de P&N Impresión 3D. Borrador sujeto a validación antes de abrir la tienda.'>
       <section>
-        <h2>1. Zonas y métodos de envío</h2>
-        <p>
-          La zona de venta y entrega prevista es{' '}
-          <strong>España peninsular</strong>. No se ofrecen inicialmente envíos
-          a Baleares, Canarias, Ceuta ni Melilla.{' '}
-          <strong>
-            [PENDIENTE: TRANSPORTISTA, TARIFAS Y RESTRICCIONES ESPECÍFICAS]
-          </strong>
-          .
-        </p>
+        <h2>1. Ámbito y métodos de entrega</h2>
+        <p>Realizamos entregas en España peninsular e Islas Baleares mediante Correos, con un coste fijo anunciado de <strong>8,00 € por pedido</strong>. También se ofrece recogida presencial gratuita en Avda. Antonio Machado, 155, 41230 Castilblanco de los Arroyos (Sevilla), previa confirmación de disponibilidad. No se contemplan inicialmente envíos a Canarias, Ceuta, Melilla ni al extranjero.</p>
       </section>
       <section>
-        <h2>2. Gastos y tiempos de entrega</h2>
-        <p>
-          Los gastos y plazos deben comunicarse antes de confirmar cada pedido.
-          Distinguir entre tiempo de fabricación y tiempo de transporte.{' '}
-          <strong>
-            [PENDIENTE: TARIFAS Y PLAZOS REALES, FECHAS MÁXIMAS Y CONDICIONES DE
-            ENTREGA]
-          </strong>
-          .
-        </p>
+        <h2>2. Fabricación y plazos</h2>
+        <p>Los encargos pueden requerir un período de fabricación antes de su expedición. <strong>[PENDIENTE: plazo de fabricación y entrega de Correos; fecha máxima de entrega o criterio de cálculo]</strong>. Estos datos se comunicarán antes de aceptar una compra con obligación de pago.</p>
       </section>
       <section>
-        <h2>3. Desistimiento en artículos estándar</h2>
-        <p>
-          Con carácter general, cuando proceda el derecho de desistimiento, el
-          plazo es de 14 días naturales desde la recepción. Se informará
-          previamente del procedimiento, dirección de devolución y de quién
-          asume sus costes directos, conforme a la normativa aplicable.{' '}
-          <strong>[PENDIENTE: DIRECCIÓN Y PROCEDIMIENTO]</strong>.
-        </p>
+        <h2>3. Desistimiento de productos de catálogo</h2>
+        <p>En las compras a distancia de productos que no estén legalmente exceptuados, el consumidor dispone, como regla general, de <strong>14 días naturales desde la recepción</strong> para comunicar el desistimiento sin necesidad de justificarlo. Puede notificarlo en <a className='text-[#B5FF67] underline' href='mailto:info@pn3d.es'>info@pn3d.es</a>. La devolución física podrá dirigirse, previa coordinación, a Avda. Antonio Machado, 155, 41230 Castilblanco de los Arroyos (Sevilla).</p>
+        <p><strong>[PENDIENTE: determinar e informar expresamente quién asume los gastos directos de devolución y facilitar formulario modelo de desistimiento]</strong>.</p>
       </section>
       <section>
-        <h2>4. Artículos personalizados</h2>
-        <p>
-          Los productos realizados conforme a especificaciones particulares del
-          consumidor o claramente personalizados pueden estar exceptuados del
-          desistimiento legal. Esta excepción debe determinarse correctamente y
-          comunicarse antes de la compra. La impresión 3D o fabricación tras el
-          pedido, por sí solas, no bastan para aplicar la excepción de forma
-          general.
-        </p>
+        <h2>4. Productos personalizados</h2>
+        <p>Conforme al artículo 103.c) del Real Decreto Legislativo 1/2007, el derecho de desistimiento no se aplica a bienes confeccionados conforme a las especificaciones del consumidor o claramente personalizados. La mera fabricación bajo demanda de un artículo estándar no basta para aplicar esta excepción. La posible excepción se informará expresamente antes de confirmar cada encargo.</p>
       </section>
       <section>
-        <h2>5. Productos defectuosos o no conformes</h2>
-        <p>
-          La existencia de una excepción al desistimiento no elimina los
-          derechos de garantía legal por falta de conformidad. El cliente debe
-          disponer de un canal para comunicar daños, errores o incidencias.{' '}
-          <strong>[PENDIENTE: CANAL Y PROCEDIMIENTO]</strong>.
-        </p>
+        <h2>5. Defectos, daños y falta de conformidad</h2>
+        <p>Los derechos legales de garantía y las medidas frente a la falta de conformidad se mantienen también en productos personalizados. Para incidencias escribe a <a className='text-[#B5FF67] underline' href='mailto:info@pn3d.es'>info@pn3d.es</a> o consulta <Link className='text-[#B5FF67] underline' href='/contacto'>Contacto</Link>.</p>
       </section>
       <section>
         <h2>6. Reembolsos</h2>
-        <p>
-          Los plazos, medios de reembolso y condiciones aplicables se
-          especificarán conforme a la normativa y al método de pago realmente
-          implantado.{' '}
-          <strong>
-            [PENDIENTE: VALIDAR PROCEDIMIENTO CON STRIPE Y TITULAR]
-          </strong>
-          .
-        </p>
+        <p>Cuando proceda legalmente el desistimiento, el reembolso comprende las cantidades exigibles por la normativa, incluidos los gastos de entrega ordinaria que correspondan. Se realizará por el medio de pago original salvo acuerdo válido en contrario. <strong>[PENDIENTE: procedimiento operativo de reintegros cuando se active Stripe]</strong>.</p>
       </section>
     </LegalPage>
   );

@@ -1,120 +1,48 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { LegalPage } from '@/components/legal/LegalPage';
+
 export const metadata: Metadata = {
   title: 'Condiciones de compra',
   robots: { index: false, follow: false },
 };
+
 export default function Page() {
   return (
-    <LegalPage
-      title='Condiciones de compra'
-      intro='Borrador de las condiciones que deberán regular la venta de productos de P&N Impresión 3D cuando se activen los cobros.'
-    >
+    <LegalPage title='Condiciones de compra'
+      intro='Borrador de las condiciones comerciales de P&N Impresión 3D, pendiente de revisión operativa y de facturación antes de habilitar pagos.'>
       <section>
-        <h2>1. Vendedor y alcance</h2>
-        <p>
-          El vendedor previsto es{' '}
-          <strong>Luis Miguel Rodriguez Gutierrez</strong>, autónomo. NIF:{' '}
-          <strong>77803934V</strong>. Domicilio legal:{' '}
-          <strong>
-            Avenida Antonio Machado 155, C. P.: 41230, Castilblanco de los
-            Arroyos (Sevilla), España
-          </strong>
-          . Ámbito de entrega previsto: <strong>España peninsular</strong>.
-          Quedan excluidas, por ahora, Baleares, Canarias, Ceuta y Melilla; las
-          tarifas y condiciones exactas están pendientes de definir.
-        </p>
-      </section>
-      <section> 
-        <h2>2. Productos, materiales y personalización</h2>
-        <p>
-          Las fichas describirán características esenciales, variantes y, cuando
-          proceda, las opciones de fabricación. Los encargos personalizados
-          requieren concretar sus especificaciones y presupuesto antes de
-          aceptarse.
-        </p>
+        <h2>1. Identificación del vendedor</h2>
+        <p>Luis Miguel Rodriguez Gutierrez, autónomo, NIF 77803934V, domicilio legal: Avda. Antonio Machado, 155, 41230 Castilblanco de los Arroyos (Sevilla), España. Correo: <a className='text-[#B5FF67] underline' href='mailto:info@pn3d.es'>info@pn3d.es</a>. Teléfono: 684 710 115.</p>
       </section>
       <section>
-        <h2>3. Precio final, impuestos y entrega</h2>
-        <p>
-          Antes de confirmar una compra se mostrará el importe total, impuestos
-          aplicables y gastos de entrega, además de la información
-          precontractual exigible.{' '}
-          <strong>[PENDIENTE: IVA, ZONAS, TARIFAS, UMBRALES Y PLAZOS]</strong>.
-        </p>
+        <h2>2. Productos y encargos a medida</h2>
+        <p>Los productos de catálogo se describen en sus fichas, con variantes y precios disponibles. Los encargos personalizados requieren acordar previamente sus características y presupuesto. Las imágenes y acabados deben describirse fielmente; las particularidades propias de la fabricación se especificarán donde proceda.</p>
       </section>
       <section>
-        <h2>4. Pedido y pago</h2>
-        <p>
-          La plataforma está en fase de pruebas. El registro técnico de un
-          pedido no acredita por sí solo un pago efectuado.{' '}
-          <strong>
-            [PENDIENTE: DEFINIR MÉTODOS DE PAGO Y MOMENTO DE FORMALIZACIÓN DE LA
-            COMPRA]
-          </strong>
-          . Cuando se habilite el pago, la confirmación de una operación deberá
-          depender de la verificación del proveedor de pagos, no únicamente de
-          volver a una pantalla de éxito.
-        </p>
+        <h2>3. Precio y fiscalidad</h2>
+        <p>El titular declara el régimen general de IVA. Los precios publicados y el envío son importes finales con IVA incluido; el tipo general previsto para el catálogo es del 21 %, sujeto a revisión por producto. Envío con Correos: 8,00 € finales por pedido. Recogida presencial: gratuita. El total se mostrará antes de confirmar el pedido.</p>
+        <p><strong>[PENDIENTE: verificar con la gestoría los tipos impositivos de cada producto y los requisitos del software de facturación]</strong>.</p>
       </section>
       <section>
-        <h2>5. Derecho de desistimiento</h2>
-        <p>
-          Como regla general, en compras a distancia de productos no
-          exceptuados, el consumidor dispone de 14 días naturales para desistir
-          desde la recepción, con las condiciones y costes legalmente
-          aplicables. La excepción del artículo 103.c) para bienes
-          confeccionados conforme a las especificaciones del consumidor o
-          claramente personalizados se valorará por producto y se comunicará
-          antes de contratar.{' '}
-          <strong>
-            La mera impresión bajo demanda no implica automáticamente la pérdida
-            del derecho de desistimiento.
-          </strong>
-        </p>
+        <h2>4. Entregas y recogida</h2>
+        <p>Se ofrece envío a España peninsular e Islas Baleares por Correos, o recogida presencial en el domicilio indicado tras confirmación de disponibilidad. No están disponibles inicialmente Canarias, Ceuta, Melilla ni el extranjero. <strong>[PENDIENTE: plazos de fabricación, entrega y procedimiento de recogida]</strong>. Consulta <Link href='/envios-devoluciones' className='text-[#B5FF67] underline'>Envíos y devoluciones</Link>.</p>
       </section>
       <section>
-        <h2>6. Falta de conformidad y garantías</h2>
-        <p>
-          Los derechos legales de las personas consumidoras por productos
-          defectuosos o no conformes no se eliminan por personalización ni por
-          impresión 3D.{' '}
-          <strong>
-            [PENDIENTE: PROCEDIMIENTO DE INCIDENCIAS, REPARACIÓN, SUSTITUCIÓN Y
-            REEMBOLSO]
-          </strong>
-          .
-        </p>
+        <h2>5. Pedido y pago</h2>
+        <p>La plataforma está actualmente en pruebas. El registro de un pedido no implica que se haya efectuado un pago. <strong>[PENDIENTE: integrar Stripe, confirmación segura por webhook, confirmación contractual y comunicación en soporte duradero]</strong>. La facturación se realizará desde la propia web cuando se implemente y valide el módulo de facturación conforme a la normativa aplicable. Mientras tanto, la tienda no expedirá facturas desde su código.</p>
       </section>
       <section>
-        <h2>7. Atención y reclamaciones</h2>
-        <p>
-          Correo comercial: <strong>info@pn3d.es</strong>; teléfono de contacto:{' '}
-          <strong>684 710 115</strong>; domicilio legal:{' '}
-          <strong>
-            Avenida Antonio Machado 155, C. P.: 41230, Castilblanco de los
-            Arroyos (Sevilla), España
-          </strong>
-          . <strong>[PENDIENTE: PROCESO OPERATIVO DE RECLAMACIONES]</strong>.
-          Consulta asimismo{' '}
-          <Link
-            href='/envios-devoluciones'
-            className='text-[#B5FF67] underline'
-          >
-            envíos y devoluciones
-          </Link>
-          .
-        </p>
+        <h2>6. Desistimiento</h2>
+        <p>Los productos estándar contratados a distancia disponen, con carácter general, de 14 días naturales desde la recepción para desistir. Los productos confeccionados conforme a especificaciones del consumidor o claramente personalizados pueden estar exceptuados, conforme al artículo 103.c) del Real Decreto Legislativo 1/2007. La mera impresión bajo demanda no implica esta excepción.</p>
       </section>
       <section>
-        <h2>8. Información antes del pedido</h2>
-        <p>
-          Antes de abrir ventas se revisará el resumen de compra, el botón final
-          con obligación de pago, la información de desistimiento y el envío de
-          confirmaciones en soporte duradero. No se debe considerar el checkout
-          comercialmente listo hasta implementar estas obligaciones.
-        </p>
+        <h2>7. Garantía legal e incidencias</h2>
+        <p>Los derechos de garantía por falta de conformidad no se eliminan porque un producto sea personalizado. Las incidencias y reclamaciones se atenderán mediante info@pn3d.es y el teléfono comercial. <strong>[PENDIENTE: procedimiento interno y plazo orientativo de atención]</strong>.</p>
+      </section>
+      <section>
+        <h2>8. Antes de abrir la tienda</h2>
+        <p>Se revisarán los textos finales, el resumen de compra, la aceptación de las condiciones y las obligaciones de información precontractual, incluidos los plazos de entrega, el desistimiento y la confirmación del contrato. No se debe activar el cobro hasta completar dichas verificaciones.</p>
       </section>
     </LegalPage>
   );

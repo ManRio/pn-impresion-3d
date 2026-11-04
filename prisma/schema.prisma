@@ -311,6 +311,12 @@ model Order {
   billingAddress   String         @db.Text
   customerNotes    String         @default("") @db.Text
   totalCents       Int
+  taxableBaseCents     Int?
+  vatCents             Int?
+  vatRatePercent       Int?
+  subtotalCents    Int?
+  shippingCents    Int?
+  deliveryMethod   String?
   status           OrderStatus    @default(RECEIVED)
   paymentStatus    String         @default("PENDING")
   carrier          String?

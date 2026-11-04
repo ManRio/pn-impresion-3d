@@ -28,10 +28,20 @@ export type AggregateOrder = {
 
 export type OrderAvgAggregateOutputType = {
   totalCents: number | null
+  taxableBaseCents: number | null
+  vatCents: number | null
+  vatRatePercent: number | null
+  subtotalCents: number | null
+  shippingCents: number | null
 }
 
 export type OrderSumAggregateOutputType = {
   totalCents: number | null
+  taxableBaseCents: number | null
+  vatCents: number | null
+  vatRatePercent: number | null
+  subtotalCents: number | null
+  shippingCents: number | null
 }
 
 export type OrderMinAggregateOutputType = {
@@ -45,6 +55,12 @@ export type OrderMinAggregateOutputType = {
   billingAddress: string | null
   customerNotes: string | null
   totalCents: number | null
+  taxableBaseCents: number | null
+  vatCents: number | null
+  vatRatePercent: number | null
+  subtotalCents: number | null
+  shippingCents: number | null
+  deliveryMethod: string | null
   status: $Enums.OrderStatus | null
   paymentStatus: string | null
   carrier: string | null
@@ -64,6 +80,12 @@ export type OrderMaxAggregateOutputType = {
   billingAddress: string | null
   customerNotes: string | null
   totalCents: number | null
+  taxableBaseCents: number | null
+  vatCents: number | null
+  vatRatePercent: number | null
+  subtotalCents: number | null
+  shippingCents: number | null
+  deliveryMethod: string | null
   status: $Enums.OrderStatus | null
   paymentStatus: string | null
   carrier: string | null
@@ -83,6 +105,12 @@ export type OrderCountAggregateOutputType = {
   billingAddress: number
   customerNotes: number
   totalCents: number
+  taxableBaseCents: number
+  vatCents: number
+  vatRatePercent: number
+  subtotalCents: number
+  shippingCents: number
+  deliveryMethod: number
   status: number
   paymentStatus: number
   carrier: number
@@ -95,10 +123,20 @@ export type OrderCountAggregateOutputType = {
 
 export type OrderAvgAggregateInputType = {
   totalCents?: true
+  taxableBaseCents?: true
+  vatCents?: true
+  vatRatePercent?: true
+  subtotalCents?: true
+  shippingCents?: true
 }
 
 export type OrderSumAggregateInputType = {
   totalCents?: true
+  taxableBaseCents?: true
+  vatCents?: true
+  vatRatePercent?: true
+  subtotalCents?: true
+  shippingCents?: true
 }
 
 export type OrderMinAggregateInputType = {
@@ -112,6 +150,12 @@ export type OrderMinAggregateInputType = {
   billingAddress?: true
   customerNotes?: true
   totalCents?: true
+  taxableBaseCents?: true
+  vatCents?: true
+  vatRatePercent?: true
+  subtotalCents?: true
+  shippingCents?: true
+  deliveryMethod?: true
   status?: true
   paymentStatus?: true
   carrier?: true
@@ -131,6 +175,12 @@ export type OrderMaxAggregateInputType = {
   billingAddress?: true
   customerNotes?: true
   totalCents?: true
+  taxableBaseCents?: true
+  vatCents?: true
+  vatRatePercent?: true
+  subtotalCents?: true
+  shippingCents?: true
+  deliveryMethod?: true
   status?: true
   paymentStatus?: true
   carrier?: true
@@ -150,6 +200,12 @@ export type OrderCountAggregateInputType = {
   billingAddress?: true
   customerNotes?: true
   totalCents?: true
+  taxableBaseCents?: true
+  vatCents?: true
+  vatRatePercent?: true
+  subtotalCents?: true
+  shippingCents?: true
+  deliveryMethod?: true
   status?: true
   paymentStatus?: true
   carrier?: true
@@ -256,6 +312,12 @@ export type OrderGroupByOutputType = {
   billingAddress: string
   customerNotes: string
   totalCents: number
+  taxableBaseCents: number | null
+  vatCents: number | null
+  vatRatePercent: number | null
+  subtotalCents: number | null
+  shippingCents: number | null
+  deliveryMethod: string | null
   status: $Enums.OrderStatus
   paymentStatus: string
   carrier: string | null
@@ -298,6 +360,12 @@ export type OrderWhereInput = {
   billingAddress?: Prisma.StringFilter<"Order"> | string
   customerNotes?: Prisma.StringFilter<"Order"> | string
   totalCents?: Prisma.IntFilter<"Order"> | number
+  taxableBaseCents?: Prisma.IntNullableFilter<"Order"> | number | null
+  vatCents?: Prisma.IntNullableFilter<"Order"> | number | null
+  vatRatePercent?: Prisma.IntNullableFilter<"Order"> | number | null
+  subtotalCents?: Prisma.IntNullableFilter<"Order"> | number | null
+  shippingCents?: Prisma.IntNullableFilter<"Order"> | number | null
+  deliveryMethod?: Prisma.StringNullableFilter<"Order"> | string | null
   status?: Prisma.EnumOrderStatusFilter<"Order"> | $Enums.OrderStatus
   paymentStatus?: Prisma.StringFilter<"Order"> | string
   carrier?: Prisma.StringNullableFilter<"Order"> | string | null
@@ -320,6 +388,12 @@ export type OrderOrderByWithRelationInput = {
   billingAddress?: Prisma.SortOrder
   customerNotes?: Prisma.SortOrder
   totalCents?: Prisma.SortOrder
+  taxableBaseCents?: Prisma.SortOrderInput | Prisma.SortOrder
+  vatCents?: Prisma.SortOrderInput | Prisma.SortOrder
+  vatRatePercent?: Prisma.SortOrderInput | Prisma.SortOrder
+  subtotalCents?: Prisma.SortOrderInput | Prisma.SortOrder
+  shippingCents?: Prisma.SortOrderInput | Prisma.SortOrder
+  deliveryMethod?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   paymentStatus?: Prisma.SortOrder
   carrier?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -345,6 +419,12 @@ export type OrderWhereUniqueInput = Prisma.AtLeast<{
   billingAddress?: Prisma.StringFilter<"Order"> | string
   customerNotes?: Prisma.StringFilter<"Order"> | string
   totalCents?: Prisma.IntFilter<"Order"> | number
+  taxableBaseCents?: Prisma.IntNullableFilter<"Order"> | number | null
+  vatCents?: Prisma.IntNullableFilter<"Order"> | number | null
+  vatRatePercent?: Prisma.IntNullableFilter<"Order"> | number | null
+  subtotalCents?: Prisma.IntNullableFilter<"Order"> | number | null
+  shippingCents?: Prisma.IntNullableFilter<"Order"> | number | null
+  deliveryMethod?: Prisma.StringNullableFilter<"Order"> | string | null
   status?: Prisma.EnumOrderStatusFilter<"Order"> | $Enums.OrderStatus
   paymentStatus?: Prisma.StringFilter<"Order"> | string
   carrier?: Prisma.StringNullableFilter<"Order"> | string | null
@@ -367,6 +447,12 @@ export type OrderOrderByWithAggregationInput = {
   billingAddress?: Prisma.SortOrder
   customerNotes?: Prisma.SortOrder
   totalCents?: Prisma.SortOrder
+  taxableBaseCents?: Prisma.SortOrderInput | Prisma.SortOrder
+  vatCents?: Prisma.SortOrderInput | Prisma.SortOrder
+  vatRatePercent?: Prisma.SortOrderInput | Prisma.SortOrder
+  subtotalCents?: Prisma.SortOrderInput | Prisma.SortOrder
+  shippingCents?: Prisma.SortOrderInput | Prisma.SortOrder
+  deliveryMethod?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   paymentStatus?: Prisma.SortOrder
   carrier?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -394,6 +480,12 @@ export type OrderScalarWhereWithAggregatesInput = {
   billingAddress?: Prisma.StringWithAggregatesFilter<"Order"> | string
   customerNotes?: Prisma.StringWithAggregatesFilter<"Order"> | string
   totalCents?: Prisma.IntWithAggregatesFilter<"Order"> | number
+  taxableBaseCents?: Prisma.IntNullableWithAggregatesFilter<"Order"> | number | null
+  vatCents?: Prisma.IntNullableWithAggregatesFilter<"Order"> | number | null
+  vatRatePercent?: Prisma.IntNullableWithAggregatesFilter<"Order"> | number | null
+  subtotalCents?: Prisma.IntNullableWithAggregatesFilter<"Order"> | number | null
+  shippingCents?: Prisma.IntNullableWithAggregatesFilter<"Order"> | number | null
+  deliveryMethod?: Prisma.StringNullableWithAggregatesFilter<"Order"> | string | null
   status?: Prisma.EnumOrderStatusWithAggregatesFilter<"Order"> | $Enums.OrderStatus
   paymentStatus?: Prisma.StringWithAggregatesFilter<"Order"> | string
   carrier?: Prisma.StringNullableWithAggregatesFilter<"Order"> | string | null
@@ -412,6 +504,12 @@ export type OrderCreateInput = {
   billingAddress: string
   customerNotes?: string
   totalCents: number
+  taxableBaseCents?: number | null
+  vatCents?: number | null
+  vatRatePercent?: number | null
+  subtotalCents?: number | null
+  shippingCents?: number | null
+  deliveryMethod?: string | null
   status?: $Enums.OrderStatus
   paymentStatus?: string
   carrier?: string | null
@@ -434,6 +532,12 @@ export type OrderUncheckedCreateInput = {
   billingAddress: string
   customerNotes?: string
   totalCents: number
+  taxableBaseCents?: number | null
+  vatCents?: number | null
+  vatRatePercent?: number | null
+  subtotalCents?: number | null
+  shippingCents?: number | null
+  deliveryMethod?: string | null
   status?: $Enums.OrderStatus
   paymentStatus?: string
   carrier?: string | null
@@ -454,6 +558,12 @@ export type OrderUpdateInput = {
   billingAddress?: Prisma.StringFieldUpdateOperationsInput | string
   customerNotes?: Prisma.StringFieldUpdateOperationsInput | string
   totalCents?: Prisma.IntFieldUpdateOperationsInput | number
+  taxableBaseCents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  vatCents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  vatRatePercent?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  subtotalCents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  shippingCents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  deliveryMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   paymentStatus?: Prisma.StringFieldUpdateOperationsInput | string
   carrier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -476,6 +586,12 @@ export type OrderUncheckedUpdateInput = {
   billingAddress?: Prisma.StringFieldUpdateOperationsInput | string
   customerNotes?: Prisma.StringFieldUpdateOperationsInput | string
   totalCents?: Prisma.IntFieldUpdateOperationsInput | number
+  taxableBaseCents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  vatCents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  vatRatePercent?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  subtotalCents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  shippingCents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  deliveryMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   paymentStatus?: Prisma.StringFieldUpdateOperationsInput | string
   carrier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -497,6 +613,12 @@ export type OrderCreateManyInput = {
   billingAddress: string
   customerNotes?: string
   totalCents: number
+  taxableBaseCents?: number | null
+  vatCents?: number | null
+  vatRatePercent?: number | null
+  subtotalCents?: number | null
+  shippingCents?: number | null
+  deliveryMethod?: string | null
   status?: $Enums.OrderStatus
   paymentStatus?: string
   carrier?: string | null
@@ -515,6 +637,12 @@ export type OrderUpdateManyMutationInput = {
   billingAddress?: Prisma.StringFieldUpdateOperationsInput | string
   customerNotes?: Prisma.StringFieldUpdateOperationsInput | string
   totalCents?: Prisma.IntFieldUpdateOperationsInput | number
+  taxableBaseCents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  vatCents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  vatRatePercent?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  subtotalCents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  shippingCents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  deliveryMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   paymentStatus?: Prisma.StringFieldUpdateOperationsInput | string
   carrier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -534,6 +662,12 @@ export type OrderUncheckedUpdateManyInput = {
   billingAddress?: Prisma.StringFieldUpdateOperationsInput | string
   customerNotes?: Prisma.StringFieldUpdateOperationsInput | string
   totalCents?: Prisma.IntFieldUpdateOperationsInput | number
+  taxableBaseCents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  vatCents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  vatRatePercent?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  subtotalCents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  shippingCents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  deliveryMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   paymentStatus?: Prisma.StringFieldUpdateOperationsInput | string
   carrier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -563,6 +697,12 @@ export type OrderCountOrderByAggregateInput = {
   billingAddress?: Prisma.SortOrder
   customerNotes?: Prisma.SortOrder
   totalCents?: Prisma.SortOrder
+  taxableBaseCents?: Prisma.SortOrder
+  vatCents?: Prisma.SortOrder
+  vatRatePercent?: Prisma.SortOrder
+  subtotalCents?: Prisma.SortOrder
+  shippingCents?: Prisma.SortOrder
+  deliveryMethod?: Prisma.SortOrder
   status?: Prisma.SortOrder
   paymentStatus?: Prisma.SortOrder
   carrier?: Prisma.SortOrder
@@ -573,6 +713,11 @@ export type OrderCountOrderByAggregateInput = {
 
 export type OrderAvgOrderByAggregateInput = {
   totalCents?: Prisma.SortOrder
+  taxableBaseCents?: Prisma.SortOrder
+  vatCents?: Prisma.SortOrder
+  vatRatePercent?: Prisma.SortOrder
+  subtotalCents?: Prisma.SortOrder
+  shippingCents?: Prisma.SortOrder
 }
 
 export type OrderMaxOrderByAggregateInput = {
@@ -586,6 +731,12 @@ export type OrderMaxOrderByAggregateInput = {
   billingAddress?: Prisma.SortOrder
   customerNotes?: Prisma.SortOrder
   totalCents?: Prisma.SortOrder
+  taxableBaseCents?: Prisma.SortOrder
+  vatCents?: Prisma.SortOrder
+  vatRatePercent?: Prisma.SortOrder
+  subtotalCents?: Prisma.SortOrder
+  shippingCents?: Prisma.SortOrder
+  deliveryMethod?: Prisma.SortOrder
   status?: Prisma.SortOrder
   paymentStatus?: Prisma.SortOrder
   carrier?: Prisma.SortOrder
@@ -605,6 +756,12 @@ export type OrderMinOrderByAggregateInput = {
   billingAddress?: Prisma.SortOrder
   customerNotes?: Prisma.SortOrder
   totalCents?: Prisma.SortOrder
+  taxableBaseCents?: Prisma.SortOrder
+  vatCents?: Prisma.SortOrder
+  vatRatePercent?: Prisma.SortOrder
+  subtotalCents?: Prisma.SortOrder
+  shippingCents?: Prisma.SortOrder
+  deliveryMethod?: Prisma.SortOrder
   status?: Prisma.SortOrder
   paymentStatus?: Prisma.SortOrder
   carrier?: Prisma.SortOrder
@@ -615,6 +772,11 @@ export type OrderMinOrderByAggregateInput = {
 
 export type OrderSumOrderByAggregateInput = {
   totalCents?: Prisma.SortOrder
+  taxableBaseCents?: Prisma.SortOrder
+  vatCents?: Prisma.SortOrder
+  vatRatePercent?: Prisma.SortOrder
+  subtotalCents?: Prisma.SortOrder
+  shippingCents?: Prisma.SortOrder
 }
 
 export type OrderScalarRelationFilter = {
@@ -706,6 +868,12 @@ export type OrderCreateWithoutUserInput = {
   billingAddress: string
   customerNotes?: string
   totalCents: number
+  taxableBaseCents?: number | null
+  vatCents?: number | null
+  vatRatePercent?: number | null
+  subtotalCents?: number | null
+  shippingCents?: number | null
+  deliveryMethod?: string | null
   status?: $Enums.OrderStatus
   paymentStatus?: string
   carrier?: string | null
@@ -726,6 +894,12 @@ export type OrderUncheckedCreateWithoutUserInput = {
   billingAddress: string
   customerNotes?: string
   totalCents: number
+  taxableBaseCents?: number | null
+  vatCents?: number | null
+  vatRatePercent?: number | null
+  subtotalCents?: number | null
+  shippingCents?: number | null
+  deliveryMethod?: string | null
   status?: $Enums.OrderStatus
   paymentStatus?: string
   carrier?: string | null
@@ -776,6 +950,12 @@ export type OrderScalarWhereInput = {
   billingAddress?: Prisma.StringFilter<"Order"> | string
   customerNotes?: Prisma.StringFilter<"Order"> | string
   totalCents?: Prisma.IntFilter<"Order"> | number
+  taxableBaseCents?: Prisma.IntNullableFilter<"Order"> | number | null
+  vatCents?: Prisma.IntNullableFilter<"Order"> | number | null
+  vatRatePercent?: Prisma.IntNullableFilter<"Order"> | number | null
+  subtotalCents?: Prisma.IntNullableFilter<"Order"> | number | null
+  shippingCents?: Prisma.IntNullableFilter<"Order"> | number | null
+  deliveryMethod?: Prisma.StringNullableFilter<"Order"> | string | null
   status?: Prisma.EnumOrderStatusFilter<"Order"> | $Enums.OrderStatus
   paymentStatus?: Prisma.StringFilter<"Order"> | string
   carrier?: Prisma.StringNullableFilter<"Order"> | string | null
@@ -794,6 +974,12 @@ export type OrderCreateWithoutItemsInput = {
   billingAddress: string
   customerNotes?: string
   totalCents: number
+  taxableBaseCents?: number | null
+  vatCents?: number | null
+  vatRatePercent?: number | null
+  subtotalCents?: number | null
+  shippingCents?: number | null
+  deliveryMethod?: string | null
   status?: $Enums.OrderStatus
   paymentStatus?: string
   carrier?: string | null
@@ -815,6 +1001,12 @@ export type OrderUncheckedCreateWithoutItemsInput = {
   billingAddress: string
   customerNotes?: string
   totalCents: number
+  taxableBaseCents?: number | null
+  vatCents?: number | null
+  vatRatePercent?: number | null
+  subtotalCents?: number | null
+  shippingCents?: number | null
+  deliveryMethod?: string | null
   status?: $Enums.OrderStatus
   paymentStatus?: string
   carrier?: string | null
@@ -850,6 +1042,12 @@ export type OrderUpdateWithoutItemsInput = {
   billingAddress?: Prisma.StringFieldUpdateOperationsInput | string
   customerNotes?: Prisma.StringFieldUpdateOperationsInput | string
   totalCents?: Prisma.IntFieldUpdateOperationsInput | number
+  taxableBaseCents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  vatCents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  vatRatePercent?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  subtotalCents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  shippingCents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  deliveryMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   paymentStatus?: Prisma.StringFieldUpdateOperationsInput | string
   carrier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -871,6 +1069,12 @@ export type OrderUncheckedUpdateWithoutItemsInput = {
   billingAddress?: Prisma.StringFieldUpdateOperationsInput | string
   customerNotes?: Prisma.StringFieldUpdateOperationsInput | string
   totalCents?: Prisma.IntFieldUpdateOperationsInput | number
+  taxableBaseCents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  vatCents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  vatRatePercent?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  subtotalCents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  shippingCents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  deliveryMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   paymentStatus?: Prisma.StringFieldUpdateOperationsInput | string
   carrier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -890,6 +1094,12 @@ export type OrderCreateWithoutHistoryInput = {
   billingAddress: string
   customerNotes?: string
   totalCents: number
+  taxableBaseCents?: number | null
+  vatCents?: number | null
+  vatRatePercent?: number | null
+  subtotalCents?: number | null
+  shippingCents?: number | null
+  deliveryMethod?: string | null
   status?: $Enums.OrderStatus
   paymentStatus?: string
   carrier?: string | null
@@ -911,6 +1121,12 @@ export type OrderUncheckedCreateWithoutHistoryInput = {
   billingAddress: string
   customerNotes?: string
   totalCents: number
+  taxableBaseCents?: number | null
+  vatCents?: number | null
+  vatRatePercent?: number | null
+  subtotalCents?: number | null
+  shippingCents?: number | null
+  deliveryMethod?: string | null
   status?: $Enums.OrderStatus
   paymentStatus?: string
   carrier?: string | null
@@ -946,6 +1162,12 @@ export type OrderUpdateWithoutHistoryInput = {
   billingAddress?: Prisma.StringFieldUpdateOperationsInput | string
   customerNotes?: Prisma.StringFieldUpdateOperationsInput | string
   totalCents?: Prisma.IntFieldUpdateOperationsInput | number
+  taxableBaseCents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  vatCents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  vatRatePercent?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  subtotalCents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  shippingCents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  deliveryMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   paymentStatus?: Prisma.StringFieldUpdateOperationsInput | string
   carrier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -967,6 +1189,12 @@ export type OrderUncheckedUpdateWithoutHistoryInput = {
   billingAddress?: Prisma.StringFieldUpdateOperationsInput | string
   customerNotes?: Prisma.StringFieldUpdateOperationsInput | string
   totalCents?: Prisma.IntFieldUpdateOperationsInput | number
+  taxableBaseCents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  vatCents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  vatRatePercent?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  subtotalCents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  shippingCents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  deliveryMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   paymentStatus?: Prisma.StringFieldUpdateOperationsInput | string
   carrier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -986,6 +1214,12 @@ export type OrderCreateManyUserInput = {
   billingAddress: string
   customerNotes?: string
   totalCents: number
+  taxableBaseCents?: number | null
+  vatCents?: number | null
+  vatRatePercent?: number | null
+  subtotalCents?: number | null
+  shippingCents?: number | null
+  deliveryMethod?: string | null
   status?: $Enums.OrderStatus
   paymentStatus?: string
   carrier?: string | null
@@ -1004,6 +1238,12 @@ export type OrderUpdateWithoutUserInput = {
   billingAddress?: Prisma.StringFieldUpdateOperationsInput | string
   customerNotes?: Prisma.StringFieldUpdateOperationsInput | string
   totalCents?: Prisma.IntFieldUpdateOperationsInput | number
+  taxableBaseCents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  vatCents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  vatRatePercent?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  subtotalCents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  shippingCents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  deliveryMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   paymentStatus?: Prisma.StringFieldUpdateOperationsInput | string
   carrier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1024,6 +1264,12 @@ export type OrderUncheckedUpdateWithoutUserInput = {
   billingAddress?: Prisma.StringFieldUpdateOperationsInput | string
   customerNotes?: Prisma.StringFieldUpdateOperationsInput | string
   totalCents?: Prisma.IntFieldUpdateOperationsInput | number
+  taxableBaseCents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  vatCents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  vatRatePercent?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  subtotalCents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  shippingCents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  deliveryMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   paymentStatus?: Prisma.StringFieldUpdateOperationsInput | string
   carrier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1044,6 +1290,12 @@ export type OrderUncheckedUpdateManyWithoutUserInput = {
   billingAddress?: Prisma.StringFieldUpdateOperationsInput | string
   customerNotes?: Prisma.StringFieldUpdateOperationsInput | string
   totalCents?: Prisma.IntFieldUpdateOperationsInput | number
+  taxableBaseCents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  vatCents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  vatRatePercent?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  subtotalCents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  shippingCents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  deliveryMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   paymentStatus?: Prisma.StringFieldUpdateOperationsInput | string
   carrier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1103,6 +1355,12 @@ export type OrderSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   billingAddress?: boolean
   customerNotes?: boolean
   totalCents?: boolean
+  taxableBaseCents?: boolean
+  vatCents?: boolean
+  vatRatePercent?: boolean
+  subtotalCents?: boolean
+  shippingCents?: boolean
+  deliveryMethod?: boolean
   status?: boolean
   paymentStatus?: boolean
   carrier?: boolean
@@ -1126,6 +1384,12 @@ export type OrderSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   billingAddress?: boolean
   customerNotes?: boolean
   totalCents?: boolean
+  taxableBaseCents?: boolean
+  vatCents?: boolean
+  vatRatePercent?: boolean
+  subtotalCents?: boolean
+  shippingCents?: boolean
+  deliveryMethod?: boolean
   status?: boolean
   paymentStatus?: boolean
   carrier?: boolean
@@ -1146,6 +1410,12 @@ export type OrderSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   billingAddress?: boolean
   customerNotes?: boolean
   totalCents?: boolean
+  taxableBaseCents?: boolean
+  vatCents?: boolean
+  vatRatePercent?: boolean
+  subtotalCents?: boolean
+  shippingCents?: boolean
+  deliveryMethod?: boolean
   status?: boolean
   paymentStatus?: boolean
   carrier?: boolean
@@ -1166,6 +1436,12 @@ export type OrderSelectScalar = {
   billingAddress?: boolean
   customerNotes?: boolean
   totalCents?: boolean
+  taxableBaseCents?: boolean
+  vatCents?: boolean
+  vatRatePercent?: boolean
+  subtotalCents?: boolean
+  shippingCents?: boolean
+  deliveryMethod?: boolean
   status?: boolean
   paymentStatus?: boolean
   carrier?: boolean
@@ -1174,7 +1450,7 @@ export type OrderSelectScalar = {
   updatedAt?: boolean
 }
 
-export type OrderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "checkoutKey" | "userId" | "customerName" | "customerEmail" | "customerPhone" | "shippingAddress" | "billingAddress" | "customerNotes" | "totalCents" | "status" | "paymentStatus" | "carrier" | "trackingNumber" | "createdAt" | "updatedAt", ExtArgs["result"]["order"]>
+export type OrderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "checkoutKey" | "userId" | "customerName" | "customerEmail" | "customerPhone" | "shippingAddress" | "billingAddress" | "customerNotes" | "totalCents" | "taxableBaseCents" | "vatCents" | "vatRatePercent" | "subtotalCents" | "shippingCents" | "deliveryMethod" | "status" | "paymentStatus" | "carrier" | "trackingNumber" | "createdAt" | "updatedAt", ExtArgs["result"]["order"]>
 export type OrderInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   items?: boolean | Prisma.Order$itemsArgs<ExtArgs>
@@ -1206,6 +1482,12 @@ export type $OrderPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     billingAddress: string
     customerNotes: string
     totalCents: number
+    taxableBaseCents: number | null
+    vatCents: number | null
+    vatRatePercent: number | null
+    subtotalCents: number | null
+    shippingCents: number | null
+    deliveryMethod: string | null
     status: $Enums.OrderStatus
     paymentStatus: string
     carrier: string | null
@@ -1648,6 +1930,12 @@ export interface OrderFieldRefs {
   readonly billingAddress: Prisma.FieldRef<"Order", 'String'>
   readonly customerNotes: Prisma.FieldRef<"Order", 'String'>
   readonly totalCents: Prisma.FieldRef<"Order", 'Int'>
+  readonly taxableBaseCents: Prisma.FieldRef<"Order", 'Int'>
+  readonly vatCents: Prisma.FieldRef<"Order", 'Int'>
+  readonly vatRatePercent: Prisma.FieldRef<"Order", 'Int'>
+  readonly subtotalCents: Prisma.FieldRef<"Order", 'Int'>
+  readonly shippingCents: Prisma.FieldRef<"Order", 'Int'>
+  readonly deliveryMethod: Prisma.FieldRef<"Order", 'String'>
   readonly status: Prisma.FieldRef<"Order", 'OrderStatus'>
   readonly paymentStatus: Prisma.FieldRef<"Order", 'String'>
   readonly carrier: Prisma.FieldRef<"Order", 'String'>
