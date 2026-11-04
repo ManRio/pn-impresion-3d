@@ -14,8 +14,18 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
     disableSignUp: false,
-    minPasswordLength: 8,
+    minPasswordLength: 12,
+    maxPasswordLength: 128,
   },
+
+  // Protección básica para las rutas de autenticación.
+  // Para producción configuraremos almacenamiento compartido.
+  rateLimit: {
+    enabled: true,
+    window: 60,
+    max: 30,
+  },
+
   plugins: [
     admin({
       defaultRole: 'user',

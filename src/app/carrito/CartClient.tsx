@@ -5,6 +5,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { readCart, saveCart, type CartData } from '@/lib/cart-store';
 import { placeOrder } from './actions';
+import PrivacyNotice from '@/components/legal/PrivacyNotice';
 
 type Preview = {
   id: string;
@@ -299,6 +300,10 @@ export default function CartClient() {
             Para registrar el pedido debes iniciar sesión y tener completa tu
             dirección de envío.
           </p>
+
+          <div className='mt-5'>
+            <PrivacyNotice context='checkout' />
+          </div>
 
           {error && (
             <p role='alert' className='mt-3 text-red-300'>

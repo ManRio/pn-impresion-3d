@@ -1,0 +1,12 @@
+import type { Metadata } from 'next';
+import { LegalPage } from '@/components/legal/LegalPage';
+export const metadata: Metadata = { title: 'Política de cookies', robots: { index: false, follow: false } };
+export default function Page() {
+  return <LegalPage title="Política de cookies" intro="Borrador sobre cookies y otras tecnologías de almacenamiento utilizadas por esta web.">
+    <section><h2>1. ¿Qué son?</h2><p>Las cookies son pequeños archivos o identificadores que el navegador puede guardar para permitir determinadas funciones del sitio. Existen mecanismos similares, como el almacenamiento local, que también deben analizarse desde la perspectiva de privacidad.</p></section>
+    <section><h2>2. Tecnologías identificadas en el desarrollo</h2><ul><li>Sesión y autenticación: Better Auth utiliza mecanismos técnicos para mantener la sesión del usuario.</li><li>Carrito: se utiliza almacenamiento local del navegador para conservar los artículos seleccionados en el dispositivo.</li></ul><p><strong>[PENDIENTE: INVENTARIO REAL DE NOMBRES DE COOKIES, DOMINIOS, FINALIDAD Y DURACIÓN EN EL DOMINIO PUBLICADO]</strong>. La lista de proveedores técnicos no equivale a una afirmación de que todos instalan cookies en el navegador.</p></section>
+    <section><h2>3. Cookies necesarias y cookies opcionales</h2><p>Las cookies técnicas estrictamente necesarias para una función solicitada por el usuario pueden estar exentas de consentimiento. Si se añaden analítica, marketing, publicidad, reproducción de contenido embebido u otras finalidades no exceptuadas, se informará de ellas y se solicitará consentimiento válido <strong>antes de activarlas</strong>, con opciones de aceptar y rechazar igualmente visibles.</p></section>
+    <section><h2>4. Cómo gestionar el almacenamiento</h2><p>El navegador permite consultar y borrar cookies y datos locales. Borrar determinados datos técnicos puede cerrar la sesión o eliminar el carrito guardado en ese dispositivo.</p><p><strong>[PENDIENTE: SI EXISTEN COOKIES OPCIONALES, IMPLEMENTAR PANEL DE CONFIGURACIÓN Y RETIRADA DE CONSENTIMIENTO PERMANENTEMENTE ACCESIBLE]</strong>.</p></section>
+    <section><h2>5. Contacto y actualización</h2><p>Responsable: <strong>Luis Miguel Rodriguez Gutierrez</strong>. Contacto para privacidad: <strong>info@pn3d.es</strong>. Este documento se actualizará tras la auditoría de cookies del dominio definitivo y siempre que cambien las tecnologías utilizadas.</p></section>
+  </LegalPage>;
+}

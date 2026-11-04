@@ -46,10 +46,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang='es' data-scroll-behavior="smooth">
+    <html lang='es' data-scroll-behavior='smooth'>
       <body className={`${oxanium.variable} ${inter.variable}`}>
+        <a href='#contenido-principal' className='skip-link'>
+          Saltar al contenido principal
+        </a>
+
         <Header />
+
         {children}
+
         <Footer />
       </body>
     </html>

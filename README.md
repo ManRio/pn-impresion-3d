@@ -2,7 +2,20 @@
 
 **Tienda online de productos impresos en 3D y encargos personalizados**, orientada inicialmente al mercado español.
 
-> **Estado (3 de noviembre de 2026): MVP avanzado en desarrollo y pruebas locales.** Catálogo, administración, categorías y subcategorías, cuentas, presupuestos, carrito y registro/seguimiento de pedidos están implementados. Los campos SEO de producto se han incorporado, pero **la indexación, el rendimiento y la seguridad de producción siguen pendientes de auditoría**. El pago online, las reglas definitivas de envío y los requisitos legales/fiscales continúan pendientes. **La tienda aún no está preparada para un lanzamiento comercial abierto.**
+> **Estado (4 de noviembre de 2026): MVP avanzado, pendiente de despliegue comercial.**
+> Landing rediseñada con slider de productos reales, páginas de contacto y
+> borradores legales, canales de contacto e información básica de privacidad
+> en los formularios. Dominio elegido: pn3d.es.
+>
+> Datos comerciales confirmados: envío con Correos por 8 € o recogida gratuita;
+> venta en Península y Baleares; precios de catálogo con impuestos incluidos.
+>
+> Pendiente de implementar: selector de entrega y recálculo del checkout en
+> servidor, integración con Stripe, confirmación fiscal por la gestoría,
+> condiciones comerciales definitivas y auditorías SEO, seguridad y
+> accesibilidad.
+>
+> **No habilitar ventas reales hasta completar estas comprobaciones.**
 
 ## 1. Tecnologías
 

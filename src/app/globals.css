@@ -724,3 +724,47 @@ button {
   font-weight: 700;
   letter-spacing: -0.02em;
 }
+
+/* Accesibilidad global */
+
+.skip-link {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 9999;
+  padding: 12px 18px;
+  border-radius: 8px;
+  background: #b5ff67;
+  color: #101319;
+  font-weight: 800;
+  transform: translateY(-180%);
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+  outline: 3px solid white;
+  outline-offset: 3px;
+}
+
+:where(a, button, input, textarea, select):focus-visible {
+  outline: 2px solid #b5ff67;
+  outline-offset: 3px;
+}
+
+#contenido-principal {
+  scroll-margin-top: 110px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
