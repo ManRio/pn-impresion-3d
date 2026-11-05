@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import type Stripe from 'stripe';
 import { prisma } from '@/lib/prisma';
 import { getStripe } from '@/lib/stripe';
+import { queuePaidEmails } from '@/lib/email/queue';
 
 export const runtime = 'nodejs';
 
@@ -14,7 +15,7 @@ export async function POST(request: NextRequest) {
 
   let event: Stripe.Event;
   try {
-    const payload = await request.text(); // El cuerpo original es obligatorio.
+    const payload = await request.text();
     event = getStripe().webhooks.constructEvent(payload, signature, secret);
   } catch {
     return NextResponse.json({ error: 'Firma no válida' }, { status: 400 });
@@ -37,29 +38,34 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const order = await prisma.order.findUnique({
-      where: { id: orderId },
-      select: { id: true, totalCents: true, paymentStatus: true,
-        stripeCheckoutSessionId: true },
-    });
-    if (!order || order.stripeCheckoutSessionId !== session.id ||
-        order.totalCents !== session.amount_total) {
-      return NextResponse.json({ error: 'Pedido o importe no coincidente' }, { status: 409 });
-    }
+    const result = await prisma.$transaction(async tx => {
+      const order = await tx.order.findUnique({
+        where: { id: orderId },
+        select: { id: true, totalCents: true, stripeCheckoutSessionId: true },
+      });
+      if (!order || order.stripeCheckoutSessionId !== session.id ||
+          order.totalCents !== session.amount_total) return 'mismatch';
 
-    const intentId = typeof session.payment_intent === 'string'
-      ? session.payment_intent : session.payment_intent?.id ?? null;
+      const intentId = typeof session.payment_intent === 'string'
+        ? session.payment_intent : session.payment_intent?.id ?? null;
 
-    // La condición garantiza que los reintentos de Stripe no duplican el efecto.
-    await prisma.order.updateMany({
-      where: { id: order.id, paymentStatus: { not: 'PAID' },
-        stripeCheckoutSessionId: session.id },
-      data: { paymentStatus: 'PAID', paidAt: new Date(),
-        stripePaymentIntentId: intentId },
+      const updated = await tx.order.updateMany({
+        where: { id: order.id, paymentStatus: { not: 'PAID' },
+          stripeCheckoutSessionId: session.id },
+        data: { paymentStatus: 'PAID', paidAt: new Date(),
+          stripePaymentIntentId: intentId },
+      });
+      if (updated.count === 1) {
+        // La confirmación y las notificaciones pendientes se guardan de forma atómica.
+        // Un fallo de Resend nunca deshace el cobro.
+        await queuePaidEmails(tx, order.id);
+      }
+      return 'ok';
     });
+    if (result === 'mismatch') return NextResponse.json({ error: 'Pedido o importe no coincidente' }, { status: 409 });
     return NextResponse.json({ received: true });
   } catch (error) {
-    console.error('Error persistiendo pago de Stripe:', error);
-    return NextResponse.json({ error: 'No se pudo actualizar el pedido' }, { status: 500 });
+    console.error('Error registrando el pago y sus notificaciones:', error);
+    return NextResponse.json({ error: 'No se pudo procesar el pago' }, { status: 500 });
   }
 }

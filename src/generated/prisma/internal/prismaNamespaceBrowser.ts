@@ -64,6 +64,7 @@ export const ModelName = {
   SavedDesign: 'SavedDesign',
   CustomerProfile: 'CustomerProfile',
   QuoteInternalNote: 'QuoteInternalNote',
+  EmailNotification: 'EmailNotification',
   Order: 'Order',
   OrderItem: 'OrderItem',
   OrderHistory: 'OrderHistory'
@@ -303,6 +304,28 @@ export const QuoteInternalNoteScalarFieldEnum = {
 } as const
 
 export type QuoteInternalNoteScalarFieldEnum = (typeof QuoteInternalNoteScalarFieldEnum)[keyof typeof QuoteInternalNoteScalarFieldEnum]
+
+
+export const EmailNotificationScalarFieldEnum = {
+  id: 'id',
+  dedupeKey: 'dedupeKey',
+  orderId: 'orderId',
+  kind: 'kind',
+  recipient: 'recipient',
+  subject: 'subject',
+  html: 'html',
+  status: 'status',
+  attempts: 'attempts',
+  nextAttemptAt: 'nextAttemptAt',
+  lockedAt: 'lockedAt',
+  sentAt: 'sentAt',
+  providerId: 'providerId',
+  lastError: 'lastError',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type EmailNotificationScalarFieldEnum = (typeof EmailNotificationScalarFieldEnum)[keyof typeof EmailNotificationScalarFieldEnum]
 
 
 export const OrderScalarFieldEnum = {

@@ -5,6 +5,7 @@ import { redirect } from 'next/navigation';
 import type { OrderStatus } from '@/generated/prisma/client';
 import { prisma } from '@/lib/prisma';
 import { requireAdmin } from '@/lib/require-admin';
+import { queueStatusEmail } from '@/lib/email/queue';
 
 const statuses: OrderStatus[] = ['RECEIVED', 'MANUFACTURING', 'FINISHED', 'SHIPPED'];
 const field = (form: FormData, key: string) => {
@@ -43,9 +44,7 @@ export async function updateOrder(form: FormData) {
     redirect('/admin/pedidos?error=Indica%20transportista%20y%20seguimiento');
   }
 
-  // La comprobación del pago y el cambio de estado se ejecutan en la misma
-  // transacción. updateMany comprueba paymentStatus justo al escribir.
-  const result: UpdateResult = await prisma.$transaction(async (tx) => {
+  const result: UpdateResult = await prisma.$transaction(async tx => {
     const previous = await tx.order.findUnique({
       where: { id },
       select: {
@@ -57,8 +56,6 @@ export async function updateOrder(form: FormData) {
     });
     if (!previous) return { ok: false, error: 'Pedido no encontrado' };
 
-    // Solo RECEIVED está permitido sin pago. También permite devolver un pedido
-    // antiguo sin pagar a RECEIVED para corregirlo sin seguir tramitándolo.
     if (status !== 'RECEIVED' && previous.paymentStatus !== 'PAID') {
       return { ok: false, error: 'No se puede tramitar un pedido sin pago confirmado' };
     }
@@ -67,12 +64,10 @@ export async function updateOrder(form: FormData) {
       previous.carrier !== carrier || previous.trackingNumber !== tracking
     );
     const statusChanged = previous.status !== status;
-    const changed = statusChanged || shippingUpdate;
-    if (!changed && !note && !visible) {
+    if (!statusChanged && !shippingUpdate && !note && !visible) {
       return { ok: false, error: 'Sin cambios' };
     }
 
-    // Esta condición evita que otra operación invalide nuestro dato leído.
     const changedRows = await tx.order.updateMany({
       where: {
         id,
@@ -88,7 +83,7 @@ export async function updateOrder(form: FormData) {
       return { ok: false, error: 'El pedido ha cambiado; recarga y vuelve a intentarlo' };
     }
 
-    await tx.orderHistory.create({
+    const history = await tx.orderHistory.create({
       data: {
         orderId: id,
         authorId: admin.id,
@@ -99,6 +94,10 @@ export async function updateOrder(form: FormData) {
         publicMessage: visible || (statusChanged ? statusLabels[status] : null),
       },
     });
+
+    if (statusChanged && (status === 'FINISHED' || status === 'SHIPPED')) {
+      await queueStatusEmail(tx, id, status, history.id);
+    }
     return { ok: true };
   });
 

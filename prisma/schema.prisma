@@ -299,6 +299,36 @@ enum OrderStatus {
   SHIPPED
 }
 
+enum EmailStatus {
+  PENDING
+  SENDING
+  SENT
+  FAILED
+}
+
+model EmailNotification {
+  id            String      @id
+  dedupeKey     String      @unique
+  orderId       String
+  order         Order       @relation(fields: [orderId], references: [id], onDelete: Restrict)
+  kind          String
+  recipient     String
+  subject       String
+  html          String      @db.Text
+  status        EmailStatus @default(PENDING)
+  attempts      Int         @default(0)
+  nextAttemptAt DateTime    @default(now())
+  lockedAt      DateTime?
+  sentAt        DateTime?
+  providerId    String?
+  lastError     String?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  @@index([status, nextAttemptAt])
+  @@index([orderId, createdAt])
+}
+
 model Order {
   id               String         @id @default(cuid())
   checkoutKey String? @unique
@@ -326,6 +356,7 @@ model Order {
   trackingNumber   String?
   items            OrderItem[]
   history          OrderHistory[]
+  emailNotifications EmailNotification[]
   createdAt        DateTime       @default(now())
   updatedAt        DateTime       @updatedAt
   @@index([userId, createdAt])

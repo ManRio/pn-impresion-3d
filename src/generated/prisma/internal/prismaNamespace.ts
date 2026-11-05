@@ -410,6 +410,7 @@ export const ModelName = {
   SavedDesign: 'SavedDesign',
   CustomerProfile: 'CustomerProfile',
   QuoteInternalNote: 'QuoteInternalNote',
+  EmailNotification: 'EmailNotification',
   Order: 'Order',
   OrderItem: 'OrderItem',
   OrderHistory: 'OrderHistory'
@@ -428,7 +429,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "category" | "product" | "productImage" | "productVariant" | "pricingConfig" | "quoteRequest" | "user" | "session" | "account" | "verification" | "savedDesign" | "customerProfile" | "quoteInternalNote" | "order" | "orderItem" | "orderHistory"
+    modelProps: "category" | "product" | "productImage" | "productVariant" | "pricingConfig" | "quoteRequest" | "user" | "session" | "account" | "verification" | "savedDesign" | "customerProfile" | "quoteInternalNote" | "emailNotification" | "order" | "orderItem" | "orderHistory"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1394,6 +1395,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    EmailNotification: {
+      payload: Prisma.$EmailNotificationPayload<ExtArgs>
+      fields: Prisma.EmailNotificationFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.EmailNotificationFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailNotificationPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.EmailNotificationFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailNotificationPayload>
+        }
+        findFirst: {
+          args: Prisma.EmailNotificationFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailNotificationPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.EmailNotificationFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailNotificationPayload>
+        }
+        findMany: {
+          args: Prisma.EmailNotificationFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailNotificationPayload>[]
+        }
+        create: {
+          args: Prisma.EmailNotificationCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailNotificationPayload>
+        }
+        createMany: {
+          args: Prisma.EmailNotificationCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.EmailNotificationCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailNotificationPayload>[]
+        }
+        delete: {
+          args: Prisma.EmailNotificationDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailNotificationPayload>
+        }
+        update: {
+          args: Prisma.EmailNotificationUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailNotificationPayload>
+        }
+        deleteMany: {
+          args: Prisma.EmailNotificationDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.EmailNotificationUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.EmailNotificationUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailNotificationPayload>[]
+        }
+        upsert: {
+          args: Prisma.EmailNotificationUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailNotificationPayload>
+        }
+        aggregate: {
+          args: Prisma.EmailNotificationAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateEmailNotification>
+        }
+        groupBy: {
+          args: Prisma.EmailNotificationGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.EmailNotificationGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.EmailNotificationCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.EmailNotificationCountAggregateOutputType> | number
+        }
+      }
+    }
     Order: {
       payload: Prisma.$OrderPayload<ExtArgs>
       fields: Prisma.OrderFieldRefs
@@ -1875,6 +1950,28 @@ export const QuoteInternalNoteScalarFieldEnum = {
 export type QuoteInternalNoteScalarFieldEnum = (typeof QuoteInternalNoteScalarFieldEnum)[keyof typeof QuoteInternalNoteScalarFieldEnum]
 
 
+export const EmailNotificationScalarFieldEnum = {
+  id: 'id',
+  dedupeKey: 'dedupeKey',
+  orderId: 'orderId',
+  kind: 'kind',
+  recipient: 'recipient',
+  subject: 'subject',
+  html: 'html',
+  status: 'status',
+  attempts: 'attempts',
+  nextAttemptAt: 'nextAttemptAt',
+  lockedAt: 'lockedAt',
+  sentAt: 'sentAt',
+  providerId: 'providerId',
+  lastError: 'lastError',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type EmailNotificationScalarFieldEnum = (typeof EmailNotificationScalarFieldEnum)[keyof typeof EmailNotificationScalarFieldEnum]
+
+
 export const OrderScalarFieldEnum = {
   id: 'id',
   checkoutKey: 'checkoutKey',
@@ -2102,6 +2199,20 @@ export type ListEnumSavedDesignStatusFieldRefInput<$PrismaModel> = FieldRefInput
 
 
 /**
+ * Reference to a field of type 'EmailStatus'
+ */
+export type EnumEmailStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'EmailStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'EmailStatus[]'
+ */
+export type ListEnumEmailStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'EmailStatus[]'>
+    
+
+
+/**
  * Reference to a field of type 'OrderStatus'
  */
 export type EnumOrderStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'OrderStatus'>
@@ -2292,6 +2403,7 @@ export type GlobalOmitConfig = {
   savedDesign?: Prisma.SavedDesignOmit
   customerProfile?: Prisma.CustomerProfileOmit
   quoteInternalNote?: Prisma.QuoteInternalNoteOmit
+  emailNotification?: Prisma.EmailNotificationOmit
   order?: Prisma.OrderOmit
   orderItem?: Prisma.OrderItemOmit
   orderHistory?: Prisma.OrderHistoryOmit

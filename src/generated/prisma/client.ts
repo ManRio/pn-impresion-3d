@@ -107,6 +107,11 @@ export type CustomerProfile = Prisma.CustomerProfileModel
  */
 export type QuoteInternalNote = Prisma.QuoteInternalNoteModel
 /**
+ * Model EmailNotification
+ * 
+ */
+export type EmailNotification = Prisma.EmailNotificationModel
+/**
  * Model Order
  * 
  */
