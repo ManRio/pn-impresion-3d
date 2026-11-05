@@ -21,10 +21,7 @@ type Input = {
   deliveryMethod: DeliveryMethod;
 };
 
-type Result =
-  | { ok: true; url: string }
-  | { ok: false; error: string };
-
+type Result = { ok: true; url: string } | { ok: false; error: string };
 const uuidPattern =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
@@ -35,7 +32,6 @@ export async function startStripeCheckout(input: Input): Promise<Result> {
 
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session) return { ok: false, error: 'Inicia sesión antes de pagar.' };
-
   if (!input || typeof input.checkoutKey !== 'string' || !uuidPattern.test(input.checkoutKey)) {
     return { ok: false, error: 'Identificador del pedido inválido.' };
   }
@@ -68,6 +64,17 @@ export async function startStripeCheckout(input: Input): Promise<Result> {
   }
   if (order?.paymentStatus === 'PAID') {
     return { ok: false, error: 'Este pedido ya está pagado. Consúltalo en Mi cuenta.' };
+  }
+
+  if (order) {
+    // No aceptar una clave antigua si el navegador cambió productos, notas o entrega.
+    // Esto evita cobrar un pedido distinto al carrito que muestra la interfaz.
+    const sameItems = order.items.length === quantities.size &&
+      order.items.every(item => quantities.get(item.variantId) === item.quantity);
+    if (!sameItems || order.customerNotes !== input.notes ||
+        order.deliveryMethod !== input.deliveryMethod) {
+      return { ok: false, error: 'El carrito cambió desde que se inició este pago. Vuelve a preparar tu pedido.' };
+    }
   }
 
   if (!order) {
@@ -173,6 +180,12 @@ export async function startStripeCheckout(input: Input): Promise<Result> {
         if (!order || order.userId !== session.user.id) {
           return { ok: false, error: 'No se pudo recuperar el pedido.' };
         }
+        const sameItems = order.items.length === quantities.size &&
+          order.items.every(item => quantities.get(item.variantId) === item.quantity);
+        if (!sameItems || order.customerNotes !== input.notes ||
+            order.deliveryMethod !== input.deliveryMethod) {
+          return { ok: false, error: 'El carrito ya no coincide con el pedido anterior.' };
+        }
       } else {
         console.error('Error creando pedido:', error);
         return { ok: false, error: 'No se pudo registrar el pedido.' };
@@ -180,7 +193,6 @@ export async function startStripeCheckout(input: Input): Promise<Result> {
     }
   }
 
-  // Hay que comprobar de nuevo un pedido recuperado después de una carrera.
   if (order.paymentStatus === 'PAID') {
     return { ok: false, error: 'El pedido ya está pagado.' };
   }
@@ -192,7 +204,8 @@ export async function startStripeCheckout(input: Input): Promise<Result> {
       if (existing.status === 'open' && existing.url) {
         return { ok: true, url: existing.url };
       }
-      return { ok: false, error: 'La sesión de pago ha terminado. Contacta con soporte antes de repetir este pedido.' };
+      // No generar una sesión nueva a ciegas: un evento de pago puede estar aún en tránsito.
+      return { ok: false, error: 'La sesión de pago ha terminado. Consulta el estado del pedido antes de volver a pagar.' };
     }
 
     const items = order.items.map(item => ({

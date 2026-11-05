@@ -3,10 +3,9 @@
 import Link from 'next/link';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import PrivacyNotice from '@/components/legal/PrivacyNotice';
-import { readCart, saveCart, type CartData } from '@/lib/cart-store';
-import {
-  shippingCentsFor, PICKUP_ADDRESS, type DeliveryMethod,
-} from '@/lib/checkout-config';
+import { authClient } from '@/lib/auth-client';
+import { readCart, saveCart, setActiveCartUser, type CartData } from '@/lib/cart-store';
+import { shippingCentsFor, PICKUP_ADDRESS, type DeliveryMethod } from '@/lib/checkout-config';
 import { splitIncludedVat } from '@/lib/tax-config';
 import { startStripeCheckout } from './actions';
 
@@ -19,21 +18,64 @@ type Preview = {
   image: string | null;
 };
 
+type CheckoutAttempt = {
+  key: string;
+  snapshot: string;
+  deliveryMethod: DeliveryMethod;
+};
+
 const CHECKOUT_KEY = 'pn-checkout-key';
+const CHECKOUT_ATTEMPT_KEY = 'pn-checkout-attempt-v1';
 const eur = (n: number) => (n / 100).toLocaleString('es-ES', {
   style: 'currency', currency: 'EUR',
 });
 
+function snapshotOf(cart: CartData, deliveryMethod: DeliveryMethod): string {
+  const lines = cart.lines
+    .map(line => ({ variantId: line.variantId, quantity: line.quantity }))
+    .sort((a, b) => a.variantId.localeCompare(b.variantId));
+  return JSON.stringify({ lines, notes: cart.notes, deliveryMethod });
+}
+
+function readAttempt(): CheckoutAttempt | null {
+  try {
+    const value: unknown = JSON.parse(sessionStorage.getItem(CHECKOUT_ATTEMPT_KEY) || 'null');
+    if (!value || typeof value !== 'object') return null;
+    const attempt = value as Record<string, unknown>;
+    if (typeof attempt.key !== 'string' ||
+        typeof attempt.snapshot !== 'string' ||
+        (attempt.deliveryMethod !== 'SHIPPING' && attempt.deliveryMethod !== 'PICKUP')) return null;
+    return {
+      key: attempt.key,
+      snapshot: attempt.snapshot,
+      deliveryMethod: attempt.deliveryMethod,
+    };
+  } catch {
+    return null;
+  }
+}
+
+function clearAttempt() {
+  sessionStorage.removeItem(CHECKOUT_KEY);
+  sessionStorage.removeItem(CHECKOUT_ATTEMPT_KEY);
+}
+
 export default function CartClient() {
+  const { data: session, isPending } = authClient.useSession();
+  const userId = session?.user.id ?? null;
   const [cart, setCart] = useState<CartData>({ lines: [], notes: '' });
   const [preview, setPreview] = useState<Preview[]>([]);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
   const [deliveryMethod, setDeliveryMethod] = useState<DeliveryMethod | null>(null);
+  const [loaded, setLoaded] = useState(false);
   const submitting = useRef(false);
-  const initialized = useRef(false);
 
   const refresh = useCallback(async (currentCart: CartData) => {
+    if (!currentCart.lines.length) {
+      setPreview([]);
+      return;
+    }
     try {
       const response = await fetch('/api/cart-preview', {
         method: 'POST',
@@ -53,19 +95,43 @@ export default function CartClient() {
     }
   }, []);
 
+  // Esperar a que Better Auth conozca la cuenta antes de leer un carrito por usuario.
+  // Escuchar cambios mantiene esta pantalla sincronizada con el carrito de la cabecera.
   useEffect(() => {
-    if (initialized.current) return;
-    initialized.current = true;
-    queueMicrotask(() => {
-      const savedCart = readCart();
-      setCart(savedCart);
-      void refresh(savedCart);
-    });
-  }, [refresh]);
+    if (isPending) return;
+    let cancelled = false;
+    const synchronize = () => {
+      if (cancelled) return;
+      setActiveCartUser(userId);
+      const saved = readCart();
+      setCart(saved);
+      setPreview([]);
+      void refresh(saved);
+      setLoaded(true);
+    };
+    queueMicrotask(synchronize);
+    window.addEventListener('pn-cart-changed', synchronize);
+    window.addEventListener('storage', synchronize);
+    return () => {
+      cancelled = true;
+      window.removeEventListener('pn-cart-changed', synchronize);
+      window.removeEventListener('storage', synchronize);
+    };
+  }, [isPending, userId, refresh]);
+
+  // Recuperar la entrega elegida solamente si el intento sigue correspondiendo
+  // al contenido exacto del carrito (sin reutilizar pedidos de otro carrito).
+  useEffect(() => {
+    if (!loaded) return;
+    const attempt = readAttempt();
+    if (attempt && attempt.snapshot === snapshotOf(cart, attempt.deliveryMethod)) {
+      queueMicrotask(() => setDeliveryMethod(attempt.deliveryMethod));
+    }
+  }, [loaded, cart]);
 
   const update = (next: CartData) => {
     if (submitting.current) return;
-    sessionStorage.removeItem(CHECKOUT_KEY);
+    clearAttempt();
     setCart({ ...next, lines: [...next.lines] });
     setError('');
     setPreview([]);
@@ -75,8 +141,12 @@ export default function CartClient() {
 
   const selectDelivery = (method: DeliveryMethod) => {
     if (submitting.current) return;
+    // Seleccionar el MISMO método después de volver de Stripe no invalida el pedido.
+    const attempt = readAttempt();
+    if (!attempt || attempt.snapshot !== snapshotOf(cart, method)) {
+      clearAttempt();
+    }
     setDeliveryMethod(method);
-    sessionStorage.removeItem(CHECKOUT_KEY);
     setError('');
   };
 
@@ -84,7 +154,7 @@ export default function CartClient() {
     const product = preview.find(item => item.id === line.variantId);
     return sum + (product?.priceCents ?? 0) * line.quantity;
   }, 0);
-  const ready = cart.lines.length > 0 && preview.length === cart.lines.length;
+  const ready = loaded && cart.lines.length > 0 && preview.length === cart.lines.length;
   const shipping = deliveryMethod ? shippingCentsFor(deliveryMethod) : 0;
   const grandTotal = subtotal + shipping;
   const taxBreakdown = splitIncludedVat(grandTotal);
@@ -98,11 +168,17 @@ export default function CartClient() {
     setBusy(true);
     setError('');
     try {
-      let checkoutKey = sessionStorage.getItem(CHECKOUT_KEY);
-      if (!checkoutKey) {
-        checkoutKey = crypto.randomUUID();
-        sessionStorage.setItem(CHECKOUT_KEY, checkoutKey);
-      }
+      const snapshot = snapshotOf(cart, deliveryMethod);
+      const previous = readAttempt();
+      const checkoutKey = previous?.snapshot === snapshot
+        ? previous.key
+        : crypto.randomUUID();
+      // Guardar ANTES de redirigir y conservarlo tras cancelar.
+      sessionStorage.setItem(CHECKOUT_KEY, checkoutKey);
+      sessionStorage.setItem(CHECKOUT_ATTEMPT_KEY, JSON.stringify({
+        key: checkoutKey, snapshot, deliveryMethod,
+      } satisfies CheckoutAttempt));
+
       const result = await startStripeCheckout({
         lines: cart.lines, notes: cart.notes, deliveryMethod, checkoutKey,
       });
@@ -110,7 +186,6 @@ export default function CartClient() {
         setError(result.error);
         return;
       }
-      // Conservar carrito y checkoutKey hasta recibir confirmación de pago.
       window.location.assign(result.url);
     } catch {
       setError('No se pudo iniciar Stripe. Puedes reintentar sin duplicar el pedido.');
@@ -122,7 +197,8 @@ export default function CartClient() {
 
   return (
     <div className='space-y-5'>
-      {cart.lines.length === 0 && (
+      {!loaded && <p className='text-white/70'>Cargando tu carrito…</p>}
+      {loaded && cart.lines.length === 0 && (
         <div className='rounded-xl border border-white/15 p-6'>
           Tu carrito está vacío.{' '}
           <Link href='/tienda' className='text-[#B5FF67] underline'>Ver tienda</Link>
@@ -160,7 +236,7 @@ export default function CartClient() {
         );
       })}
 
-      {cart.lines.length > 0 && (
+      {loaded && cart.lines.length > 0 && (
         <section className='rounded-xl border border-white/15 p-5'>
           <label className='text-sm font-semibold'>
             Notas para el pedido
