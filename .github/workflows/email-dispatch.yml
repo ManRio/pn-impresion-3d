@@ -1,0 +1,36 @@
+
+name: PN3D - Envio de notificaciones
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pn3d-email-dispatch
+  cancel-in-progress: false
+
+jobs:
+  dispatch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+
+    steps:
+      - name: Procesar correos pendientes
+        env:
+          DISPATCH_SECRET: ${{ secrets.EMAIL_DISPATCH_SECRET }}
+        run: |
+          if [ -z "$DISPATCH_SECRET" ]; then
+            echo "Falta configurar EMAIL_DISPATCH_SECRET"
+            exit 1
+          fi
+
+          curl --fail-with-body --silent --show-error \
+            --max-time 120 \
+            --retry 2 \
+            --request POST \
+            --header "Authorization: Bearer $DISPATCH_SECRET" \
+            "https://pn-impresion-3d-production.up.railway.app/api/internal/email-dispatch"
