@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     absolute: 'P&N Impresión 3D | Regalos y piezas personalizadas',
   },
   description,
-  alternates: siteUrl ? { canonical: `${siteUrl}/` } : undefined,
+  alternates: { canonical: '/' },
   openGraph: {
     type: 'website',
     locale: 'es_ES',
