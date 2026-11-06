@@ -3,6 +3,7 @@ import { prismaAdapter } from '@better-auth/prisma-adapter';
 import { admin } from 'better-auth/plugins';
 
 import { prisma } from '@/lib/prisma';
+import { sendAccountVerificationEmail } from '@/lib/email/verification';
 
 export const auth = betterAuth({
   appName: 'P&N Impresión 3D',
@@ -16,6 +17,15 @@ export const auth = betterAuth({
     disableSignUp: false,
     minPasswordLength: 12,
     maxPasswordLength: 128,
+    requireEmailVerification: true,
+  },
+  emailVerification: {
+    sendOnSignUp: true,
+    sendOnSignIn: true,
+    expiresIn: 3600,
+    sendVerificationEmail: async ({ user, url }) => {
+      await sendAccountVerificationEmail(user.email, url);
+    },
   },
 
   // Protección básica para las rutas de autenticación.

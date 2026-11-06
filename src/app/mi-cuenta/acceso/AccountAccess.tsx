@@ -27,6 +27,7 @@ export default function AccountAccess() {
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
+  const [notice, setNotice] = useState('');
 
   const longEnough = password.length >= 12;
   const passwordsMatch =
@@ -38,6 +39,7 @@ export default function AccountAccess() {
   function switchMode() {
     setSignup((current) => !current);
     setError('');
+    setNotice('');
     setPassword('');
     setConfirmPassword('');
     setShowPassword(false);
@@ -50,6 +52,7 @@ export default function AccountAccess() {
     if (busy) return;
 
     setError('');
+    setNotice('');
 
     if (signup) {
       if (name.trim().length < 2) {
@@ -83,11 +86,21 @@ export default function AccountAccess() {
           });
 
       if (result.error) {
-        setError(
-          signup
-            ? 'No se pudo completar el registro. Revisa los datos o inténtalo más tarde.'
-            : 'No se pudo iniciar sesión. Revisa tus credenciales o inténtalo más tarde.',
-        );
+        if (result.error.status === 403 || result.error.code === 'EMAIL_NOT_VERIFIED') {
+          setNotice('Debes verificar tu correo antes de iniciar sesión. Revisa tu bandeja o solicita un nuevo enlace.');
+          return;
+        }
+        setError(signup
+          ? 'No se pudo completar el registro. Revisa los datos o inténtalo más tarde.'
+          : 'No se pudo iniciar sesión. Revisa tus credenciales o inténtalo más tarde.');
+        return;
+      }
+
+      if (signup) {
+        setNotice('Cuenta creada. Comprueba tu correo y pulsa el enlace de verificación antes de iniciar sesión.');
+        setSignup(false);
+        setPassword('');
+        setConfirmPassword('');
         return;
       }
 
@@ -106,6 +119,31 @@ export default function AccountAccess() {
       router.refresh();
     } catch {
       setError('No se pudo conectar. Inténtalo de nuevo.');
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function resendVerification() {
+    if (!email.trim()) {
+      setError('Escribe primero tu correo electrónico.');
+      return;
+    }
+    setBusy(true);
+    setError('');
+    setNotice('');
+    try {
+      const response = await authClient.sendVerificationEmail({
+        email: email.trim().toLowerCase(),
+        callbackURL: '/mi-cuenta/acceso',
+      });
+      if (response.error) {
+        setError('No se ha podido solicitar la verificación. Vuelve a intentarlo más tarde.');
+      } else {
+        setNotice('Si la cuenta existe y necesita verificación, recibirás un enlace en tu correo. Revisa también spam.');
+      }
+    } catch {
+      setError('No se pudo solicitar el correo de verificación.');
     } finally {
       setBusy(false);
     }
@@ -269,6 +307,8 @@ export default function AccountAccess() {
           </div>
         )}
 
+        {notice && <p role='status' className='rounded-lg border border-[#B5FF67]/30 bg-[#B5FF67]/10 p-3 text-sm text-white'>{notice}</p>}
+
         {error && (
           <p
             role='alert'
@@ -277,6 +317,13 @@ export default function AccountAccess() {
           >
             {error}
           </p>
+        )}
+
+        {!signup && (
+          <button type='button' disabled={busy} onClick={resendVerification}
+            className='text-left text-sm text-[#B5FF67] underline disabled:opacity-50'>
+            ¿No recibiste el correo de verificación? Reenviar enlace
+          </button>
         )}
 
         <PrivacyNotice context='account' />
