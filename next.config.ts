@@ -1,4 +1,3 @@
-
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
@@ -11,6 +10,16 @@ const nextConfig: NextConfig = {
       },
     ],
     formats: ['image/avif', 'image/webp'],
+  },
+
+  async redirects() {
+    return [
+      {
+        source: '/tienda/lampara-infantil-con-letras-a-iluminadas',
+        destination: '/tienda/lampara-infantil-conos-iluminados-siluetas',
+        statusCode: 301,
+      },
+    ];
   },
 
   experimental: {
