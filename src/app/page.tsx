@@ -263,7 +263,7 @@ export default async function Home() {
             {categories.map((category, index) => (
               <Link
                 key={category.id}
-                href={`/tienda?categoria=${encodeURIComponent(category.slug)}`}
+                href={`/categoria/${encodeURIComponent(category.slug)}`}
                 className='group flex min-h-28 items-center justify-between gap-4 rounded-2xl border border-white/10 bg-[#1a211e] p-6 transition hover:border-[#B5FF67]/60 hover:bg-[#222c21] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#B5FF67]'
               >
                 <span className='flex items-center gap-4'>

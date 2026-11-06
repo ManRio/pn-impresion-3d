@@ -10,6 +10,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     select: { slug: true, updatedAt: true },
     orderBy: { updatedAt: 'desc' },
   });
+  // Solo incluir categorías que contengan productos activos.
+  const activeCategories = await prisma.category.findMany({
+    where: { products: { some: { status: 'ACTIVE' } } },
+    select: { id: true, slug: true, parentId: true },
+  });
+  const ids = [...new Set(activeCategories.flatMap(c => [c.id, ...(c.parentId ? [c.parentId] : [])]))];
+  const categories = ids.length ? await prisma.category.findMany({
+    where: { id: { in: ids } },
+    select: { slug: true },
+  }) : [];
   const staticPages: MetadataRoute.Sitemap = [
     { url: base, changeFrequency: 'weekly', priority: 1 },
     { url: `${base}/tienda`, changeFrequency: 'daily', priority: 0.9 },
@@ -19,6 +29,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ];
   return [
     ...staticPages,
+    ...categories.map(c => ({
+      url: `${base}/categoria/${encodeURIComponent(c.slug)}`,
+      changeFrequency: 'weekly' as const,
+      priority: 0.7,
+    })),
     ...products.map(p => ({
       url: `${base}/tienda/${encodeURIComponent(p.slug)}`,
       lastModified: p.updatedAt,

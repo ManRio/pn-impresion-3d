@@ -68,9 +68,15 @@ export default async function ProductPage({ params }: Props) {
     <main className='mx-auto max-w-7xl px-5 py-12 lg:px-8'>
       <script type='application/ld+json'
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredProduct).replace(/</g, '\\u003c') }} />
-      <Link href='/tienda' className='text-sm text-[#B5FF67]'>
-        ← Volver a la tienda
-      </Link>
+      <nav aria-label='Ruta de navegación' className='flex flex-wrap items-center gap-2 text-sm'>
+        <Link href='/tienda' className='text-[#B5FF67] hover:underline'>Tienda</Link>
+        <span aria-hidden='true' className='text-white/40'>/</span>
+        <Link href={`/categoria/${encodeURIComponent(p.category.slug)}`} className='text-[#B5FF67] hover:underline'>
+          {p.category.name}
+        </Link>
+        <span aria-hidden='true' className='text-white/40'>/</span>
+        <span aria-current='page' className='text-white/70'>{p.name}</span>
+      </nav>
       <div className='mt-8 grid items-start gap-10 lg:grid-cols-2'>
         <ProductLightbox images={p.images} name={p.name} />
         <section>

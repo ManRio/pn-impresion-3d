@@ -50,7 +50,7 @@ export default async function Tienda({
         {groups.map((g) => (
           <Link
             key={g.root.id}
-            href={`/tienda?categoria=${encodeURIComponent(g.root.slug)}`}
+            href={`/categoria/${encodeURIComponent(g.root.slug)}`}
             className={`rounded-lg border px-4 py-2 text-sm ${activeGroup?.root.id === g.root.id ? 'border-[#B5FF67] text-[#B5FF67]' : 'border-white/20'}`}
           >
             {g.root.name}
@@ -63,7 +63,7 @@ export default async function Tienda({
           className='mb-8 flex flex-wrap gap-2 rounded-lg border border-white/10 bg-[#1a211e] p-4'
         >
           <Link
-            href={`/tienda?categoria=${encodeURIComponent(activeGroup.root.slug)}`}
+            href={`/categoria/${encodeURIComponent(activeGroup.root.slug)}`}
             className={`rounded-lg px-3 py-2 text-sm ${selected?.id === activeGroup.root.id ? 'bg-[#B5FF67] text-black' : 'bg-white/10'}`}
           >
             Todo en {activeGroup.root.name}
@@ -71,7 +71,7 @@ export default async function Tienda({
           {activeGroup.children.map((c) => (
             <Link
               key={c.id}
-              href={`/tienda?categoria=${encodeURIComponent(c.slug)}`}
+              href={`/categoria/${encodeURIComponent(c.slug)}`}
               className={`rounded-lg px-3 py-2 text-sm ${selected?.id === c.id ? 'bg-[#B5FF67] text-black' : 'bg-white/10'}`}
             >
               {c.name}
