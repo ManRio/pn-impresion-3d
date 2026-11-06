@@ -15,9 +15,14 @@ export function getStripeMode(): StripeMode {
 function configuredStripeSecret(): string {
   const mode = getStripeMode();
   const secret = process.env.STRIPE_SECRET_KEY;
-  if (!secret?.startsWith(`sk_${mode}_`)) {
+
+  const validPrefixes =
+    mode === 'live' ? ['sk_live_', 'rk_live_'] : ['sk_test_', 'rk_test_'];
+
+  if (!secret || !validPrefixes.some((prefix) => secret.startsWith(prefix))) {
     throw new Error(`STRIPE_SECRET_KEY no coincide con STRIPE_MODE=${mode}.`);
   }
+
   return secret;
 }
 
