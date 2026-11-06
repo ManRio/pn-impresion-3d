@@ -262,3 +262,12 @@ Un túnel del puerto 3000 puede introducir una cabecera `x-forwarded-host` difer
 - Antes de entrar en producción hay que cerrar textos legales, política de entrega, facturación externa, cuenta bancaria/transferencias y una prueba real controlada.
 - **No sustituir aún las claves de Railway.** Desplegar primero con `STRIPE_MODE=test`; validar todo con Stripe de pruebas. Para el corte a modo real, suspender temporalmente el checkout, esperar/reconciliar sesiones test pendientes, introducir secretos live y activar solo tras verificar el webhook real.
 - Los historiales de pagos de prueba permanecen etiquetados como pruebas; no representan cobros reales.
+
+
+## Checkout: información precontractual (revisión 2026-11-06)
+
+- Carrito: muestra productos, cantidades, desglose IVA incluido, transporte y total; antes de pagar explica preparación y entrega, desistimiento y condiciones.
+- El botón de producción se etiqueta «Realizar pedido con obligación de pago». En pruebas identifica expresamente la ausencia de cobro real.
+- El comprador marca una casilla no premarcada de aceptación de condiciones de compra y envíos/devoluciones. El servidor valida `termsAccepted === true`; la creación inicial de `OrderHistory` registra una nota interna sobre la aceptación. Este registro es una evidencia básica, no un expediente jurídico completo de consentimiento/versionado.
+- Las páginas legales siguen sujetas a revisión final; antes de ventas reales comprobar plazos específicos para trabajos largos, política de cancelaciones y confirmación contractual en soporte duradero.
+- Tras esta actualización, volver a probar checkout de prueba, cancelación y recuperación, y las notificaciones. **No activar `STRIPE_MODE=live` solo por pasar el build.**

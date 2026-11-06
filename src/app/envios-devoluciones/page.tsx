@@ -9,32 +9,47 @@ export const metadata: Metadata = {
 
 export default function Page() {
   return (
-    <LegalPage title='Envíos y devoluciones'
-      intro='Información sobre entregas, recogida, desistimiento e incidencias de P&N Impresión 3D. Borrador sujeto a validación antes de abrir la tienda.'>
+    <LegalPage
+      title='Envíos y devoluciones'
+      intro='Información sobre cobertura de entrega, recogida, desistimiento y atención de incidencias. Pendiente de completar algunos aspectos operativos antes de aceptar pagos reales.'
+    >
       <section>
-        <h2>1. Ámbito y métodos de entrega</h2>
-        <p>Realizamos entregas en España peninsular e Islas Baleares mediante Correos, con un coste fijo anunciado de <strong>8,00 € por pedido</strong>. También se ofrece recogida presencial gratuita en Avda. Antonio Machado, 155, 41230 Castilblanco de los Arroyos (Sevilla), previa confirmación de disponibilidad. No se contemplan inicialmente envíos a Canarias, Ceuta, Melilla ni al extranjero.</p>
+        <h2>1. Destinos y modalidades</h2>
+        <p>Se realizan envíos por Correos a España peninsular e Islas Baleares, con un coste de 8,00 € por pedido, impuestos incluidos. La recogida presencial es gratuita en Avda. Antonio Machado, 155, 41230 Castilblanco de los Arroyos (Sevilla), previa comunicación de disponibilidad.</p>
+        <p>No se ofrecen inicialmente entregas a Canarias, Ceuta, Melilla ni fuera de España.</p>
       </section>
       <section>
-        <h2>2. Fabricación y plazos</h2>
-        <p>Los encargos pueden requerir un período de fabricación antes de su expedición. <strong>[PENDIENTE: plazo de fabricación y entrega de Correos; fecha máxima de entrega o criterio de cálculo]</strong>. Estos datos se comunicarán antes de aceptar una compra con obligación de pago.</p>
+        <h2>2. Producción y plazos de entrega</h2>
+        <p>Los artículos se pueden fabricar tras la confirmación del pago. Como referencia, la preparación para el envío suele estimarse entre 48 y 72 horas para trabajos habituales. Este intervalo es orientativo y <strong>no incluye el tiempo de transporte de Correos</strong>.</p><p>El tiempo de preparación puede ser superior según las dimensiones de la pieza, las horas de impresión necesarias, la complejidad del encargo y los pedidos que estén en cola. Antes de contratar, el comprador debe conocer el plazo o fecha de entrega aplicable a su pedido. Si un encargo requiere un plazo especial, se le comunicará para su aceptación antes de formalizarlo.</p><p>Para recogida presencial, avisaremos cuando el pedido esté terminado y disponible para coordinar la recogida. En ausencia de un plazo de entrega diferente acordado, se aplica el plazo legal máximo de 30 días naturales desde la celebración del contrato.</p><p><strong>[PENDIENTE DE VERIFICACIÓN TÉCNICA: asegurar que el checkout informa del plazo de entrega del pedido antes del pago.]</strong></p>
       </section>
       <section>
-        <h2>3. Desistimiento de productos de catálogo</h2>
-        <p>En las compras a distancia de productos que no estén legalmente exceptuados, el consumidor dispone, como regla general, de <strong>14 días naturales desde la recepción</strong> para comunicar el desistimiento sin necesidad de justificarlo. Puede notificarlo en <a className='text-[#B5FF67] underline' href='mailto:info@pn3d.es'>info@pn3d.es</a>. La devolución física podrá dirigirse, previa coordinación, a Avda. Antonio Machado, 155, 41230 Castilblanco de los Arroyos (Sevilla).</p>
-        <p><strong>[PENDIENTE: determinar e informar expresamente quién asume los gastos directos de devolución y facilitar formulario modelo de desistimiento]</strong>.</p>
+        <h2>3. Desistimiento de productos no exceptuados</h2>
+        <p>Con carácter general, el consumidor dispone de 14 días naturales desde la recepción del bien para comunicar su desistimiento sin justificarlo, cuando no concurra una excepción legal. Puede comunicarlo a <a className='text-[#B5FF67] underline' href='mailto:info@pn3d.es'>info@pn3d.es</a> mediante una declaración inequívoca o utilizando el modelo incluido más abajo.</p>
+        <p>Tras comunicar el desistimiento, deberá devolver o entregar el bien sin demoras indebidas y, como regla general, dentro de los 14 días naturales siguientes a dicha comunicación. La dirección de devolución es Avda. Antonio Machado, 155, 41230 Castilblanco de los Arroyos (Sevilla), España, previa coordinación por correo.</p>
+        <p>En caso de desistimiento ordinario, <strong>el comprador asume los costes directos de envío de vuelta</strong>. Puede elegir un medio de transporte adecuado y deberá conservar el justificante. Los costes derivados de una falta de conformidad o defecto se gestionarán según los derechos de garantía y no se cargarán al consumidor cuando deban ser gratuitos por ley.</p>
       </section>
       <section>
-        <h2>4. Productos personalizados</h2>
-        <p>Conforme al artículo 103.c) del Real Decreto Legislativo 1/2007, el derecho de desistimiento no se aplica a bienes confeccionados conforme a las especificaciones del consumidor o claramente personalizados. La mera fabricación bajo demanda de un artículo estándar no basta para aplicar esta excepción. La posible excepción se informará expresamente antes de confirmar cada encargo.</p>
+        <h2>4. Productos hechos según especificaciones del consumidor</h2>
+        <p>El artículo 103.c) del Real Decreto Legislativo 1/2007 exceptúa del desistimiento los bienes confeccionados conforme a las especificaciones del consumidor o claramente personalizados. La excepción no se aplica automáticamente a cualquier producto impreso después de recibir un pedido. Cuando proceda, se informará antes de aceptar el encargo.</p>
+        <p>La excepción al desistimiento no afecta a los derechos legales ante defectos o faltas de conformidad.</p>
       </section>
       <section>
-        <h2>5. Defectos, daños y falta de conformidad</h2>
-        <p>Los derechos legales de garantía y las medidas frente a la falta de conformidad se mantienen también en productos personalizados. Para incidencias escribe a <a className='text-[#B5FF67] underline' href='mailto:info@pn3d.es'>info@pn3d.es</a> o consulta <Link className='text-[#B5FF67] underline' href='/contacto'>Contacto</Link>.</p>
+        <h2>5. Reembolso por desistimiento</h2>
+        <p>Cuando proceda el desistimiento, se reembolsarán los importes exigibles legalmente, incluidos los gastos de entrega ordinaria que correspondan, sin demoras indebidas y dentro del plazo legal. El reembolso se realizará mediante el mismo medio de pago, salvo acuerdo válido en contrario. En la venta de bienes, el empresario podrá retenerlo hasta recibirlos o disponer de prueba de su devolución, cuando corresponda conforme a la ley.</p>
       </section>
       <section>
-        <h2>6. Reembolsos</h2>
-        <p>Cuando proceda legalmente el desistimiento, el reembolso comprende las cantidades exigibles por la normativa, incluidos los gastos de entrega ordinaria que correspondan. Se realizará por el medio de pago original salvo acuerdo válido en contrario. <strong>[PENDIENTE: procedimiento operativo de reintegros cuando se active Stripe]</strong>.</p>
+        <h2>6. Artículos dañados, defectos y garantías</h2>
+        <p>Si un artículo llega dañado o no se corresponde con lo contratado, comunícalo a <a className='text-[#B5FF67] underline' href='mailto:info@pn3d.es'>info@pn3d.es</a>, indicando la referencia de pedido y el problema detectado. Puede adjuntar fotografías para facilitar la gestión, sin que ello limite sus derechos legales.</p>
+        <p>Los gastos de una devolución por falta de conformidad se tratarán conforme a los derechos de garantía del consumidor, y no como un desistimiento ordinario.</p>
+      </section>
+      <section>
+        <h2>7. Modelo de desistimiento</h2>
+        <p>Puede copiar este texto y enviarlo a info@pn3d.es. Utilícelo solo si desea desistir del contrato y el producto no está legalmente exceptuado:</p>
+        <p>«A la atención de P&N Impresión 3D: por la presente comunico que desisto de mi contrato de compra del siguiente bien: [producto]. Referencia de pedido: [referencia]. Fecha de recepción: [fecha]. Nombre y apellidos: [nombre]. Domicilio: [dirección]. Fecha de comunicación: [fecha].»</p>
+      </section>
+      <section>
+        <h2>8. Contacto y otras condiciones</h2>
+        <p>Puede consultar también las <Link href='/condiciones-compra' className='text-[#B5FF67] underline'>condiciones de compra</Link> o ponerse en contacto en info@pn3d.es.</p>
       </section>
     </LegalPage>
   );

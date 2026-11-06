@@ -19,6 +19,7 @@ type Input = {
   notes: string;
   checkoutKey: string;
   deliveryMethod: DeliveryMethod;
+  termsAccepted: boolean;
 };
 
 type Result = { ok: true; url: string } | { ok: false; error: string };
@@ -34,6 +35,9 @@ export async function startStripeCheckout(input: Input): Promise<Result> {
   if (!session) return { ok: false, error: 'Inicia sesión antes de pagar.' };
   if (!input || typeof input.checkoutKey !== 'string' || !uuidPattern.test(input.checkoutKey)) {
     return { ok: false, error: 'Identificador del pedido inválido.' };
+  }
+  if (input.termsAccepted !== true) {
+    return { ok: false, error: 'Debes aceptar las condiciones de compra antes de pagar.' };
   }
   if (!isDeliveryMethod(input.deliveryMethod)) {
     return { ok: false, error: 'Selecciona envío o recogida presencial.' };
@@ -166,6 +170,7 @@ export async function startStripeCheckout(input: Input): Promise<Result> {
               previousStatus: null,
               newStatus: 'RECEIVED',
               publicMessage: 'Pedido creado · pago pendiente',
+              internalNote: 'Condiciones de compra y envíos/devoluciones aceptadas en checkout (versión 2026-11-06).',
             },
           },
         },

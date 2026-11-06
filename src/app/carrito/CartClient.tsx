@@ -60,12 +60,13 @@ function clearAttempt() {
   sessionStorage.removeItem(CHECKOUT_ATTEMPT_KEY);
 }
 
-export default function CartClient() {
+export default function CartClient({ stripeMode }: { stripeMode: 'test' | 'live' }) {
   const { data: session, isPending } = authClient.useSession();
   const userId = session?.user.id ?? null;
   const [cart, setCart] = useState<CartData>({ lines: [], notes: '' });
   const [preview, setPreview] = useState<Preview[]>([]);
   const [busy, setBusy] = useState(false);
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [error, setError] = useState('');
   const [deliveryMethod, setDeliveryMethod] = useState<DeliveryMethod | null>(null);
   const [loaded, setLoaded] = useState(false);
@@ -132,6 +133,7 @@ export default function CartClient() {
   const update = (next: CartData) => {
     if (submitting.current) return;
     clearAttempt();
+    setAcceptedTerms(false);
     setCart({ ...next, lines: [...next.lines] });
     setError('');
     setPreview([]);
@@ -147,6 +149,7 @@ export default function CartClient() {
       clearAttempt();
     }
     setDeliveryMethod(method);
+    setAcceptedTerms(false);
     setError('');
   };
 
@@ -162,6 +165,10 @@ export default function CartClient() {
   async function submit() {
     if (submitting.current || !ready || !deliveryMethod) {
       if (!deliveryMethod) setError('Selecciona envío o recogida presencial.');
+      return;
+    }
+    if (!acceptedTerms) {
+      setError('Debes aceptar las condiciones de compra antes de continuar.');
       return;
     }
     submitting.current = true;
@@ -180,7 +187,7 @@ export default function CartClient() {
       } satisfies CheckoutAttempt));
 
       const result = await startStripeCheckout({
-        lines: cart.lines, notes: cart.notes, deliveryMethod, checkoutKey,
+        lines: cart.lines, notes: cart.notes, deliveryMethod, checkoutKey, termsAccepted: acceptedTerms,
       });
       if (!result.ok) {
         setError(result.error);
@@ -306,8 +313,29 @@ export default function CartClient() {
               comprobarse para cada familia de productos antes de aceptar pagos reales.
             </p>
           </div>
+          <div className='mt-4 rounded-lg border border-white/15 bg-[#101319] p-4 text-sm leading-6 text-white/80'>
+            <p className='font-semibold text-white'>Preparación y entrega</p>
+            <p className='mt-1'>Preparación habitual estimada: entre 48 y 72 horas.
+              Puede ampliarse según el tamaño, las horas de impresión y los encargos en cola.
+              El transporte de Correos requiere tiempo adicional. Salvo acuerdo sobre otro
+              plazo de entrega, se aplica el máximo legal de 30 días naturales.</p>
+            <p className='mt-2'>En los artículos estándar suele existir un derecho de
+              desistimiento de 14 días naturales desde la recepción; los gastos directos
+              de devolución ordinaria corresponden al comprador. Los artículos hechos
+              conforme a especificaciones individuales o claramente personalizados
+              pueden quedar exceptuados. Esto no limita los derechos ante defectos.</p>
+            <p className='mt-2'>Consulta las{' '}
+              <Link href='/condiciones-compra' target='_blank' rel='noopener noreferrer'
+                className='text-[#B5FF67] underline'>condiciones de compra</Link>{' '}
+              y la{' '}
+              <Link href='/envios-devoluciones' target='_blank' rel='noopener noreferrer'
+                className='text-[#B5FF67] underline'>política de envíos y devoluciones</Link>.
+            </p>
+          </div>
           <p className='mt-3 text-xs text-amber-200'>
-            Pago de prueba con Stripe. No se cobrará dinero real.
+            {stripeMode === 'test'
+              ? 'Estás utilizando Stripe en modo pruebas: no se cobrará dinero real.'
+              : 'Al continuar, se abrirá Stripe para abonar el importe indicado.'}
           </p>
           <p className='mt-2 text-xs text-white/60'>
             {deliveryMethod === 'PICKUP'
@@ -315,11 +343,25 @@ export default function CartClient() {
               : 'Para el envío necesitas iniciar sesión y guardar una dirección de Península o Baleares en Mi cuenta.'}
           </p>
           <div className='mt-5'><PrivacyNotice context='checkout'/></div>
+          <label className='mt-5 flex cursor-pointer items-start gap-3 rounded-lg border border-white/20 bg-[#101319] p-4 text-sm leading-6'>
+            <input type='checkbox' checked={acceptedTerms} disabled={busy}
+              onChange={event => { setAcceptedTerms(event.target.checked); setError(''); }}
+              className='mt-1 h-4 w-4 shrink-0 accent-[#B5FF67]'/>
+            <span>He leído y acepto las{' '}
+              <Link href='/condiciones-compra' target='_blank' rel='noopener noreferrer'
+                className='text-[#B5FF67] underline'>condiciones de compra</Link>{' '}
+              y la{' '}
+              <Link href='/envios-devoluciones' target='_blank' rel='noopener noreferrer'
+                className='text-[#B5FF67] underline'>política de envíos y devoluciones</Link>.
+            </span>
+          </label>
           {error && <p role='alert' className='mt-3 text-red-300'>{error}</p>}
           <button type='button' onClick={submit}
-            disabled={busy || !ready || !deliveryMethod}
+            disabled={busy || !ready || !deliveryMethod || !acceptedTerms}
             className='mt-4 rounded-lg bg-[#B5FF67] px-6 py-3 font-bold text-[#101319] disabled:opacity-50'>
-            {busy ? 'Abriendo Stripe…' : 'Pagar con Stripe (pruebas)'}
+            {busy ? 'Abriendo Stripe…' : stripeMode === 'test'
+              ? 'Confirmar pedido de prueba (sin cobro real)'
+              : 'Realizar pedido con obligación de pago'}
           </button>
         </section>
       )}
