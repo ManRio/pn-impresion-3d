@@ -12,7 +12,7 @@ import {
   shippingCentsFor,
   type DeliveryMethod,
 } from '@/lib/checkout-config';
-import { checkoutBaseUrl, checkoutEnabled, getStripe } from '@/lib/stripe';
+import { checkoutBaseUrl, checkoutEnabled, getStripe, getStripeMode, checkoutSessionPrefix } from '@/lib/stripe';
 
 type Input = {
   lines: { variantId: string; quantity: number }[];
@@ -27,7 +27,7 @@ const uuidPattern =
 
 export async function startStripeCheckout(input: Input): Promise<Result> {
   if (!checkoutEnabled()) {
-    return { ok: false, error: 'Los pagos de prueba todavía no están habilitados.' };
+    return { ok: false, error: 'Los pagos no están habilitados para el entorno configurado.' };
   }
 
   const session = await auth.api.getSession({ headers: await headers() });
@@ -200,6 +200,10 @@ export async function startStripeCheckout(input: Input): Promise<Result> {
   try {
     const stripe = getStripe();
     if (order.stripeCheckoutSessionId) {
+      // Nunca consultar una sesión histórica de otro modo con la clave activa.
+      if (!order.stripeCheckoutSessionId.startsWith(checkoutSessionPrefix())) {
+        return { ok: false, error: 'Este pedido pertenece a otro entorno de pago. Consulta tus pedidos antes de volver a pagar.' };
+      }
       const existing = await stripe.checkout.sessions.retrieve(order.stripeCheckoutSessionId);
       if (existing.status === 'open' && existing.url) {
         return { ok: true, url: existing.url };
@@ -237,7 +241,7 @@ export async function startStripeCheckout(input: Input): Promise<Result> {
       line_items: items,
       success_url: `${baseUrl}/pago/exito?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${baseUrl}/carrito?stripe_cancel=1`,
-    }, { idempotencyKey: `pn3d-test-order-${order.id}` });
+    }, { idempotencyKey: `pn3d-${getStripeMode()}-order-${order.id}` });
 
     if (!stripeSession.url) return { ok: false, error: 'Stripe no devolvió una URL de pago.' };
     await prisma.order.updateMany({

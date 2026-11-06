@@ -249,3 +249,16 @@ Un túnel del puerto 3000 puede introducir una cabecera `x-forwarded-host` difer
 5. Confirmar y subir a `main` únicamente cuando esté claro qué incluye el commit.
 
 **Repositorio:** https://github.com/ManRio/pn-impresion-3d
+
+
+## Stripe: preparación para test y producción (6 de noviembre de 2026)
+
+- La selección es **explícita** mediante `STRIPE_MODE=test|live` (por defecto `test`).
+- `STRIPE_SECRET_KEY` debe empezar por `sk_test_` o `sk_live_` según el modo; una mezcla deshabilita el checkout.
+- `STRIPE_CHECKOUT_ENABLED=true` habilita el pago solo si el modo y la clave coinciden.
+- El webhook verifica la firma con `STRIPE_WEBHOOK_SECRET` del mismo entorno, y compara `event.livemode`, `session.livemode`, prefijo del identificador, importe, moneda e identificador de pedido.
+- Cada entorno de Stripe requiere su propio webhook de firma `whsec_` y sus sesiones son independientes.
+- Se mantiene el circuito de notificaciones por Resend y Neon, sin cambios.
+- Antes de entrar en producción hay que cerrar textos legales, política de entrega, facturación externa, cuenta bancaria/transferencias y una prueba real controlada.
+- **No sustituir aún las claves de Railway.** Desplegar primero con `STRIPE_MODE=test`; validar todo con Stripe de pruebas. Para el corte a modo real, suspender temporalmente el checkout, esperar/reconciliar sesiones test pendientes, introducir secretos live y activar solo tras verificar el webhook real.
+- Los historiales de pagos de prueba permanecen etiquetados como pruebas; no representan cobros reales.

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import type Stripe from 'stripe';
 import { prisma } from '@/lib/prisma';
-import { getStripe } from '@/lib/stripe';
+import { getStripe, getStripeMode, checkoutSessionPrefix } from '@/lib/stripe';
 import { queuePaidEmails } from '@/lib/email/queue';
 
 export const runtime = 'nodejs';
@@ -27,13 +27,16 @@ export async function POST(request: NextRequest) {
   }
 
   const session = event.data.object as Stripe.Checkout.Session;
-  if (event.livemode || session.livemode || session.mode !== 'payment' ||
+  const expectedLiveMode = getStripeMode() === 'live';
+  if (event.livemode !== expectedLiveMode ||
+      session.livemode !== expectedLiveMode ||
+      session.mode !== 'payment' ||
       session.payment_status !== 'paid' || session.currency?.toLowerCase() !== 'eur') {
     return NextResponse.json({ received: true });
   }
 
   const orderId = session.metadata?.orderId;
-  if (!orderId || !Number.isSafeInteger(session.amount_total) || !session.id.startsWith('cs_test_')) {
+  if (!orderId || !Number.isSafeInteger(session.amount_total) || !session.id.startsWith(checkoutSessionPrefix())) {
     return NextResponse.json({ error: 'Sesión incorrecta' }, { status: 400 });
   }
 

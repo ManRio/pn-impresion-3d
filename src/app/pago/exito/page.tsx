@@ -18,7 +18,7 @@ export default async function PaymentResult({
   const session = await auth.api.getSession({ headers: await headers() });
   const { session_id } = await searchParams;
   const order =
-    session && session_id?.startsWith('cs_test_')
+    session && (session_id?.startsWith('cs_test_') || session_id?.startsWith('cs_live_'))
       ? await prisma.order.findFirst({
           where: {
             userId: session.user.id,
@@ -37,7 +37,9 @@ export default async function PaymentResult({
         <>
           <ConfirmPaidCart checkoutKey={order.checkoutKey} />
           <p className='mt-4 text-white/75'>
-            Tu pago de prueba está confirmado y el pedido figura como pagado.
+            {session_id?.startsWith('cs_test_')
+              ? 'Tu pago de prueba está confirmado y el pedido figura como pagado.'
+              : 'Tu pago está confirmado y el pedido figura como pagado.'}
           </p>
           <p className='mt-3'>
             Referencia: #{order.id.slice(-8).toUpperCase()}
