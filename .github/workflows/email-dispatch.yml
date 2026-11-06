@@ -33,4 +33,4 @@ jobs:
             --retry 2 \
             --request POST \
             --header "Authorization: Bearer $DISPATCH_SECRET" \
-            "https://pn-impresion-3d-production.up.railway.app/api/internal/email-dispatch"
+            "https://pn3d.es/api/internal/email-dispatch"

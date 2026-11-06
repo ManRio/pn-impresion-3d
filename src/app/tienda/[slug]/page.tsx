@@ -22,12 +22,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const p = await product((await params).slug);
   if (!p) return {title:'Producto no disponible',robots:{index:false,follow:false}};
   const path = `/tienda/${encodeURIComponent(p.slug)}`;
-  const base = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/,'');
+  const base = 'https://pn3d.es';
   const socialImage = p.socialImageUrl || p.images[0]?.url;
   return {
     title: p.seoTitle || p.name,
     description: p.seoDescription || p.shortDescription || p.description.slice(0,155),
-    alternates: base ? {canonical:`${base}${path}`} : undefined,
+    alternates: {canonical:`${base}${path}`},
     openGraph: {
       type:'website', title:p.socialTitle || p.seoTitle || p.name,
       description:p.socialDescription || p.seoDescription || p.shortDescription || p.description.slice(0,155),
@@ -46,8 +46,28 @@ export default async function ProductPage({ params }: Props) {
     .filter((v) => v.priceCents > 0)
     .map((v) => v.priceCents)
     .sort((a, b) => a - b)[0];
+  const structuredProduct = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: p.name,
+    description: p.seoDescription || p.shortDescription || p.description,
+    url: `https://pn3d.es/tienda/${encodeURIComponent(p.slug)}`,
+    ...(p.images.length ? { image: p.images.map(i => i.url) } : {}),
+    ...(p.variants[0]?.sku ? { sku: p.variants[0].sku } : {}),
+    ...(p.saleMode === 'DIRECT' && price !== undefined ? {
+      offers: {
+        '@type': 'Offer',
+        url: `https://pn3d.es/tienda/${encodeURIComponent(p.slug)}`,
+        priceCurrency: 'EUR',
+        price: (price / 100).toFixed(2),
+        seller: { '@type': 'Organization', name: 'P&N Impresión 3D' },
+      },
+    } : {}),
+  };
   return (
     <main className='mx-auto max-w-7xl px-5 py-12 lg:px-8'>
+      <script type='application/ld+json'
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredProduct).replace(/</g, '\\u003c') }} />
       <Link href='/tienda' className='text-sm text-[#B5FF67]'>
         ← Volver a la tienda
       </Link>
@@ -116,8 +136,8 @@ export default async function ProductPage({ params }: Props) {
           )}
 
           <p className='mt-3 text-xs text-white/50'>
-            Los pedidos se registran sin cobro online. El pago se gestionará
-            posteriormente.
+            Los productos de venta directa se abonan mediante Stripe al confirmar el pedido.
+            Los encargos personalizados se presupuestan previamente.
           </p>
         </section>
       </div>

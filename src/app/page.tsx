@@ -134,6 +134,16 @@ export default async function Home() {
 
   return (
     <main id='contenido-principal' className='overflow-hidden'>
+      <script type='application/ld+json' dangerouslySetInnerHTML={{
+        __html: JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'Organization',
+          name: 'P&N Impresión 3D',
+          url: 'https://pn3d.es',
+          logo: 'https://pn3d.es/LogoPN.png',
+          email: 'info@pn3d.es',
+        }).replace(/</g, '\\u003c'),
+      }} />
       {/* HERO */}
       <section
         aria-labelledby='home-title'

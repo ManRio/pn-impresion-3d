@@ -34,9 +34,11 @@ export const metadata: Metadata = {
     shortcut: '/LogoPN.png',
     apple: '/LogoPN.png',
   },
+  metadataBase: new URL('https://pn3d.es'),
+  alternates: { canonical: '/' },
   robots: {
-    index: false,
-    follow: false,
+    index: true,
+    follow: true,
   },
 };
 

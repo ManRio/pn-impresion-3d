@@ -6,7 +6,8 @@ import StoreCard from '@/components/StoreCard';
 import { categoryGroups } from '@/lib/category-tree';
 export const metadata: Metadata = {
   title: 'Tienda',
-  description: 'Catálogo de productos impresos en 3D por P&N.',
+  description: 'Compra figuras, regalos, decoración y piezas impresas en 3D. Productos bajo demanda y personalizados en P&N Impresión 3D.',
+  alternates: { canonical: '/tienda' },
 };
 export const dynamic = 'force-dynamic';
 export default async function Tienda({

@@ -1,6 +1,6 @@
 import 'server-only';
 import type { Prisma } from '@/generated/prisma/client';
-import { paidAdminEmail, paidCustomerEmail, orderStatusEmail, type MailOrder, type MailPayload } from './templates';
+import { paidCustomerEmail, orderStatusEmail, type MailOrder, type MailPayload } from './templates';
 
 export const mailOrderSelect = {
   id: true, customerName: true, customerEmail: true, totalCents: true,
@@ -23,10 +23,8 @@ export async function queuePaidEmails(tx: DbTx, orderId: string): Promise<void> 
   if (!notificationsEnabled()) return;
   const order = await tx.order.findUnique({ where: { id: orderId }, select: { ...mailOrderSelect, paymentStatus: true } });
   if (!order || order.paymentStatus !== 'PAID') return;
-  const adminTo = process.env.EMAIL_ADMIN_TO?.trim();
-  const rows = [payloadRow(order.id, `paid-customer:${order.id}`, 'PAID_CUSTOMER', paidCustomerEmail(order as MailOrder))];
-  if (adminTo) rows.push(payloadRow(order.id, `paid-admin:${order.id}`, 'PAID_ADMIN', paidAdminEmail(order as MailOrder, adminTo)));
-  await tx.emailNotification.createMany({ data: rows, skipDuplicates: true });
+  const row = payloadRow(order.id, `paid-customer:${order.id}`, 'PAID_CUSTOMER', paidCustomerEmail(order as MailOrder));
+  await tx.emailNotification.createMany({ data: [row], skipDuplicates: true });
 }
 
 export async function queueStatusEmail(tx: DbTx, orderId: string, status: 'FINISHED' | 'SHIPPED', historyId: string): Promise<void> {
