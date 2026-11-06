@@ -20,23 +20,42 @@ async function product(slug: string) {
 }
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const p = await product((await params).slug);
-  if (!p) return {title:'Producto no disponible',robots:{index:false,follow:false}};
+  if (!p)
+    return {
+      title: 'Producto no disponible',
+      robots: { index: false, follow: false },
+    };
   const path = `/tienda/${encodeURIComponent(p.slug)}`;
   const base = 'https://pn3d.es';
   const socialImage = p.socialImageUrl || p.images[0]?.url;
   return {
     title: p.seoTitle || p.name,
-    description: p.seoDescription || p.shortDescription || p.description.slice(0,155),
-    alternates: {canonical:`${base}${path}`},
+    description:
+      p.seoDescription || p.shortDescription || p.description.slice(0, 155),
+    alternates: { canonical: `${base}${path}` },
     openGraph: {
-      type:'website', title:p.socialTitle || p.seoTitle || p.name,
-      description:p.socialDescription || p.seoDescription || p.shortDescription || p.description.slice(0,155),
-      ...(base?{url:`${base}${path}`}:{ } ),
-      ...(socialImage?{images:[{url:socialImage,alt:p.images[0]?.alt||p.name}]}:{}),
+      type: 'website',
+      title: p.socialTitle || p.seoTitle || p.name,
+      description:
+        p.socialDescription ||
+        p.seoDescription ||
+        p.shortDescription ||
+        p.description.slice(0, 155),
+      ...(base ? { url: `${base}${path}` } : {}),
+      ...(socialImage
+        ? { images: [{ url: socialImage, alt: p.images[0]?.alt || p.name }] }
+        : {}),
     },
-    twitter: {card:socialImage?'summary_large_image':'summary',title:p.socialTitle || p.seoTitle || p.name,
-      description:p.socialDescription || p.seoDescription || p.shortDescription || p.description.slice(0,155),
-      ...(socialImage?{images:[socialImage]}:{})},
+    twitter: {
+      card: socialImage ? 'summary_large_image' : 'summary',
+      title: p.socialTitle || p.seoTitle || p.name,
+      description:
+        p.socialDescription ||
+        p.seoDescription ||
+        p.shortDescription ||
+        p.description.slice(0, 155),
+      ...(socialImage ? { images: [socialImage] } : {}),
+    },
   };
 }
 export default async function ProductPage({ params }: Props) {
@@ -52,30 +71,52 @@ export default async function ProductPage({ params }: Props) {
     name: p.name,
     description: p.seoDescription || p.shortDescription || p.description,
     url: `https://pn3d.es/tienda/${encodeURIComponent(p.slug)}`,
-    ...(p.images.length ? { image: p.images.map(i => i.url) } : {}),
+    ...(p.images.length ? { image: p.images.map((i) => i.url) } : {}),
     ...(p.variants[0]?.sku ? { sku: p.variants[0].sku } : {}),
-    ...(p.saleMode === 'DIRECT' && price !== undefined ? {
-      offers: {
-        '@type': 'Offer',
-        url: `https://pn3d.es/tienda/${encodeURIComponent(p.slug)}`,
-        priceCurrency: 'EUR',
-        price: (price / 100).toFixed(2),
-        seller: { '@type': 'Organization', name: 'P&N Impresión 3D' },
-      },
-    } : {}),
+    ...(p.saleMode === 'DIRECT' && price !== undefined
+      ? {
+          offers: {
+            '@type': 'Offer',
+            url: `https://pn3d.es/tienda/${encodeURIComponent(p.slug)}`,
+            priceCurrency: 'EUR',
+            price: (price / 100).toFixed(2),
+            seller: { '@type': 'Organization', name: 'P&N Impresión 3D' },
+          },
+        }
+      : {}),
   };
   return (
     <main className='mx-auto max-w-7xl px-5 py-12 lg:px-8'>
-      <script type='application/ld+json'
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredProduct).replace(/</g, '\\u003c') }} />
-      <nav aria-label='Ruta de navegación' className='flex flex-wrap items-center gap-2 text-sm'>
-        <Link href='/tienda' className='text-[#B5FF67] hover:underline'>Tienda</Link>
-        <span aria-hidden='true' className='text-white/40'>/</span>
-        <Link href={`/categoria/${encodeURIComponent(p.category.slug)}`} className='text-[#B5FF67] hover:underline'>
+      {p.saleMode === 'DIRECT' && price !== undefined && (
+        <script
+          type='application/ld+json'
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(structuredProduct).replace(/</g, '\\u003c'),
+          }}
+        />
+      )}
+      <nav
+        aria-label='Ruta de navegación'
+        className='flex flex-wrap items-center gap-2 text-sm'
+      >
+        <Link href='/tienda' className='text-[#B5FF67] hover:underline'>
+          Tienda
+        </Link>
+        <span aria-hidden='true' className='text-white/40'>
+          /
+        </span>
+        <Link
+          href={`/categoria/${encodeURIComponent(p.category.slug)}`}
+          className='text-[#B5FF67] hover:underline'
+        >
           {p.category.name}
         </Link>
-        <span aria-hidden='true' className='text-white/40'>/</span>
-        <span aria-current='page' className='text-white/70'>{p.name}</span>
+        <span aria-hidden='true' className='text-white/40'>
+          /
+        </span>
+        <span aria-current='page' className='text-white/70'>
+          {p.name}
+        </span>
       </nav>
       <div className='mt-8 grid items-start gap-10 lg:grid-cols-2'>
         <ProductLightbox images={p.images} name={p.name} />
@@ -84,7 +125,9 @@ export default async function ProductPage({ params }: Props) {
             {p.category.name}
           </p>
           <h1 className='mt-3 text-4xl font-black'>{p.name}</h1>
-          {p.shortDescription && <p className='mt-4 text-lg text-white/85'>{p.shortDescription}</p>}
+          {p.shortDescription && (
+            <p className='mt-4 text-lg text-white/85'>{p.shortDescription}</p>
+          )}
           <p className='mt-5 whitespace-pre-line leading-8 text-white/70'>
             {p.description}
           </p>
@@ -142,8 +185,9 @@ export default async function ProductPage({ params }: Props) {
           )}
 
           <p className='mt-3 text-xs text-white/50'>
-            Los productos de venta directa se abonan mediante Stripe al confirmar el pedido.
-            Los encargos personalizados se presupuestan previamente.
+            Los productos de venta directa se abonan mediante Stripe al
+            confirmar el pedido. Los encargos personalizados se presupuestan
+            previamente.
           </p>
         </section>
       </div>
