@@ -144,8 +144,8 @@ export default async function Home() {
           className='pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_80%_30%,rgba(181,255,103,0.13),transparent_52%)]'
         />
 
-        <div className='relative mx-auto grid max-w-7xl items-center gap-10 px-5 py-16 lg:min-h-160 lg:grid-cols-2 lg:gap-16 lg:px-8 lg:py-24'>
-          <div>
+        <div className='relative mx-auto grid w-full min-w-0 max-w-7xl grid-cols-1 items-center gap-10 px-5 py-12 sm:py-16 lg:min-h-160 lg:grid-cols-2 lg:gap-16 lg:px-8 lg:py-24'>
+          <div className='min-w-0'>
             <p className='mb-6 inline-flex items-center gap-2 rounded-full border border-[#B5FF67]/30 bg-[#B5FF67]/10 px-4 py-2 text-xs font-bold uppercase tracking-wider text-[#B5FF67]'>
               <Sparkles size={15} aria-hidden='true' />
               Impresión 3D bajo demanda
@@ -153,7 +153,7 @@ export default async function Home() {
 
             <h1
               id='home-title'
-              className='max-w-2xl font-display text-[clamp(2.8rem,6vw,5.5rem)] font-extrabold leading-[1.04] tracking-tight'
+              className='max-w-2xl min-w-0 font-display text-[clamp(1.85rem,8.3vw,3rem)] font-extrabold leading-[1.08] tracking-tight [overflow-wrap:break-word] sm:text-[clamp(2.8rem,6vw,5.5rem)] sm:leading-[1.04]'
             >
               TUS IDEAS.
               <span className='mt-2 block text-[#B5FF67]'>
@@ -167,10 +167,10 @@ export default async function Home() {
               has encontrado en ninguna tienda.
             </p>
 
-            <div className='mt-9 flex flex-wrap gap-3'>
+            <div className='mt-9 flex min-w-0 flex-col gap-3 sm:flex-row sm:flex-wrap'>
               <Link
                 href='/tienda'
-                className='inline-flex min-h-12 items-center justify-center gap-3 rounded-xl bg-[#B5FF67] px-6 py-3 font-bold text-[#101319] transition hover:bg-[#d2ffab] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#B5FF67]'
+                className='inline-flex min-h-12 w-full min-w-0 items-center justify-center gap-3 rounded-xl bg-[#B5FF67] px-6 py-3 font-bold text-[#101319] sm:w-auto transition hover:bg-[#d2ffab] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#B5FF67]'
               >
                 Explorar productos
                 <ArrowUpRight size={20} aria-hidden='true' />
@@ -178,7 +178,7 @@ export default async function Home() {
 
               <Link
                 href='/presupuesto'
-                className='inline-flex min-h-12 items-center justify-center gap-3 rounded-xl border border-white/30 px-6 py-3 font-bold text-white transition hover:border-[#B5FF67] hover:text-[#B5FF67] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#B5FF67]'
+                className='inline-flex min-h-12 w-full min-w-0 items-center justify-center gap-3 rounded-xl border border-white/30 px-6 py-3 font-bold text-white sm:w-auto transition hover:border-[#B5FF67] hover:text-[#B5FF67] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#B5FF67]'
               >
                 Personalizar una idea
                 <ArrowRight size={19} aria-hidden='true' />
@@ -206,7 +206,7 @@ export default async function Home() {
           </div>
 
           {/* Slider de productos destacados */}
-          <div className='relative mx-auto w-full max-w-lg'>
+          <div className='relative mx-auto w-full min-w-0 max-w-lg'>
             <div
               aria-hidden='true'
               className='absolute -inset-4 rounded-[2rem] border border-[#B5FF67]/10'

@@ -313,8 +313,12 @@ export default function CartClient({ stripeMode }: { stripeMode: 'test' | 'live'
               comprobarse para cada familia de productos antes de aceptar pagos reales.
             </p>
           </div>
-          <div className='mt-4 rounded-lg border border-white/15 bg-[#101319] p-4 text-sm leading-6 text-white/80'>
-            <p className='font-semibold text-white'>Preparación y entrega</p>
+          <details className='group mt-4 rounded-lg border border-white/15 bg-[#101319] p-4 text-sm leading-6 text-white/80'>
+            <summary className='flex cursor-pointer list-none items-center justify-between gap-3 font-semibold text-white marker:hidden [&::-webkit-details-marker]:hidden'>
+              <span>Preparación, entrega y devoluciones<span className='mt-1 block text-xs font-normal text-white/65'>Preparación habitual: 48–72 h. Consulta plazos y condiciones.</span></span>
+              <span aria-hidden='true' className='shrink-0 text-[#B5FF67] transition-transform group-open:rotate-180'>⌄</span>
+            </summary>
+            <div className='mt-3 border-t border-white/10 pt-3'>
             <p className='mt-1'>Preparación habitual estimada: entre 48 y 72 horas.
               Puede ampliarse según el tamaño, las horas de impresión y los encargos en cola.
               El transporte de Correos requiere tiempo adicional. Salvo acuerdo sobre otro
@@ -331,7 +335,8 @@ export default function CartClient({ stripeMode }: { stripeMode: 'test' | 'live'
               <Link href='/envios-devoluciones' target='_blank' rel='noopener noreferrer'
                 className='text-[#B5FF67] underline'>política de envíos y devoluciones</Link>.
             </p>
-          </div>
+            </div>
+          </details>
           <p className='mt-3 text-xs text-amber-200'>
             {stripeMode === 'test'
               ? 'Estás utilizando Stripe en modo pruebas: no se cobrará dinero real.'
@@ -342,7 +347,17 @@ export default function CartClient({ stripeMode }: { stripeMode: 'test' | 'live'
               ? 'Necesitas iniciar sesión y tener completa tu dirección de facturación.'
               : 'Para el envío necesitas iniciar sesión y guardar una dirección de Península o Baleares en Mi cuenta.'}
           </p>
-          <div className='mt-5'><PrivacyNotice context='checkout'/></div>
+          <details className='group mt-5 rounded-xl border border-[#B5FF67]/25 bg-[#B5FF67]/5 p-4'>
+            <summary className='flex cursor-pointer list-none items-center justify-between gap-3 text-sm font-bold text-white marker:hidden [&::-webkit-details-marker]:hidden'>
+              <span>Protección de datos<span className='mt-1 block text-xs font-normal text-neutral-300'>Tus datos se utilizan para gestionar el pedido y cumplir obligaciones legales.</span></span>
+              <span aria-hidden='true' className='shrink-0 text-[#B5FF67] transition-transform group-open:rotate-180'>⌄</span>
+            </summary>
+            <div className='mt-3'><PrivacyNotice context='checkout'/></div>
+          </details>
+          <p className='mt-2 text-xs text-white/70'>Más detalles en nuestra{' '}
+            <Link href='/privacidad' target='_blank' rel='noopener noreferrer'
+              className='text-[#B5FF67] underline'>política de privacidad</Link>.
+          </p>
           <label className='mt-5 flex cursor-pointer items-start gap-3 rounded-lg border border-white/20 bg-[#101319] p-4 text-sm leading-6'>
             <input type='checkbox' checked={acceptedTerms} disabled={busy}
               onChange={event => { setAcceptedTerms(event.target.checked); setError(''); }}
