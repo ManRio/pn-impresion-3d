@@ -80,7 +80,13 @@ export default async function ProductPage({ params }: Props) {
             url: `https://pn3d.es/tienda/${encodeURIComponent(p.slug)}`,
             priceCurrency: 'EUR',
             price: (price / 100).toFixed(2),
-            seller: { '@type': 'Organization', name: 'P&N Impresión 3D' },
+            availability: 'https://schema.org/InStock',
+            itemCondition: 'https://schema.org/NewCondition',
+            seller: {
+              '@type': 'Organization',
+              name: 'P&N Impresión 3D',
+              url: 'https://pn3d.es',
+            },
           },
         }
       : {}),
