@@ -23,6 +23,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticPages: MetadataRoute.Sitemap = [
     { url: base, changeFrequency: 'weekly', priority: 1 },
     { url: `${base}/tienda`, changeFrequency: 'daily', priority: 0.9 },
+    { url: `${base}/impresion-3d-sevilla`, changeFrequency: 'monthly', priority: 0.9 },
     { url: `${base}/personalizados`, changeFrequency: 'monthly', priority: 0.7 },
     { url: `${base}/presupuesto`, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${base}/contacto`, changeFrequency: 'monthly', priority: 0.5 },

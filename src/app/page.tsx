@@ -248,6 +248,20 @@ export default async function Home() {
         </div>
       </section>
 
+      {/* SERVICIO LOCAL */}
+      <section aria-labelledby='seo-sevilla-title' className='border-b border-white/10 bg-[#151b16]'>
+        <div className='mx-auto flex max-w-7xl flex-col gap-6 px-5 py-10 lg:flex-row lg:items-center lg:justify-between lg:px-8'>
+          <div className='max-w-3xl'>
+            <p className='text-xs font-bold uppercase tracking-widest text-[#B5FF67]'>Trabajamos desde Sevilla provincia</p>
+            <h2 id='seo-sevilla-title' className='mt-3 text-2xl font-extrabold sm:text-3xl'>Impresión 3D en Sevilla, a tu medida</h2>
+            <p className='mt-3 leading-7 text-neutral-300'>Fabricamos figuras, regalos y piezas bajo demanda desde Castilblanco de los Arroyos. Atendemos encargos de Sevilla y provincia, con envío o recogida concertada.</p>
+          </div>
+          <Link href='/impresion-3d-sevilla' className='inline-flex min-h-12 shrink-0 items-center justify-center gap-2 rounded-xl border border-[#B5FF67]/60 px-5 py-3 font-bold text-[#B5FF67] transition hover:bg-[#B5FF67]/10'>
+            Impresión 3D Sevilla <ArrowUpRight size={18} aria-hidden='true' />
+          </Link>
+        </div>
+      </section>
+
       {/* CATEGORÍAS */}
       {categories.length > 0 && (
         <section
