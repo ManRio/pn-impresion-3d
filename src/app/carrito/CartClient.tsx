@@ -4,8 +4,17 @@ import Link from 'next/link';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import PrivacyNotice from '@/components/legal/PrivacyNotice';
 import { authClient } from '@/lib/auth-client';
-import { readCart, saveCart, setActiveCartUser, type CartData } from '@/lib/cart-store';
-import { shippingCentsFor, PICKUP_ADDRESS, type DeliveryMethod } from '@/lib/checkout-config';
+import {
+  readCart,
+  saveCart,
+  setActiveCartUser,
+  type CartData,
+} from '@/lib/cart-store';
+import {
+  shippingCentsFor,
+  PICKUP_ADDRESS,
+  type DeliveryMethod,
+} from '@/lib/checkout-config';
 import { splitIncludedVat } from '@/lib/tax-config';
 import { startStripeCheckout } from './actions';
 
@@ -26,25 +35,33 @@ type CheckoutAttempt = {
 
 const CHECKOUT_KEY = 'pn-checkout-key';
 const CHECKOUT_ATTEMPT_KEY = 'pn-checkout-attempt-v1';
-const eur = (n: number) => (n / 100).toLocaleString('es-ES', {
-  style: 'currency', currency: 'EUR',
-});
+const eur = (n: number) =>
+  (n / 100).toLocaleString('es-ES', {
+    style: 'currency',
+    currency: 'EUR',
+  });
 
 function snapshotOf(cart: CartData, deliveryMethod: DeliveryMethod): string {
   const lines = cart.lines
-    .map(line => ({ variantId: line.variantId, quantity: line.quantity }))
+    .map((line) => ({ variantId: line.variantId, quantity: line.quantity }))
     .sort((a, b) => a.variantId.localeCompare(b.variantId));
   return JSON.stringify({ lines, notes: cart.notes, deliveryMethod });
 }
 
 function readAttempt(): CheckoutAttempt | null {
   try {
-    const value: unknown = JSON.parse(sessionStorage.getItem(CHECKOUT_ATTEMPT_KEY) || 'null');
+    const value: unknown = JSON.parse(
+      sessionStorage.getItem(CHECKOUT_ATTEMPT_KEY) || 'null',
+    );
     if (!value || typeof value !== 'object') return null;
     const attempt = value as Record<string, unknown>;
-    if (typeof attempt.key !== 'string' ||
-        typeof attempt.snapshot !== 'string' ||
-        (attempt.deliveryMethod !== 'SHIPPING' && attempt.deliveryMethod !== 'PICKUP')) return null;
+    if (
+      typeof attempt.key !== 'string' ||
+      typeof attempt.snapshot !== 'string' ||
+      (attempt.deliveryMethod !== 'SHIPPING' &&
+        attempt.deliveryMethod !== 'PICKUP')
+    )
+      return null;
     return {
       key: attempt.key,
       snapshot: attempt.snapshot,
@@ -60,7 +77,11 @@ function clearAttempt() {
   sessionStorage.removeItem(CHECKOUT_ATTEMPT_KEY);
 }
 
-export default function CartClient({ stripeMode }: { stripeMode: 'test' | 'live' }) {
+export default function CartClient({
+  stripeMode,
+}: {
+  stripeMode: 'test' | 'live';
+}) {
   const { data: session, isPending } = authClient.useSession();
   const userId = session?.user.id ?? null;
   const [cart, setCart] = useState<CartData>({ lines: [], notes: '' });
@@ -68,7 +89,9 @@ export default function CartClient({ stripeMode }: { stripeMode: 'test' | 'live'
   const [busy, setBusy] = useState(false);
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [error, setError] = useState('');
-  const [deliveryMethod, setDeliveryMethod] = useState<DeliveryMethod | null>(null);
+  const [deliveryMethod, setDeliveryMethod] = useState<DeliveryMethod | null>(
+    null,
+  );
   const [loaded, setLoaded] = useState(false);
   const submitting = useRef(false);
 
@@ -125,7 +148,10 @@ export default function CartClient({ stripeMode }: { stripeMode: 'test' | 'live'
   useEffect(() => {
     if (!loaded) return;
     const attempt = readAttempt();
-    if (attempt && attempt.snapshot === snapshotOf(cart, attempt.deliveryMethod)) {
+    if (
+      attempt &&
+      attempt.snapshot === snapshotOf(cart, attempt.deliveryMethod)
+    ) {
       queueMicrotask(() => setDeliveryMethod(attempt.deliveryMethod));
     }
   }, [loaded, cart]);
@@ -154,10 +180,11 @@ export default function CartClient({ stripeMode }: { stripeMode: 'test' | 'live'
   };
 
   const subtotal = cart.lines.reduce((sum, line) => {
-    const product = preview.find(item => item.id === line.variantId);
+    const product = preview.find((item) => item.id === line.variantId);
     return sum + (product?.priceCents ?? 0) * line.quantity;
   }, 0);
-  const ready = loaded && cart.lines.length > 0 && preview.length === cart.lines.length;
+  const ready =
+    loaded && cart.lines.length > 0 && preview.length === cart.lines.length;
   const shipping = deliveryMethod ? shippingCentsFor(deliveryMethod) : 0;
   const grandTotal = subtotal + shipping;
   const taxBreakdown = splitIncludedVat(grandTotal);
@@ -177,17 +204,25 @@ export default function CartClient({ stripeMode }: { stripeMode: 'test' | 'live'
     try {
       const snapshot = snapshotOf(cart, deliveryMethod);
       const previous = readAttempt();
-      const checkoutKey = previous?.snapshot === snapshot
-        ? previous.key
-        : crypto.randomUUID();
+      const checkoutKey =
+        previous?.snapshot === snapshot ? previous.key : crypto.randomUUID();
       // Guardar ANTES de redirigir y conservarlo tras cancelar.
       sessionStorage.setItem(CHECKOUT_KEY, checkoutKey);
-      sessionStorage.setItem(CHECKOUT_ATTEMPT_KEY, JSON.stringify({
-        key: checkoutKey, snapshot, deliveryMethod,
-      } satisfies CheckoutAttempt));
+      sessionStorage.setItem(
+        CHECKOUT_ATTEMPT_KEY,
+        JSON.stringify({
+          key: checkoutKey,
+          snapshot,
+          deliveryMethod,
+        } satisfies CheckoutAttempt),
+      );
 
       const result = await startStripeCheckout({
-        lines: cart.lines, notes: cart.notes, deliveryMethod, checkoutKey, termsAccepted: acceptedTerms,
+        lines: cart.lines,
+        notes: cart.notes,
+        deliveryMethod,
+        checkoutKey,
+        termsAccepted: acceptedTerms,
       });
       if (!result.ok) {
         setError(result.error);
@@ -195,7 +230,9 @@ export default function CartClient({ stripeMode }: { stripeMode: 'test' | 'live'
       }
       window.location.assign(result.url);
     } catch {
-      setError('No se pudo iniciar Stripe. Puedes reintentar sin duplicar el pedido.');
+      setError(
+        'No se pudo iniciar Stripe. Puedes reintentar sin duplicar el pedido.',
+      );
     } finally {
       submitting.current = false;
       setBusy(false);
@@ -208,36 +245,71 @@ export default function CartClient({ stripeMode }: { stripeMode: 'test' | 'live'
       {loaded && cart.lines.length === 0 && (
         <div className='rounded-xl border border-white/15 p-6'>
           Tu carrito está vacío.{' '}
-          <Link href='/tienda' className='text-[#B5FF67] underline'>Ver tienda</Link>
+          <Link href='/tienda' className='text-[#B5FF67] underline'>
+            Ver tienda
+          </Link>
         </div>
       )}
-      {cart.lines.map(line => {
-        const product = preview.find(item => item.id === line.variantId);
+      {cart.lines.map((line) => {
+        const product = preview.find((item) => item.id === line.variantId);
         return (
-          <div key={line.variantId}
-            className='flex flex-wrap items-center justify-between gap-3 rounded-xl border border-white/15 bg-[#1a211e] p-4'>
+          <div
+            key={line.variantId}
+            className='flex flex-wrap items-center justify-between gap-3 rounded-xl border border-white/15 bg-[#1a211e] p-4'
+          >
             <div>
-              <p className='font-semibold'>{product?.name ?? 'Producto no disponible'}</p>
-              <p className='text-xs text-white/60'>{product?.label ?? line.variantId}</p>
+              <p className='font-semibold'>
+                {product?.name ?? 'Producto no disponible'}
+              </p>
+              <p className='text-xs text-white/60'>
+                {product?.label ?? line.variantId}
+              </p>
               <p className='text-sm text-[#B5FF67]'>
                 {product ? eur(product.priceCents) : 'Pendiente'}
               </p>
             </div>
             <div className='flex items-center gap-3'>
-              <input aria-label={`Cantidad de ${product?.name ?? 'producto'}`}
+              <input
+                aria-label={`Cantidad de ${product?.name ?? 'producto'}`}
                 className='w-18 rounded-lg bg-[#101319] p-2'
-                type='number' min={1} max={20} disabled={busy} value={line.quantity}
-                onChange={event => update({
-                  ...cart,
-                  lines: cart.lines.map(item => item.variantId === line.variantId
-                    ? { ...item, quantity: Math.max(1, Math.min(20, Number(event.target.value) || 1)) }
-                    : item),
-                })}
+                type='number'
+                min={1}
+                max={20}
+                disabled={busy}
+                value={line.quantity}
+                onChange={(event) =>
+                  update({
+                    ...cart,
+                    lines: cart.lines.map((item) =>
+                      item.variantId === line.variantId
+                        ? {
+                            ...item,
+                            quantity: Math.max(
+                              1,
+                              Math.min(20, Number(event.target.value) || 1),
+                            ),
+                          }
+                        : item,
+                    ),
+                  })
+                }
               />
-              <button type='button' disabled={busy}
+              <button
+                type='button'
+                disabled={busy}
                 aria-label={`Quitar ${product?.name ?? 'producto'} del carrito`}
-                onClick={() => update({ ...cart, lines: cart.lines.filter(item => item.variantId !== line.variantId) })}
-                className='text-sm text-red-300 disabled:opacity-50'>Quitar</button>
+                onClick={() =>
+                  update({
+                    ...cart,
+                    lines: cart.lines.filter(
+                      (item) => item.variantId !== line.variantId,
+                    ),
+                  })
+                }
+                className='text-sm text-red-300 disabled:opacity-50'
+              >
+                Quitar
+              </button>
             </div>
           </div>
         );
@@ -247,32 +319,57 @@ export default function CartClient({ stripeMode }: { stripeMode: 'test' | 'live'
         <section className='rounded-xl border border-white/15 p-5'>
           <label className='text-sm font-semibold'>
             Notas para el pedido
-            <textarea className='mt-2 w-full rounded-lg border border-white/20 bg-[#101319] p-3'
-              rows={4} maxLength={2000} disabled={busy} value={cart.notes}
-              onChange={event => update({ ...cart, notes: event.target.value })}
-              placeholder='Nombres, colores, detalles de personalización...'/>
+            <textarea
+              className='mt-2 w-full rounded-lg border border-white/20 bg-[#101319] p-3'
+              rows={4}
+              maxLength={2000}
+              disabled={busy}
+              value={cart.notes}
+              onChange={(event) =>
+                update({ ...cart, notes: event.target.value })
+              }
+              placeholder='Nombres, colores, detalles de personalización...'
+            />
           </label>
 
           <fieldset className='mt-6 rounded-xl border border-white/15 p-4'>
-            <legend className='px-2 text-base font-bold'>¿Cómo quieres recibir tu pedido?</legend>
+            <legend className='px-2 text-base font-bold'>
+              ¿Cómo quieres recibir tu pedido?
+            </legend>
             <div className='mt-3 space-y-3'>
               <label className='flex cursor-pointer items-start gap-3 rounded-lg border border-white/15 p-4 has-checked:border-[#B5FF67]'>
-                <input type='radio' name='deliveryMethod' value='SHIPPING'
-                  checked={deliveryMethod === 'SHIPPING'} disabled={busy}
+                <input
+                  type='radio'
+                  name='deliveryMethod'
+                  value='SHIPPING'
+                  checked={deliveryMethod === 'SHIPPING'}
+                  disabled={busy}
                   onChange={() => selectDelivery('SHIPPING')}
-                  className='mt-1 accent-[#B5FF67]'/>
+                  className='mt-1 accent-[#B5FF67]'
+                />
                 <span>
-                  <span className='block font-bold'>Envío con Correos · 8,00 €</span>
-                  <span className='mt-1 block text-sm text-white/70'>Península y Baleares.</span>
+                  <span className='block font-bold'>
+                    Envío con Correos · 8,00 €
+                  </span>
+                  <span className='mt-1 block text-sm text-white/70'>
+                    Península y Baleares.
+                  </span>
                 </span>
               </label>
               <label className='flex cursor-pointer items-start gap-3 rounded-lg border border-white/15 p-4 has-checked:border-[#B5FF67]'>
-                <input type='radio' name='deliveryMethod' value='PICKUP'
-                  checked={deliveryMethod === 'PICKUP'} disabled={busy}
+                <input
+                  type='radio'
+                  name='deliveryMethod'
+                  value='PICKUP'
+                  checked={deliveryMethod === 'PICKUP'}
+                  disabled={busy}
                   onChange={() => selectDelivery('PICKUP')}
-                  className='mt-1 accent-[#B5FF67]'/>
+                  className='mt-1 accent-[#B5FF67]'
+                />
                 <span>
-                  <span className='block font-bold'>Recogida presencial · Gratis</span>
+                  <span className='block font-bold'>
+                    Recogida presencial · Gratis
+                  </span>
                   <span className='mt-1 block text-sm leading-6 text-white/70'>
                     {PICKUP_ADDRESS}. Te avisaremos cuando esté preparado.
                   </span>
@@ -287,8 +384,18 @@ export default function CartClient({ stripeMode }: { stripeMode: 'test' | 'live'
               <span>{ready ? eur(subtotal) : 'Calculando…'}</span>
             </div>
             <div className='flex justify-between gap-4'>
-              <span>{deliveryMethod === 'SHIPPING' ? 'Envío con Correos' : 'Entrega'}</span>
-              <span>{deliveryMethod ? (shipping ? eur(shipping) : 'Gratis') : 'Por elegir'}</span>
+              <span>
+                {deliveryMethod === 'SHIPPING'
+                  ? 'Envío con Correos'
+                  : 'Entrega'}
+              </span>
+              <span>
+                {deliveryMethod
+                  ? shipping
+                    ? eur(shipping)
+                    : 'Gratis'
+                  : 'Por elegir'}
+              </span>
             </div>
             <div className='flex justify-between gap-4 border-t border-white/15 pt-3 text-lg font-bold'>
               <span>Total del pedido</span>
@@ -308,33 +415,67 @@ export default function CartClient({ stripeMode }: { stripeMode: 'test' | 'live'
                 </div>
               </div>
             )}
+
             <p className='text-xs leading-6 text-white/65'>
-              Los precios y el transporte ya incluyen IVA. El tipo del 21 % debe
-              comprobarse para cada familia de productos antes de aceptar pagos reales.
+              Los precios de los productos y los gastos de envío incluyen el 21
+              % de IVA. El importe total se muestra antes de pagar.
             </p>
           </div>
           <details className='group mt-4 rounded-lg border border-white/15 bg-[#101319] p-4 text-sm leading-6 text-white/80'>
             <summary className='flex cursor-pointer list-none items-center justify-between gap-3 font-semibold text-white marker:hidden [&::-webkit-details-marker]:hidden'>
-              <span>Preparación, entrega y devoluciones<span className='mt-1 block text-xs font-normal text-white/65'>Preparación habitual: 48–72 h. Consulta plazos y condiciones.</span></span>
-              <span aria-hidden='true' className='shrink-0 text-[#B5FF67] transition-transform group-open:rotate-180'>⌄</span>
+              <span>
+                Preparación, entrega y devoluciones
+                <span className='mt-1 block text-xs font-normal text-white/65'>
+                  Fabricación: 48–72 h. Transporte: 24–72 h estimadas.
+                </span>
+              </span>
+              <span
+                aria-hidden='true'
+                className='shrink-0 text-[#B5FF67] transition-transform group-open:rotate-180'
+              >
+                ⌄
+              </span>
             </summary>
             <div className='mt-3 border-t border-white/10 pt-3'>
-            <p className='mt-1'>Preparación habitual estimada: entre 48 y 72 horas.
-              Puede ampliarse según el tamaño, las horas de impresión y los encargos en cola.
-              El transporte de Correos requiere tiempo adicional. Salvo acuerdo sobre otro
-              plazo de entrega, se aplica el máximo legal de 30 días naturales.</p>
-            <p className='mt-2'>En los artículos estándar suele existir un derecho de
-              desistimiento de 14 días naturales desde la recepción; los gastos directos
-              de devolución ordinaria corresponden al comprador. Los artículos hechos
-              conforme a especificaciones individuales o claramente personalizados
-              pueden quedar exceptuados. Esto no limita los derechos ante defectos.</p>
-            <p className='mt-2'>Consulta las{' '}
-              <Link href='/condiciones-compra' target='_blank' rel='noopener noreferrer'
-                className='text-[#B5FF67] underline'>condiciones de compra</Link>{' '}
-              y la{' '}
-              <Link href='/envios-devoluciones' target='_blank' rel='noopener noreferrer'
-                className='text-[#B5FF67] underline'>política de envíos y devoluciones</Link>.
-            </p>
+              <p className='mt-1'>
+                La fabricación habitual requiere entre 48 y 72 horas desde la
+                confirmación del pago, según la carga de trabajo. Una vez
+                enviado el pedido, Correos estima un transporte de entre 24 y 72
+                horas, dependiendo del destino y las fechas de envío. Los plazos
+                son orientativos y pueden ampliarse por la complejidad del
+                encargo, períodos de alta demanda o incidencias del transporte.
+                Salvo acuerdo sobre otro plazo, se aplica el máximo legal de
+                entrega de 30 días naturales.
+              </p>
+              <p className='mt-2'>
+                En los artículos estándar suele existir un derecho de
+                desistimiento de 14 días naturales desde la recepción; los
+                gastos directos de devolución ordinaria corresponden al
+                comprador. Los artículos hechos conforme a especificaciones
+                individuales o claramente personalizados pueden quedar
+                exceptuados. Esto no limita los derechos ante defectos.
+              </p>
+              <p className='mt-2'>
+                Consulta las{' '}
+                <Link
+                  href='/condiciones-compra'
+                  target='_blank'
+                  rel='noopener noreferrer'
+                  className='text-[#B5FF67] underline'
+                >
+                  condiciones de compra
+                </Link>{' '}
+                y la{' '}
+                <Link
+                  href='/envios-devoluciones'
+                  target='_blank'
+                  rel='noopener noreferrer'
+                  className='text-[#B5FF67] underline'
+                >
+                  política de envíos y devoluciones
+                </Link>
+                .
+              </p>
             </div>
           </details>
           <p className='mt-3 text-xs text-amber-200'>
@@ -349,34 +490,85 @@ export default function CartClient({ stripeMode }: { stripeMode: 'test' | 'live'
           </p>
           <details className='group mt-5 rounded-xl border border-[#B5FF67]/25 bg-[#B5FF67]/5 p-4'>
             <summary className='flex cursor-pointer list-none items-center justify-between gap-3 text-sm font-bold text-white marker:hidden [&::-webkit-details-marker]:hidden'>
-              <span>Protección de datos<span className='mt-1 block text-xs font-normal text-neutral-300'>Tus datos se utilizan para gestionar el pedido y cumplir obligaciones legales.</span></span>
-              <span aria-hidden='true' className='shrink-0 text-[#B5FF67] transition-transform group-open:rotate-180'>⌄</span>
+              <span>
+                Protección de datos
+                <span className='mt-1 block text-xs font-normal text-neutral-300'>
+                  Tus datos se utilizan para gestionar el pedido y cumplir
+                  obligaciones legales.
+                </span>
+              </span>
+              <span
+                aria-hidden='true'
+                className='shrink-0 text-[#B5FF67] transition-transform group-open:rotate-180'
+              >
+                ⌄
+              </span>
             </summary>
-            <div className='mt-3'><PrivacyNotice context='checkout'/></div>
+            <div className='mt-3'>
+              <PrivacyNotice context='checkout' />
+            </div>
           </details>
-          <p className='mt-2 text-xs text-white/70'>Más detalles en nuestra{' '}
-            <Link href='/privacidad' target='_blank' rel='noopener noreferrer'
-              className='text-[#B5FF67] underline'>política de privacidad</Link>.
+          <p className='mt-2 text-xs text-white/70'>
+            Más detalles en nuestra{' '}
+            <Link
+              href='/privacidad'
+              target='_blank'
+              rel='noopener noreferrer'
+              className='text-[#B5FF67] underline'
+            >
+              política de privacidad
+            </Link>
+            .
           </p>
           <label className='mt-5 flex cursor-pointer items-start gap-3 rounded-lg border border-white/20 bg-[#101319] p-4 text-sm leading-6'>
-            <input type='checkbox' checked={acceptedTerms} disabled={busy}
-              onChange={event => { setAcceptedTerms(event.target.checked); setError(''); }}
-              className='mt-1 h-4 w-4 shrink-0 accent-[#B5FF67]'/>
-            <span>He leído y acepto las{' '}
-              <Link href='/condiciones-compra' target='_blank' rel='noopener noreferrer'
-                className='text-[#B5FF67] underline'>condiciones de compra</Link>{' '}
+            <input
+              type='checkbox'
+              checked={acceptedTerms}
+              disabled={busy}
+              onChange={(event) => {
+                setAcceptedTerms(event.target.checked);
+                setError('');
+              }}
+              className='mt-1 h-4 w-4 shrink-0 accent-[#B5FF67]'
+            />
+            <span>
+              He leído y acepto las{' '}
+              <Link
+                href='/condiciones-compra'
+                target='_blank'
+                rel='noopener noreferrer'
+                className='text-[#B5FF67] underline'
+              >
+                condiciones de compra
+              </Link>{' '}
               y la{' '}
-              <Link href='/envios-devoluciones' target='_blank' rel='noopener noreferrer'
-                className='text-[#B5FF67] underline'>política de envíos y devoluciones</Link>.
+              <Link
+                href='/envios-devoluciones'
+                target='_blank'
+                rel='noopener noreferrer'
+                className='text-[#B5FF67] underline'
+              >
+                política de envíos y devoluciones
+              </Link>
+              .
             </span>
           </label>
-          {error && <p role='alert' className='mt-3 text-red-300'>{error}</p>}
-          <button type='button' onClick={submit}
+          {error && (
+            <p role='alert' className='mt-3 text-red-300'>
+              {error}
+            </p>
+          )}
+          <button
+            type='button'
+            onClick={submit}
             disabled={busy || !ready || !deliveryMethod || !acceptedTerms}
-            className='mt-4 rounded-lg bg-[#B5FF67] px-6 py-3 font-bold text-[#101319] disabled:opacity-50'>
-            {busy ? 'Abriendo Stripe…' : stripeMode === 'test'
-              ? 'Confirmar pedido de prueba (sin cobro real)'
-              : 'Realizar pedido con obligación de pago'}
+            className='mt-4 rounded-lg bg-[#B5FF67] px-6 py-3 font-bold text-[#101319] disabled:opacity-50'
+          >
+            {busy
+              ? 'Abriendo Stripe…'
+              : stripeMode === 'test'
+                ? 'Confirmar pedido de prueba (sin cobro real)'
+                : 'Realizar pedido con obligación de pago'}
           </button>
         </section>
       )}
