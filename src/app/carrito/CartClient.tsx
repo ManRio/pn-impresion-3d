@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import PrivacyNotice from '@/components/legal/PrivacyNotice';
 import { authClient } from '@/lib/auth-client';
@@ -240,7 +241,8 @@ export default function CartClient({
   }
 
   return (
-    <div className='space-y-5'>
+    <div className='grid gap-5 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-start'>
+      <div className='min-w-0 space-y-4'>
       {!loaded && <p className='text-white/70'>Cargando tu carrito…</p>}
       {loaded && cart.lines.length === 0 && (
         <div className='rounded-xl border border-white/15 p-6'>
@@ -255,9 +257,22 @@ export default function CartClient({
         return (
           <div
             key={line.variantId}
-            className='flex flex-wrap items-center justify-between gap-3 rounded-xl border border-white/15 bg-[#1a211e] p-4'
+            className='flex flex-wrap items-center justify-between gap-3 rounded-xl border border-white/15 bg-[#1a211e] p-3 sm:p-4'
           >
-            <div>
+            <div className='flex min-w-0 items-center gap-3'>
+              {product?.image ? (
+                <Image
+                  src={product.image}
+                  alt={product.name}
+                  width={84}
+                  height={84}
+                  unoptimized
+                  className='h-20 w-20 shrink-0 rounded-lg object-cover'
+                />
+              ) : (
+                <div aria-hidden='true' className='h-20 w-20 shrink-0 rounded-lg bg-white/5' />
+              )}
+              <div className='min-w-0'>
               <p className='font-semibold'>
                 {product?.name ?? 'Producto no disponible'}
               </p>
@@ -267,6 +282,7 @@ export default function CartClient({
               <p className='text-sm text-[#B5FF67]'>
                 {product ? eur(product.priceCents) : 'Pendiente'}
               </p>
+              </div>
             </div>
             <div className='flex items-center gap-3'>
               <input
@@ -316,12 +332,12 @@ export default function CartClient({
       })}
 
       {loaded && cart.lines.length > 0 && (
-        <section className='rounded-xl border border-white/15 p-5'>
+        <section className='rounded-xl border border-white/15 p-4'>
           <label className='text-sm font-semibold'>
             Notas para el pedido
             <textarea
               className='mt-2 w-full rounded-lg border border-white/20 bg-[#101319] p-3'
-              rows={4}
+              rows={2}
               maxLength={2000}
               disabled={busy}
               value={cart.notes}
@@ -332,12 +348,12 @@ export default function CartClient({
             />
           </label>
 
-          <fieldset className='mt-6 rounded-xl border border-white/15 p-4'>
+          <fieldset className='mt-4 rounded-xl border border-white/15 p-3'>
             <legend className='px-2 text-base font-bold'>
               ¿Cómo quieres recibir tu pedido?
             </legend>
             <div className='mt-3 space-y-3'>
-              <label className='flex cursor-pointer items-start gap-3 rounded-lg border border-white/15 p-4 has-checked:border-[#B5FF67]'>
+              <label className='flex cursor-pointer items-start gap-3 rounded-lg border border-white/15 p-3 has-checked:border-[#B5FF67]'>
                 <input
                   type='radio'
                   name='deliveryMethod'
@@ -356,7 +372,7 @@ export default function CartClient({
                   </span>
                 </span>
               </label>
-              <label className='flex cursor-pointer items-start gap-3 rounded-lg border border-white/15 p-4 has-checked:border-[#B5FF67]'>
+              <label className='flex cursor-pointer items-start gap-3 rounded-lg border border-white/15 p-3 has-checked:border-[#B5FF67]'>
                 <input
                   type='radio'
                   name='deliveryMethod'
@@ -377,8 +393,13 @@ export default function CartClient({
               </label>
             </div>
           </fieldset>
-
-          <div className='mt-6 space-y-3 rounded-xl bg-[#101319] p-4'>
+        </section>
+      )}
+      </div>
+      {loaded && cart.lines.length > 0 && (
+        <aside aria-label='Resumen del pedido' className='rounded-xl border border-white/15 bg-[#1a211e] p-4 lg:sticky lg:top-28'>
+          <h2 className='mb-3 text-xl font-bold'>Resumen del pedido</h2>
+          <div className='space-y-3 rounded-xl bg-[#101319] p-4'>
             <div className='flex justify-between gap-4'>
               <span>Subtotal de productos</span>
               <span>{ready ? eur(subtotal) : 'Calculando…'}</span>
@@ -570,7 +591,7 @@ export default function CartClient({
                 ? 'Confirmar pedido de prueba (sin cobro real)'
                 : 'Realizar pedido con obligación de pago'}
           </button>
-        </section>
+        </aside>
       )}
     </div>
   );

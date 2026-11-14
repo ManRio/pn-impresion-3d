@@ -7,6 +7,7 @@ import '@/app/branding-v03.css';
 
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import WhatsAppButton from '@/components/WhatsAppButton';
 
 // Tipografía para títulos
 const oxanium = Oxanium({
@@ -59,6 +60,7 @@ export default function RootLayout({
         {children}
 
         <Footer />
+        <WhatsAppButton />
         {process.env.NODE_ENV === 'production' && (
           <Script
             id='cloudflare-web-analytics'
