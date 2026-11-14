@@ -99,9 +99,14 @@ export default function Page() {
           aplicable.
         </p>
         <p>
-          En las comprobaciones técnicas realizadas no se identificaron cookies
-          de seguimiento publicitario ni de analítica opcional instaladas por la
-          tienda.
+          La tienda utiliza Cloudflare Web Analytics para obtener estadísticas
+          de visitas y rendimiento del sitio web.
+        </p>
+        <p>
+          Según la documentación de Cloudflare, esta herramienta no utiliza
+          cookies, localStorage ni técnicas de identificación persistente para
+          realizar el seguimiento de visitantes. No se han identificado cookies
+          publicitarias instaladas por la tienda.
         </p>
       </section>
 

@@ -82,6 +82,13 @@ export default function Page() {
           publicidad personalizada ni se envían boletines comerciales mediante
           los tratamientos descritos en esta política.
         </p>
+        <p>
+          <strong>Medición de audiencia:</strong> utilizamos Cloudflare Web
+          Analytics para conocer las visitas, las páginas consultadas y el
+          rendimiento de la web, con el objetivo de mejorar nuestros servicios.
+          Según la documentación de Cloudflare, esta herramienta no utiliza
+          cookies ni almacenamiento local para realizar sus mediciones.
+        </p>
       </section>
 
       <section>
@@ -160,8 +167,9 @@ export default function Page() {
             <strong>OVHcloud:</strong> servicio de correo electrónico comercial.
           </li>
           <li>
-            <strong>Cloudflare:</strong> gestión del dominio y servicios
-            técnicos de red que se encuentren habilitados.
+            <strong>Cloudflare:</strong> gestión del dominio, servicios técnicos
+            de red habilitados y medición de audiencia y rendimiento mediante
+            Cloudflare Web Analytics.
           </li>
         </ul>
 
