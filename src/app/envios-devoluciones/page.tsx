@@ -10,6 +10,7 @@ export const metadata: Metadata = {
 export default function Page() {
   return (
     <LegalPage
+      showDraftNotice={false}
       title='Envíos y devoluciones'
       intro='Consulta nuestras zonas de entrega,
 modalidades de recogida, plazos de preparación,

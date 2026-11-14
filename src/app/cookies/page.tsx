@@ -1,12 +1,179 @@
 import type { Metadata } from 'next';
 import { LegalPage } from '@/components/legal/LegalPage';
-export const metadata: Metadata = { title: 'Política de cookies', robots: { index: false, follow: false } };
+
+export const metadata: Metadata = {
+  title: 'Política de cookies',
+  robots: { index: false, follow: false },
+};
+
 export default function Page() {
-  return <LegalPage title="Política de cookies" intro="Borrador sobre cookies y otras tecnologías de almacenamiento utilizadas por esta web.">
-    <section><h2>1. ¿Qué son?</h2><p>Las cookies son pequeños archivos o identificadores que el navegador puede guardar para permitir determinadas funciones del sitio. Existen mecanismos similares, como el almacenamiento local, que también deben analizarse desde la perspectiva de privacidad.</p></section>
-    <section><h2>2. Tecnologías identificadas en el desarrollo</h2><ul><li>Sesión y autenticación: Better Auth utiliza mecanismos técnicos para mantener la sesión del usuario.</li><li>Carrito: se utiliza almacenamiento local del navegador para conservar los artículos seleccionados en el dispositivo.</li></ul><p><strong>[PENDIENTE: INVENTARIO REAL DE NOMBRES DE COOKIES, DOMINIOS, FINALIDAD Y DURACIÓN EN EL DOMINIO PUBLICADO]</strong>. La lista de proveedores técnicos no equivale a una afirmación de que todos instalan cookies en el navegador.</p></section>
-    <section><h2>3. Cookies necesarias y cookies opcionales</h2><p>Las cookies técnicas estrictamente necesarias para una función solicitada por el usuario pueden estar exentas de consentimiento. Si se añaden analítica, marketing, publicidad, reproducción de contenido embebido u otras finalidades no exceptuadas, se informará de ellas y se solicitará consentimiento válido <strong>antes de activarlas</strong>, con opciones de aceptar y rechazar igualmente visibles.</p></section>
-    <section><h2>4. Cómo gestionar el almacenamiento</h2><p>El navegador permite consultar y borrar cookies y datos locales. Borrar determinados datos técnicos puede cerrar la sesión o eliminar el carrito guardado en ese dispositivo.</p><p><strong>[PENDIENTE: SI EXISTEN COOKIES OPCIONALES, IMPLEMENTAR PANEL DE CONFIGURACIÓN Y RETIRADA DE CONSENTIMIENTO PERMANENTEMENTE ACCESIBLE]</strong>.</p></section>
-    <section><h2>5. Contacto y actualización</h2><p>Responsable: <strong>Luis Miguel Rodriguez Gutierrez</strong>. Contacto para privacidad: <strong>info@pn3d.es</strong>. Este documento se actualizará tras la auditoría de cookies del dominio definitivo y siempre que cambien las tecnologías utilizadas.</p></section>
-  </LegalPage>;
+  return (
+    <LegalPage
+      title='Política de cookies'
+      intro='Información sobre las cookies y tecnologías de almacenamiento local utilizadas en P&N Impresión 3D para el funcionamiento de la tienda online.'
+      showDraftNotice={false}
+    >
+      <section>
+        <h2>1. ¿Qué son las cookies?</h2>
+        <p>
+          Las cookies son pequeños archivos o identificadores que los sitios web
+          pueden almacenar en el navegador del usuario para permitir
+          determinadas funciones.
+        </p>
+        <p>
+          Existen también tecnologías similares, como el almacenamiento local
+          (localStorage), que permiten conservar información en el dispositivo.
+        </p>
+      </section>
+
+      <section>
+        <h2>2. Cookies y almacenamiento utilizados</h2>
+        <p>
+          P&N Impresión 3D utiliza tecnologías técnicas necesarias para
+          determinadas funcionalidades de la tienda.
+        </p>
+
+        <h3 className='mt-5 font-bold text-white'>Cookie de autenticación</h3>
+
+        <ul>
+          <li>
+            <strong>Nombre:</strong> __Secure-better-auth.session_token
+          </li>
+          <li>
+            <strong>Dominio:</strong> pn3d.es
+          </li>
+          <li>
+            <strong>Finalidad:</strong> mantener la sesión de los usuarios
+            autenticados.
+          </li>
+          <li>
+            <strong>Sistema:</strong> Better Auth.
+          </li>
+          <li>
+            <strong>Duración:</strong> determinada por la configuración de
+            autenticación. En la comprobación realizada se observó una caducidad
+            aproximada de siete días.
+          </li>
+          <li>
+            <strong>Características:</strong> HttpOnly, Secure y SameSite=Lax.
+          </li>
+        </ul>
+
+        <h3 className='mt-5 font-bold text-white'>
+          Almacenamiento del carrito
+        </h3>
+
+        <ul>
+          <li>
+            <strong>Identificador:</strong> pn-cart-user-v2:…
+          </li>
+          <li>
+            <strong>Tecnología:</strong> localStorage.
+          </li>
+          <li>
+            <strong>Finalidad:</strong> conservar los artículos seleccionados en
+            el carrito.
+          </li>
+          <li>
+            <strong>Almacenamiento:</strong> navegador del usuario.
+          </li>
+          <li>
+            <strong>Duración:</strong> hasta su eliminación mediante las
+            funciones de la aplicación, el borrado de los datos del navegador u
+            otros mecanismos aplicables.
+          </li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>3. Cookies técnicas y consentimiento</h2>
+        <p>
+          Las tecnologías descritas se utilizan para proporcionar funciones
+          solicitadas por los usuarios, como mantener una sesión autenticada o
+          conservar los productos del carrito.
+        </p>
+        <p>
+          Las cookies y tecnologías estrictamente necesarias para prestar un
+          servicio solicitado por el usuario pueden estar exceptuadas de la
+          obligación de obtener consentimiento, conforme a la normativa
+          aplicable.
+        </p>
+        <p>
+          En las comprobaciones técnicas realizadas no se identificaron cookies
+          de seguimiento publicitario ni de analítica opcional instaladas por la
+          tienda.
+        </p>
+      </section>
+
+      <section>
+        <h2>4. Servicios de terceros</h2>
+        <p>
+          P&N Impresión 3D utiliza proveedores externos para prestar
+          determinados servicios, entre ellos Stripe para el procesamiento de
+          pagos.
+        </p>
+        <p>
+          Cuando el usuario accede a servicios o páginas gestionados
+          directamente por terceros, estos pueden utilizar sus propias
+          tecnologías de almacenamiento conforme a sus respectivas políticas de
+          privacidad y cookies.
+        </p>
+        <p>
+          Para obtener información sobre Stripe puede consultar su{' '}
+          <a
+            href='https://stripe.com/es/privacy'
+            target='_blank'
+            rel='noopener noreferrer'
+            className='text-[#B5FF67] underline'
+          >
+            política de privacidad
+          </a>
+          .
+        </p>
+      </section>
+
+      <section>
+        <h2>5. Gestión y eliminación de cookies</h2>
+        <p>
+          Los usuarios pueden consultar, bloquear o eliminar cookies y
+          almacenamiento local mediante la configuración de su navegador.
+        </p>
+        <p>
+          La eliminación de determinadas cookies técnicas puede provocar el
+          cierre de sesión. El borrado del almacenamiento local también puede
+          eliminar el contenido guardado del carrito.
+        </p>
+      </section>
+
+      <section>
+        <h2>6. Modificaciones de esta política</h2>
+        <p>
+          Esta política será actualizada cuando se incorporen nuevas tecnologías
+          de almacenamiento o cambien las finalidades de las existentes.
+        </p>
+        <p>
+          Si se incorporan herramientas de analítica, publicidad u otras
+          tecnologías que requieran consentimiento, se implementarán los
+          mecanismos correspondientes antes de su activación.
+        </p>
+      </section>
+
+      <section>
+        <h2>7. Responsable y contacto</h2>
+        <p>
+          <strong>Responsable:</strong> Luis Miguel Rodriguez Gutierrez, titular
+          de P&N Impresión 3D.
+        </p>
+        <p>
+          <strong>Contacto:</strong>{' '}
+          <a href='mailto:info@pn3d.es' className='text-[#B5FF67] underline'>
+            info@pn3d.es
+          </a>
+        </p>
+        <p>
+          <strong>Última actualización: 14 de noviembre de 2026.</strong>
+        </p>
+      </section>
+    </LegalPage>
+  );
 }

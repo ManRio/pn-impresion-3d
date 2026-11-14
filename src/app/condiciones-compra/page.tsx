@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function Page() {
   return (
-    <LegalPage
+    <LegalPage showDraftNotice={false}
       title='Condiciones de compra'
       intro='Información sobre nuestros productos, precios,
 formas de pago, fabricación bajo demanda, envíos,
