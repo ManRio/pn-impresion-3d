@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Script from 'next/script';
 import { Oxanium, Inter } from 'next/font/google';
 
 import './globals.css';
@@ -58,6 +59,14 @@ export default function RootLayout({
         {children}
 
         <Footer />
+        {process.env.NODE_ENV === 'production' && (
+          <Script
+            id='cloudflare-web-analytics'
+            src='https://static.cloudflareinsights.com/beacon.min.js'
+            strategy='afterInteractive'
+            data-cf-beacon='{"token":"116ed23db7494188af8cfc38e6d966b2"}'
+          />
+        )}
       </body>
     </html>
   );
