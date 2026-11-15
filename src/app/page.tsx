@@ -19,13 +19,13 @@ import FeaturedProductSlider from '@/components/home/FeaturedProductSlider';
 export const dynamic = 'force-dynamic';
 
 const description =
-  'Descubre figuras, decoración, regalos y piezas impresas en 3D. En P&N Impresión 3D fabricamos bajo demanda y estudiamos tus proyectos personalizados.';
+  'Tienda de impresión 3D en Sevilla. Fabricamos figuras, regalos, decoración y piezas personalizadas bajo demanda desde Castilblanco de los Arroyos. Compra online o solicita presupuesto.';
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, '');
 
 export const metadata: Metadata = {
   title: {
-    absolute: 'P&N Impresión 3D | Regalos y piezas personalizadas',
+    absolute: 'P&N Impresión 3D Sevilla | Regalos y piezas personalizadas',
   },
   description,
   alternates: { canonical: '/' },
@@ -249,14 +249,31 @@ export default async function Home() {
       </section>
 
       {/* SERVICIO LOCAL */}
-      <section aria-labelledby='seo-sevilla-title' className='border-b border-white/10 bg-[#151b16]'>
+      <section
+        aria-labelledby='seo-sevilla-title'
+        className='border-b border-white/10 bg-[#151b16]'
+      >
         <div className='mx-auto flex max-w-7xl flex-col gap-6 px-5 py-10 lg:flex-row lg:items-center lg:justify-between lg:px-8'>
           <div className='max-w-3xl'>
-            <p className='text-xs font-bold uppercase tracking-widest text-[#B5FF67]'>Trabajamos desde Sevilla provincia</p>
-            <h2 id='seo-sevilla-title' className='mt-3 text-2xl font-extrabold sm:text-3xl'>Impresión 3D en Sevilla, a tu medida</h2>
-            <p className='mt-3 leading-7 text-neutral-300'>Fabricamos figuras, regalos y piezas bajo demanda desde Castilblanco de los Arroyos. Atendemos encargos de Sevilla y provincia, con envío o recogida concertada.</p>
+            <p className='text-xs font-bold uppercase tracking-widest text-[#B5FF67]'>
+              Trabajamos desde Sevilla provincia
+            </p>
+            <h2
+              id='seo-sevilla-title'
+              className='mt-3 text-2xl font-extrabold sm:text-3xl'
+            >
+              Impresión 3D en Sevilla, a tu medida
+            </h2>
+            <p className='mt-3 leading-7 text-neutral-300'>
+              Fabricamos figuras, regalos y piezas bajo demanda desde
+              Castilblanco de los Arroyos. Atendemos encargos de Sevilla y
+              provincia, con envío o recogida concertada.
+            </p>
           </div>
-          <Link href='/impresion-3d-sevilla' className='inline-flex min-h-12 shrink-0 items-center justify-center gap-2 rounded-xl border border-[#B5FF67]/60 px-5 py-3 font-bold text-[#B5FF67] transition hover:bg-[#B5FF67]/10'>
+          <Link
+            href='/impresion-3d-sevilla'
+            className='inline-flex min-h-12 shrink-0 items-center justify-center gap-2 rounded-xl border border-[#B5FF67]/60 px-5 py-3 font-bold text-[#B5FF67] transition hover:bg-[#B5FF67]/10'
+          >
             Impresión 3D Sevilla <ArrowUpRight size={18} aria-hidden='true' />
           </Link>
         </div>
