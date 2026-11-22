@@ -12,9 +12,16 @@ const base = 'https://pn3d.es';
 async function getCategory(slug: string) {
   return prisma.category.findUnique({
     where: { slug },
-    select: { id: true, name: true, slug: true, parentId: true,
+    select: {
+      id: true,
+      name: true,
+      slug: true,
+      parentId: true,
       parent: { select: { name: true, slug: true } },
-      children: { select: { id: true, name: true, slug: true }, orderBy: { name: 'asc' } },
+      children: {
+        select: { id: true, name: true, slug: true },
+        orderBy: { name: 'asc' },
+      },
     },
   });
 }
@@ -22,21 +29,40 @@ async function getCategory(slug: string) {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const category = await getCategory(slug);
-  if (!category) return { title: 'Categoría no disponible', robots: { index: false, follow: false } };
+  if (!category)
+    return {
+      title: 'Categoría no disponible',
+      robots: { index: false, follow: false },
+    };
   const products = await storeProducts(slug);
   const description = `Descubre ${category.name.toLocaleLowerCase('es-ES')} impresos en 3D por P&N. Consulta nuestro catálogo y solicita piezas personalizadas.`;
   const path = `/categoria/${encodeURIComponent(category.slug)}`;
-  if (!products.length) return {
-    title: `${category.name} | P&N Impresión 3D`,
-    description,
-    robots: { index: false, follow: true },
-  };
+
+  const hasProducts = products.length > 0;
+  const hasSubcategories = category.children.length > 0;
+
+  if (!hasProducts && !hasSubcategories) {
+    return {
+      title: `${category.name} | P&N Impresión 3D`,
+      description,
+      robots: { index: false, follow: true },
+    };
+  }
   return {
     title: `${category.name} en impresión 3D`,
     description,
     alternates: { canonical: path },
-    openGraph: { type: 'website', title: `${category.name} | P&N Impresión 3D`, description, url: `${base}${path}` },
-    twitter: { card: 'summary', title: `${category.name} | P&N Impresión 3D`, description },
+    openGraph: {
+      type: 'website',
+      title: `${category.name} | P&N Impresión 3D`,
+      description,
+      url: `${base}${path}`,
+    },
+    twitter: {
+      card: 'summary',
+      title: `${category.name} | P&N Impresión 3D`,
+      description,
+    },
   };
 }
 
@@ -65,39 +91,85 @@ export default async function CategoryPage({ params }: Props) {
   return (
     <main className='mx-auto min-h-[65vh] max-w-7xl px-5 py-12 text-white lg:px-8'>
       {products.length > 0 && (
-        <script type='application/ld+json' dangerouslySetInnerHTML={{
-          __html: JSON.stringify(jsonLd).replace(/</g, '\\u003c'),
-        }} />
+        <script
+          type='application/ld+json'
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(jsonLd).replace(/</g, '\\u003c'),
+          }}
+        />
       )}
-      <nav aria-label='Ruta de navegación' className='flex flex-wrap items-center gap-2 text-sm text-white/70'>
-        <Link href='/tienda' className='text-[#B5FF67] hover:underline'>Tienda</Link>
-        {category.parent && <>
-          <span aria-hidden='true'>/</span>
-          <Link href={`/categoria/${encodeURIComponent(category.parent.slug)}`} className='text-[#B5FF67] hover:underline'>{category.parent.name}</Link>
-        </>}
+      <nav
+        aria-label='Ruta de navegación'
+        className='flex flex-wrap items-center gap-2 text-sm text-white/70'
+      >
+        <Link href='/tienda' className='text-[#B5FF67] hover:underline'>
+          Tienda
+        </Link>
+        {category.parent && (
+          <>
+            <span aria-hidden='true'>/</span>
+            <Link
+              href={`/categoria/${encodeURIComponent(category.parent.slug)}`}
+              className='text-[#B5FF67] hover:underline'
+            >
+              {category.parent.name}
+            </Link>
+          </>
+        )}
         <span aria-hidden='true'>/</span>
         <span aria-current='page'>{category.name}</span>
       </nav>
-      <h1 className='mt-6 text-3xl font-extrabold sm:text-4xl'>{category.name}</h1>
+      <h1 className='mt-6 text-3xl font-extrabold sm:text-4xl'>
+        {category.name}
+      </h1>
       <p className='mt-3 max-w-3xl leading-7 text-white/70'>{description}</p>
       {category.children.length > 0 && (
         <nav aria-label='Subcategorías' className='mt-7 flex flex-wrap gap-2'>
-          {category.children.map(child => (
-            <Link key={child.id} href={`/categoria/${encodeURIComponent(child.slug)}`}
-              className='rounded-lg border border-white/20 px-4 py-2 text-sm hover:border-[#B5FF67]'>
+          {category.children.map((child) => (
+            <Link
+              key={child.id}
+              href={`/categoria/${encodeURIComponent(child.slug)}`}
+              className='rounded-lg border border-white/20 px-4 py-2 text-sm hover:border-[#B5FF67]'
+            >
               {child.name}
             </Link>
           ))}
         </nav>
       )}
       {products.length > 0 ? (
-        <section aria-label={`Productos de ${category.name}`} className='mt-9 grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
-          {products.map(product => <StoreCard key={product.id} product={product} />)}
+        <section
+          aria-label={`Productos de ${category.name}`}
+          className='mt-9 grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
+        >
+          {products.map((product) => (
+            <StoreCard key={product.id} product={product} />
+          ))}
         </section>
-      ) : (
+      ) : category.children.length === 0 ? (
         <div className='mt-10 rounded-xl border border-white/15 bg-[#1a211e] p-6'>
           <p>Por ahora no hay artículos publicados en esta categoría.</p>
-          <Link href='/presupuesto' className='mt-3 inline-block font-semibold text-[#B5FF67] hover:underline'>Solicitar un presupuesto</Link>
+          <Link
+            href='/presupuesto'
+            className='mt-3 inline-block font-semibold text-[#B5FF67] hover:underline'
+          >
+            Solicitar un presupuesto
+          </Link>
+        </div>
+      ) : (
+        <div className='mt-10 rounded-xl border border-[#B5FF67]/20 bg-[#1a211e] p-6'>
+          <h2 className='text-xl font-bold'>
+            ¿Tienes un proyecto de impresión 3D?
+          </h2>
+          <p className='mt-3 max-w-2xl leading-7 text-white/70'>
+            Explora las especialidades disponibles en esta categoría o cuéntanos
+            qué necesitas para que podamos estudiar tu propuesta.
+          </p>
+          <Link
+            href='/presupuesto'
+            className='mt-5 inline-flex rounded-xl bg-[#B5FF67] px-5 py-3 font-bold text-black transition hover:bg-[#d2ffab]'
+          >
+            Solicitar presupuesto
+          </Link>
         </div>
       )}
     </main>
