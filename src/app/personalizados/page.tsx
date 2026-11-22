@@ -264,6 +264,42 @@ export default function Page() {
         </div>
       </section>
 
+      {/* ENLACE INTERNO AL SERVICIO LOCAL */}
+      <section
+        aria-labelledby='personalizados-sevilla-title'
+        className='border-t border-white/10 bg-[#101610] py-14 sm:py-16'
+      >
+        <div className='mx-auto flex max-w-7xl flex-col gap-6 px-5 lg:flex-row lg:items-center lg:justify-between lg:px-8'>
+          <div className='max-w-3xl'>
+            <p className='text-xs font-bold uppercase tracking-widest text-[#B5FF67]'>
+              Nuestro taller en Sevilla
+            </p>
+
+            <h2
+              id='personalizados-sevilla-title'
+              className='mt-3 text-2xl font-extrabold sm:text-3xl'
+            >
+              Impresión 3D personalizada en Sevilla
+            </h2>
+
+            <p className='mt-4 leading-7 text-neutral-300'>
+              Desde nuestro taller en Castilblanco de los Arroyos fabricamos
+              piezas impresas en 3D para clientes de Sevilla y provincia.
+              Descubre nuestros trabajos reales, cómo fabricamos y las opciones
+              para realizar tu encargo.
+            </p>
+          </div>
+
+          <Link
+            href='/impresion-3d-sevilla'
+            className='inline-flex min-h-12 shrink-0 items-center justify-center gap-2 rounded-xl border border-[#B5FF67]/60 px-5 py-3 font-bold text-[#B5FF67] transition hover:bg-[#B5FF67]/10 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#B5FF67]'
+          >
+            Conocer nuestro servicio en Sevilla
+            <ArrowUpRight size={18} aria-hidden='true' />
+          </Link>
+        </div>
+      </section>
+
       {/* CTA FINAL */}
       <section className='border-t border-white/10 bg-[#151b16] py-16 sm:py-20'>
         <div className='mx-auto max-w-4xl px-5 text-center'>
