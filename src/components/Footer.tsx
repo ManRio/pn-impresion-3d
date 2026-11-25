@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { Instagram, Mail, Phone } from 'lucide-react';
+import ManageCookiesButton from '@/components/google/ManageCookiesButton';
 const groups = [
   {
     title: 'Explorar',
@@ -89,7 +90,7 @@ export default function Footer() {
           © {new Date().getFullYear()} P&N Impresión 3D · Luis Miguel Rodriguez
           Gutierrez
         </p>
-        <p>Impresión 3D personalizada en Sevilla</p>
+        <div className='flex flex-wrap gap-4'><ManageCookiesButton /><p>Impresión 3D personalizada en Sevilla</p></div>
       </div>
     </footer>
   );
