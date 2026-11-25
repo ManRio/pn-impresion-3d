@@ -3,6 +3,7 @@
 
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
+import cloudinaryLoader from '@/lib/cloudinary-loader';
 import Link from 'next/link';
 import {
   ArrowUpRight,
@@ -98,7 +99,7 @@ export default function FeaturedProductSlider({
       >
         <Image
           key={active.id}
-          src={active.imageUrl}
+          loader={cloudinaryLoader} src={active.imageUrl}
           alt={active.imageAlt || active.name}
           fill
           priority={current === 0}

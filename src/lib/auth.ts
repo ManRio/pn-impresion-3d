@@ -9,7 +9,7 @@ export const auth = betterAuth({
   appName: 'P&N Impresión 3D',
 
   database: prismaAdapter(prisma, {
-    provider: 'postgresql',
+    provider: 'mysql',
   }),
 
   emailAndPassword: {

@@ -298,6 +298,7 @@ export type QuoteInternalNoteOrderByWithRelationInput = {
   sentToCustomer?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   quote?: Prisma.QuoteRequestOrderByWithRelationInput
+  _relevance?: Prisma.QuoteInternalNoteOrderByRelevanceInput
 }
 
 export type QuoteInternalNoteWhereUniqueInput = Prisma.AtLeast<{
@@ -479,6 +480,12 @@ export type QuoteInternalNoteListRelationFilter = {
 
 export type QuoteInternalNoteOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type QuoteInternalNoteOrderByRelevanceInput = {
+  fields: Prisma.QuoteInternalNoteOrderByRelevanceFieldEnum | Prisma.QuoteInternalNoteOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type QuoteInternalNoteCountOrderByAggregateInput = {
@@ -733,39 +740,7 @@ export type QuoteInternalNoteSelect<ExtArgs extends runtime.Types.Extensions.Int
   quote?: boolean | Prisma.QuoteRequestDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["quoteInternalNote"]>
 
-export type QuoteInternalNoteSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
-  id?: boolean
-  quoteId?: boolean
-  authorId?: boolean
-  authorName?: boolean
-  body?: boolean
-  statusFrom?: boolean
-  statusTo?: boolean
-  reference?: boolean
-  amountCents?: boolean
-  itemsSummary?: boolean
-  deliveryEstimate?: boolean
-  sentToCustomer?: boolean
-  createdAt?: boolean
-  quote?: boolean | Prisma.QuoteRequestDefaultArgs<ExtArgs>
-}, ExtArgs["result"]["quoteInternalNote"]>
 
-export type QuoteInternalNoteSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
-  id?: boolean
-  quoteId?: boolean
-  authorId?: boolean
-  authorName?: boolean
-  body?: boolean
-  statusFrom?: boolean
-  statusTo?: boolean
-  reference?: boolean
-  amountCents?: boolean
-  itemsSummary?: boolean
-  deliveryEstimate?: boolean
-  sentToCustomer?: boolean
-  createdAt?: boolean
-  quote?: boolean | Prisma.QuoteRequestDefaultArgs<ExtArgs>
-}, ExtArgs["result"]["quoteInternalNote"]>
 
 export type QuoteInternalNoteSelectScalar = {
   id?: boolean
@@ -785,12 +760,6 @@ export type QuoteInternalNoteSelectScalar = {
 
 export type QuoteInternalNoteOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "quoteId" | "authorId" | "authorName" | "body" | "statusFrom" | "statusTo" | "reference" | "amountCents" | "itemsSummary" | "deliveryEstimate" | "sentToCustomer" | "createdAt", ExtArgs["result"]["quoteInternalNote"]>
 export type QuoteInternalNoteInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  quote?: boolean | Prisma.QuoteRequestDefaultArgs<ExtArgs>
-}
-export type QuoteInternalNoteIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  quote?: boolean | Prisma.QuoteRequestDefaultArgs<ExtArgs>
-}
-export type QuoteInternalNoteIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   quote?: boolean | Prisma.QuoteRequestDefaultArgs<ExtArgs>
 }
 
@@ -931,30 +900,6 @@ export interface QuoteInternalNoteDelegate<ExtArgs extends runtime.Types.Extensi
   createMany<T extends QuoteInternalNoteCreateManyArgs>(args?: Prisma.SelectSubset<T, QuoteInternalNoteCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
-   * Create many QuoteInternalNotes and returns the data saved in the database.
-   * @param {QuoteInternalNoteCreateManyAndReturnArgs} args - Arguments to create many QuoteInternalNotes.
-   * @example
-   * // Create many QuoteInternalNotes
-   * const quoteInternalNote = await prisma.quoteInternalNote.createManyAndReturn({
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * 
-   * // Create many QuoteInternalNotes and only return the `id`
-   * const quoteInternalNoteWithIdOnly = await prisma.quoteInternalNote.createManyAndReturn({
-   *   select: { id: true },
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * Note, that providing `undefined` is treated as the value not being there.
-   * Read more here: https://pris.ly/d/null-undefined
-   * 
-   */
-  createManyAndReturn<T extends QuoteInternalNoteCreateManyAndReturnArgs>(args?: Prisma.SelectSubset<T, QuoteInternalNoteCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$QuoteInternalNotePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-  /**
    * Delete a QuoteInternalNote.
    * @param {QuoteInternalNoteDeleteArgs} args - Arguments to delete one QuoteInternalNote.
    * @example
@@ -1017,36 +962,6 @@ export interface QuoteInternalNoteDelegate<ExtArgs extends runtime.Types.Extensi
    * 
    */
   updateMany<T extends QuoteInternalNoteUpdateManyArgs>(args: Prisma.SelectSubset<T, QuoteInternalNoteUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
-
-  /**
-   * Update zero or more QuoteInternalNotes and returns the data updated in the database.
-   * @param {QuoteInternalNoteUpdateManyAndReturnArgs} args - Arguments to update many QuoteInternalNotes.
-   * @example
-   * // Update many QuoteInternalNotes
-   * const quoteInternalNote = await prisma.quoteInternalNote.updateManyAndReturn({
-   *   where: {
-   *     // ... provide filter here
-   *   },
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * 
-   * // Update zero or more QuoteInternalNotes and only return the `id`
-   * const quoteInternalNoteWithIdOnly = await prisma.quoteInternalNote.updateManyAndReturn({
-   *   select: { id: true },
-   *   where: {
-   *     // ... provide filter here
-   *   },
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * Note, that providing `undefined` is treated as the value not being there.
-   * Read more here: https://pris.ly/d/null-undefined
-   * 
-   */
-  updateManyAndReturn<T extends QuoteInternalNoteUpdateManyAndReturnArgs>(args: Prisma.SelectSubset<T, QuoteInternalNoteUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$QuoteInternalNotePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
   /**
    * Create or update one QuoteInternalNote.
@@ -1488,29 +1403,6 @@ export type QuoteInternalNoteCreateManyArgs<ExtArgs extends runtime.Types.Extens
 }
 
 /**
- * QuoteInternalNote createManyAndReturn
- */
-export type QuoteInternalNoteCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the QuoteInternalNote
-   */
-  select?: Prisma.QuoteInternalNoteSelectCreateManyAndReturn<ExtArgs> | null
-  /**
-   * Omit specific fields from the QuoteInternalNote
-   */
-  omit?: Prisma.QuoteInternalNoteOmit<ExtArgs> | null
-  /**
-   * The data used to create many QuoteInternalNotes.
-   */
-  data: Prisma.QuoteInternalNoteCreateManyInput | Prisma.QuoteInternalNoteCreateManyInput[]
-  skipDuplicates?: boolean
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.QuoteInternalNoteIncludeCreateManyAndReturn<ExtArgs> | null
-}
-
-/**
  * QuoteInternalNote update
  */
 export type QuoteInternalNoteUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1552,36 +1444,6 @@ export type QuoteInternalNoteUpdateManyArgs<ExtArgs extends runtime.Types.Extens
    * Limit how many QuoteInternalNotes to update.
    */
   limit?: number
-}
-
-/**
- * QuoteInternalNote updateManyAndReturn
- */
-export type QuoteInternalNoteUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the QuoteInternalNote
-   */
-  select?: Prisma.QuoteInternalNoteSelectUpdateManyAndReturn<ExtArgs> | null
-  /**
-   * Omit specific fields from the QuoteInternalNote
-   */
-  omit?: Prisma.QuoteInternalNoteOmit<ExtArgs> | null
-  /**
-   * The data used to update QuoteInternalNotes.
-   */
-  data: Prisma.XOR<Prisma.QuoteInternalNoteUpdateManyMutationInput, Prisma.QuoteInternalNoteUncheckedUpdateManyInput>
-  /**
-   * Filter which QuoteInternalNotes to update
-   */
-  where?: Prisma.QuoteInternalNoteWhereInput
-  /**
-   * Limit how many QuoteInternalNotes to update.
-   */
-  limit?: number
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.QuoteInternalNoteIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**

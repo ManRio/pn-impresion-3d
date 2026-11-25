@@ -228,6 +228,7 @@ export type OrderHistoryOrderByWithRelationInput = {
   publicMessage?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   order?: Prisma.OrderOrderByWithRelationInput
+  _relevance?: Prisma.OrderHistoryOrderByRelevanceInput
 }
 
 export type OrderHistoryWhereUniqueInput = Prisma.AtLeast<{
@@ -367,6 +368,12 @@ export type OrderHistoryListRelationFilter = {
 
 export type OrderHistoryOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type OrderHistoryOrderByRelevanceInput = {
+  fields: Prisma.OrderHistoryOrderByRelevanceFieldEnum | Prisma.OrderHistoryOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type OrderHistoryCountOrderByAggregateInput = {
@@ -573,31 +580,7 @@ export type OrderHistorySelect<ExtArgs extends runtime.Types.Extensions.Internal
   order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["orderHistory"]>
 
-export type OrderHistorySelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
-  id?: boolean
-  orderId?: boolean
-  authorId?: boolean
-  authorName?: boolean
-  previousStatus?: boolean
-  newStatus?: boolean
-  internalNote?: boolean
-  publicMessage?: boolean
-  createdAt?: boolean
-  order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
-}, ExtArgs["result"]["orderHistory"]>
 
-export type OrderHistorySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
-  id?: boolean
-  orderId?: boolean
-  authorId?: boolean
-  authorName?: boolean
-  previousStatus?: boolean
-  newStatus?: boolean
-  internalNote?: boolean
-  publicMessage?: boolean
-  createdAt?: boolean
-  order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
-}, ExtArgs["result"]["orderHistory"]>
 
 export type OrderHistorySelectScalar = {
   id?: boolean
@@ -613,12 +596,6 @@ export type OrderHistorySelectScalar = {
 
 export type OrderHistoryOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "orderId" | "authorId" | "authorName" | "previousStatus" | "newStatus" | "internalNote" | "publicMessage" | "createdAt", ExtArgs["result"]["orderHistory"]>
 export type OrderHistoryInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
-}
-export type OrderHistoryIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
-}
-export type OrderHistoryIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
 }
 
@@ -755,30 +732,6 @@ export interface OrderHistoryDelegate<ExtArgs extends runtime.Types.Extensions.I
   createMany<T extends OrderHistoryCreateManyArgs>(args?: Prisma.SelectSubset<T, OrderHistoryCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
-   * Create many OrderHistories and returns the data saved in the database.
-   * @param {OrderHistoryCreateManyAndReturnArgs} args - Arguments to create many OrderHistories.
-   * @example
-   * // Create many OrderHistories
-   * const orderHistory = await prisma.orderHistory.createManyAndReturn({
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * 
-   * // Create many OrderHistories and only return the `id`
-   * const orderHistoryWithIdOnly = await prisma.orderHistory.createManyAndReturn({
-   *   select: { id: true },
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * Note, that providing `undefined` is treated as the value not being there.
-   * Read more here: https://pris.ly/d/null-undefined
-   * 
-   */
-  createManyAndReturn<T extends OrderHistoryCreateManyAndReturnArgs>(args?: Prisma.SelectSubset<T, OrderHistoryCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrderHistoryPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-  /**
    * Delete a OrderHistory.
    * @param {OrderHistoryDeleteArgs} args - Arguments to delete one OrderHistory.
    * @example
@@ -841,36 +794,6 @@ export interface OrderHistoryDelegate<ExtArgs extends runtime.Types.Extensions.I
    * 
    */
   updateMany<T extends OrderHistoryUpdateManyArgs>(args: Prisma.SelectSubset<T, OrderHistoryUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
-
-  /**
-   * Update zero or more OrderHistories and returns the data updated in the database.
-   * @param {OrderHistoryUpdateManyAndReturnArgs} args - Arguments to update many OrderHistories.
-   * @example
-   * // Update many OrderHistories
-   * const orderHistory = await prisma.orderHistory.updateManyAndReturn({
-   *   where: {
-   *     // ... provide filter here
-   *   },
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * 
-   * // Update zero or more OrderHistories and only return the `id`
-   * const orderHistoryWithIdOnly = await prisma.orderHistory.updateManyAndReturn({
-   *   select: { id: true },
-   *   where: {
-   *     // ... provide filter here
-   *   },
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * Note, that providing `undefined` is treated as the value not being there.
-   * Read more here: https://pris.ly/d/null-undefined
-   * 
-   */
-  updateManyAndReturn<T extends OrderHistoryUpdateManyAndReturnArgs>(args: Prisma.SelectSubset<T, OrderHistoryUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrderHistoryPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
   /**
    * Create or update one OrderHistory.
@@ -1308,29 +1231,6 @@ export type OrderHistoryCreateManyArgs<ExtArgs extends runtime.Types.Extensions.
 }
 
 /**
- * OrderHistory createManyAndReturn
- */
-export type OrderHistoryCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the OrderHistory
-   */
-  select?: Prisma.OrderHistorySelectCreateManyAndReturn<ExtArgs> | null
-  /**
-   * Omit specific fields from the OrderHistory
-   */
-  omit?: Prisma.OrderHistoryOmit<ExtArgs> | null
-  /**
-   * The data used to create many OrderHistories.
-   */
-  data: Prisma.OrderHistoryCreateManyInput | Prisma.OrderHistoryCreateManyInput[]
-  skipDuplicates?: boolean
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.OrderHistoryIncludeCreateManyAndReturn<ExtArgs> | null
-}
-
-/**
  * OrderHistory update
  */
 export type OrderHistoryUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1372,36 +1272,6 @@ export type OrderHistoryUpdateManyArgs<ExtArgs extends runtime.Types.Extensions.
    * Limit how many OrderHistories to update.
    */
   limit?: number
-}
-
-/**
- * OrderHistory updateManyAndReturn
- */
-export type OrderHistoryUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the OrderHistory
-   */
-  select?: Prisma.OrderHistorySelectUpdateManyAndReturn<ExtArgs> | null
-  /**
-   * Omit specific fields from the OrderHistory
-   */
-  omit?: Prisma.OrderHistoryOmit<ExtArgs> | null
-  /**
-   * The data used to update OrderHistories.
-   */
-  data: Prisma.XOR<Prisma.OrderHistoryUpdateManyMutationInput, Prisma.OrderHistoryUncheckedUpdateManyInput>
-  /**
-   * Filter which OrderHistories to update
-   */
-  where?: Prisma.OrderHistoryWhereInput
-  /**
-   * Limit how many OrderHistories to update.
-   */
-  limit?: number
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.OrderHistoryIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**
