@@ -325,6 +325,7 @@ export type EmailNotificationOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   order?: Prisma.OrderOrderByWithRelationInput
+  _relevance?: Prisma.EmailNotificationOrderByRelevanceInput
 }
 
 export type EmailNotificationWhereUniqueInput = Prisma.AtLeast<{
@@ -526,6 +527,12 @@ export type EmailNotificationUncheckedUpdateManyInput = {
   lastError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type EmailNotificationOrderByRelevanceInput = {
+  fields: Prisma.EmailNotificationOrderByRelevanceFieldEnum | Prisma.EmailNotificationOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type EmailNotificationCountOrderByAggregateInput = {
@@ -827,45 +834,7 @@ export type EmailNotificationSelect<ExtArgs extends runtime.Types.Extensions.Int
   order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["emailNotification"]>
 
-export type EmailNotificationSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
-  id?: boolean
-  dedupeKey?: boolean
-  orderId?: boolean
-  kind?: boolean
-  recipient?: boolean
-  subject?: boolean
-  html?: boolean
-  status?: boolean
-  attempts?: boolean
-  nextAttemptAt?: boolean
-  lockedAt?: boolean
-  sentAt?: boolean
-  providerId?: boolean
-  lastError?: boolean
-  createdAt?: boolean
-  updatedAt?: boolean
-  order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
-}, ExtArgs["result"]["emailNotification"]>
 
-export type EmailNotificationSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
-  id?: boolean
-  dedupeKey?: boolean
-  orderId?: boolean
-  kind?: boolean
-  recipient?: boolean
-  subject?: boolean
-  html?: boolean
-  status?: boolean
-  attempts?: boolean
-  nextAttemptAt?: boolean
-  lockedAt?: boolean
-  sentAt?: boolean
-  providerId?: boolean
-  lastError?: boolean
-  createdAt?: boolean
-  updatedAt?: boolean
-  order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
-}, ExtArgs["result"]["emailNotification"]>
 
 export type EmailNotificationSelectScalar = {
   id?: boolean
@@ -888,12 +857,6 @@ export type EmailNotificationSelectScalar = {
 
 export type EmailNotificationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "dedupeKey" | "orderId" | "kind" | "recipient" | "subject" | "html" | "status" | "attempts" | "nextAttemptAt" | "lockedAt" | "sentAt" | "providerId" | "lastError" | "createdAt" | "updatedAt", ExtArgs["result"]["emailNotification"]>
 export type EmailNotificationInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
-}
-export type EmailNotificationIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
-}
-export type EmailNotificationIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
 }
 
@@ -1037,30 +1000,6 @@ export interface EmailNotificationDelegate<ExtArgs extends runtime.Types.Extensi
   createMany<T extends EmailNotificationCreateManyArgs>(args?: Prisma.SelectSubset<T, EmailNotificationCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
-   * Create many EmailNotifications and returns the data saved in the database.
-   * @param {EmailNotificationCreateManyAndReturnArgs} args - Arguments to create many EmailNotifications.
-   * @example
-   * // Create many EmailNotifications
-   * const emailNotification = await prisma.emailNotification.createManyAndReturn({
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * 
-   * // Create many EmailNotifications and only return the `id`
-   * const emailNotificationWithIdOnly = await prisma.emailNotification.createManyAndReturn({
-   *   select: { id: true },
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * Note, that providing `undefined` is treated as the value not being there.
-   * Read more here: https://pris.ly/d/null-undefined
-   * 
-   */
-  createManyAndReturn<T extends EmailNotificationCreateManyAndReturnArgs>(args?: Prisma.SelectSubset<T, EmailNotificationCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EmailNotificationPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-  /**
    * Delete a EmailNotification.
    * @param {EmailNotificationDeleteArgs} args - Arguments to delete one EmailNotification.
    * @example
@@ -1123,36 +1062,6 @@ export interface EmailNotificationDelegate<ExtArgs extends runtime.Types.Extensi
    * 
    */
   updateMany<T extends EmailNotificationUpdateManyArgs>(args: Prisma.SelectSubset<T, EmailNotificationUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
-
-  /**
-   * Update zero or more EmailNotifications and returns the data updated in the database.
-   * @param {EmailNotificationUpdateManyAndReturnArgs} args - Arguments to update many EmailNotifications.
-   * @example
-   * // Update many EmailNotifications
-   * const emailNotification = await prisma.emailNotification.updateManyAndReturn({
-   *   where: {
-   *     // ... provide filter here
-   *   },
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * 
-   * // Update zero or more EmailNotifications and only return the `id`
-   * const emailNotificationWithIdOnly = await prisma.emailNotification.updateManyAndReturn({
-   *   select: { id: true },
-   *   where: {
-   *     // ... provide filter here
-   *   },
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * Note, that providing `undefined` is treated as the value not being there.
-   * Read more here: https://pris.ly/d/null-undefined
-   * 
-   */
-  updateManyAndReturn<T extends EmailNotificationUpdateManyAndReturnArgs>(args: Prisma.SelectSubset<T, EmailNotificationUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EmailNotificationPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
   /**
    * Create or update one EmailNotification.
@@ -1597,29 +1506,6 @@ export type EmailNotificationCreateManyArgs<ExtArgs extends runtime.Types.Extens
 }
 
 /**
- * EmailNotification createManyAndReturn
- */
-export type EmailNotificationCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the EmailNotification
-   */
-  select?: Prisma.EmailNotificationSelectCreateManyAndReturn<ExtArgs> | null
-  /**
-   * Omit specific fields from the EmailNotification
-   */
-  omit?: Prisma.EmailNotificationOmit<ExtArgs> | null
-  /**
-   * The data used to create many EmailNotifications.
-   */
-  data: Prisma.EmailNotificationCreateManyInput | Prisma.EmailNotificationCreateManyInput[]
-  skipDuplicates?: boolean
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.EmailNotificationIncludeCreateManyAndReturn<ExtArgs> | null
-}
-
-/**
  * EmailNotification update
  */
 export type EmailNotificationUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1661,36 +1547,6 @@ export type EmailNotificationUpdateManyArgs<ExtArgs extends runtime.Types.Extens
    * Limit how many EmailNotifications to update.
    */
   limit?: number
-}
-
-/**
- * EmailNotification updateManyAndReturn
- */
-export type EmailNotificationUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the EmailNotification
-   */
-  select?: Prisma.EmailNotificationSelectUpdateManyAndReturn<ExtArgs> | null
-  /**
-   * Omit specific fields from the EmailNotification
-   */
-  omit?: Prisma.EmailNotificationOmit<ExtArgs> | null
-  /**
-   * The data used to update EmailNotifications.
-   */
-  data: Prisma.XOR<Prisma.EmailNotificationUpdateManyMutationInput, Prisma.EmailNotificationUncheckedUpdateManyInput>
-  /**
-   * Filter which EmailNotifications to update
-   */
-  where?: Prisma.EmailNotificationWhereInput
-  /**
-   * Limit how many EmailNotifications to update.
-   */
-  limit?: number
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.EmailNotificationIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**

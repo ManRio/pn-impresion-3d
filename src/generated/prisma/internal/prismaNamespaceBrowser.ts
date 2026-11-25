@@ -399,18 +399,243 @@ export const SortOrder = {
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
 
 
-export const QueryMode = {
-  default: 'default',
-  insensitive: 'insensitive'
-} as const
-
-export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
-
-
 export const NullsOrder = {
   first: 'first',
   last: 'last'
 } as const
 
 export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+export const CategoryOrderByRelevanceFieldEnum = {
+  id: 'id',
+  name: 'name',
+  slug: 'slug',
+  parentId: 'parentId'
+} as const
+
+export type CategoryOrderByRelevanceFieldEnum = (typeof CategoryOrderByRelevanceFieldEnum)[keyof typeof CategoryOrderByRelevanceFieldEnum]
+
+
+export const ProductOrderByRelevanceFieldEnum = {
+  id: 'id',
+  name: 'name',
+  slug: 'slug',
+  description: 'description',
+  shortDescription: 'shortDescription',
+  seoTitle: 'seoTitle',
+  seoDescription: 'seoDescription',
+  seoKeywords: 'seoKeywords',
+  socialTitle: 'socialTitle',
+  socialDescription: 'socialDescription',
+  socialImageUrl: 'socialImageUrl',
+  categoryId: 'categoryId',
+  sourcePlatform: 'sourcePlatform',
+  sourceModelId: 'sourceModelId',
+  sourceUrl: 'sourceUrl',
+  sourceDesigner: 'sourceDesigner',
+  sourceLicense: 'sourceLicense',
+  rightsEvidence: 'rightsEvidence'
+} as const
+
+export type ProductOrderByRelevanceFieldEnum = (typeof ProductOrderByRelevanceFieldEnum)[keyof typeof ProductOrderByRelevanceFieldEnum]
+
+
+export const ProductImageOrderByRelevanceFieldEnum = {
+  id: 'id',
+  productId: 'productId',
+  url: 'url',
+  alt: 'alt'
+} as const
+
+export type ProductImageOrderByRelevanceFieldEnum = (typeof ProductImageOrderByRelevanceFieldEnum)[keyof typeof ProductImageOrderByRelevanceFieldEnum]
+
+
+export const ProductVariantOrderByRelevanceFieldEnum = {
+  id: 'id',
+  productId: 'productId',
+  sku: 'sku',
+  label: 'label',
+  color: 'color'
+} as const
+
+export type ProductVariantOrderByRelevanceFieldEnum = (typeof ProductVariantOrderByRelevanceFieldEnum)[keyof typeof ProductVariantOrderByRelevanceFieldEnum]
+
+
+export const PricingConfigOrderByRelevanceFieldEnum = {
+  id: 'id'
+} as const
+
+export type PricingConfigOrderByRelevanceFieldEnum = (typeof PricingConfigOrderByRelevanceFieldEnum)[keyof typeof PricingConfigOrderByRelevanceFieldEnum]
+
+
+export const QuoteRequestOrderByRelevanceFieldEnum = {
+  id: 'id',
+  customerName: 'customerName',
+  email: 'email',
+  notes: 'notes',
+  fileKey: 'fileKey',
+  userId: 'userId',
+  productId: 'productId'
+} as const
+
+export type QuoteRequestOrderByRelevanceFieldEnum = (typeof QuoteRequestOrderByRelevanceFieldEnum)[keyof typeof QuoteRequestOrderByRelevanceFieldEnum]
+
+
+export const UserOrderByRelevanceFieldEnum = {
+  id: 'id',
+  name: 'name',
+  email: 'email',
+  image: 'image',
+  role: 'role',
+  banReason: 'banReason'
+} as const
+
+export type UserOrderByRelevanceFieldEnum = (typeof UserOrderByRelevanceFieldEnum)[keyof typeof UserOrderByRelevanceFieldEnum]
+
+
+export const SessionOrderByRelevanceFieldEnum = {
+  id: 'id',
+  token: 'token',
+  ipAddress: 'ipAddress',
+  impersonatedBy: 'impersonatedBy',
+  userAgent: 'userAgent',
+  userId: 'userId'
+} as const
+
+export type SessionOrderByRelevanceFieldEnum = (typeof SessionOrderByRelevanceFieldEnum)[keyof typeof SessionOrderByRelevanceFieldEnum]
+
+
+export const AccountOrderByRelevanceFieldEnum = {
+  id: 'id',
+  accountId: 'accountId',
+  providerId: 'providerId',
+  userId: 'userId',
+  accessToken: 'accessToken',
+  refreshToken: 'refreshToken',
+  idToken: 'idToken',
+  scope: 'scope',
+  password: 'password'
+} as const
+
+export type AccountOrderByRelevanceFieldEnum = (typeof AccountOrderByRelevanceFieldEnum)[keyof typeof AccountOrderByRelevanceFieldEnum]
+
+
+export const VerificationOrderByRelevanceFieldEnum = {
+  id: 'id',
+  identifier: 'identifier',
+  value: 'value'
+} as const
+
+export type VerificationOrderByRelevanceFieldEnum = (typeof VerificationOrderByRelevanceFieldEnum)[keyof typeof VerificationOrderByRelevanceFieldEnum]
+
+
+export const SavedDesignOrderByRelevanceFieldEnum = {
+  id: 'id',
+  platform: 'platform',
+  externalId: 'externalId',
+  title: 'title',
+  designer: 'designer',
+  license: 'license',
+  sourceUrl: 'sourceUrl'
+} as const
+
+export type SavedDesignOrderByRelevanceFieldEnum = (typeof SavedDesignOrderByRelevanceFieldEnum)[keyof typeof SavedDesignOrderByRelevanceFieldEnum]
+
+
+export const CustomerProfileOrderByRelevanceFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  firstName: 'firstName',
+  lastName: 'lastName',
+  phone: 'phone',
+  shippingAddress: 'shippingAddress',
+  shippingPostalCode: 'shippingPostalCode',
+  shippingCity: 'shippingCity',
+  shippingProvince: 'shippingProvince',
+  shippingCountry: 'shippingCountry',
+  billingAddress: 'billingAddress',
+  billingPostalCode: 'billingPostalCode',
+  billingCity: 'billingCity',
+  billingProvince: 'billingProvince',
+  billingCountry: 'billingCountry',
+  taxId: 'taxId'
+} as const
+
+export type CustomerProfileOrderByRelevanceFieldEnum = (typeof CustomerProfileOrderByRelevanceFieldEnum)[keyof typeof CustomerProfileOrderByRelevanceFieldEnum]
+
+
+export const QuoteInternalNoteOrderByRelevanceFieldEnum = {
+  id: 'id',
+  quoteId: 'quoteId',
+  authorId: 'authorId',
+  authorName: 'authorName',
+  body: 'body',
+  reference: 'reference',
+  itemsSummary: 'itemsSummary',
+  deliveryEstimate: 'deliveryEstimate'
+} as const
+
+export type QuoteInternalNoteOrderByRelevanceFieldEnum = (typeof QuoteInternalNoteOrderByRelevanceFieldEnum)[keyof typeof QuoteInternalNoteOrderByRelevanceFieldEnum]
+
+
+export const EmailNotificationOrderByRelevanceFieldEnum = {
+  id: 'id',
+  dedupeKey: 'dedupeKey',
+  orderId: 'orderId',
+  kind: 'kind',
+  recipient: 'recipient',
+  subject: 'subject',
+  html: 'html',
+  providerId: 'providerId',
+  lastError: 'lastError'
+} as const
+
+export type EmailNotificationOrderByRelevanceFieldEnum = (typeof EmailNotificationOrderByRelevanceFieldEnum)[keyof typeof EmailNotificationOrderByRelevanceFieldEnum]
+
+
+export const OrderOrderByRelevanceFieldEnum = {
+  id: 'id',
+  checkoutKey: 'checkoutKey',
+  userId: 'userId',
+  customerName: 'customerName',
+  customerEmail: 'customerEmail',
+  customerPhone: 'customerPhone',
+  shippingAddress: 'shippingAddress',
+  billingAddress: 'billingAddress',
+  customerNotes: 'customerNotes',
+  deliveryMethod: 'deliveryMethod',
+  paymentStatus: 'paymentStatus',
+  stripeCheckoutSessionId: 'stripeCheckoutSessionId',
+  stripePaymentIntentId: 'stripePaymentIntentId',
+  carrier: 'carrier',
+  trackingNumber: 'trackingNumber'
+} as const
+
+export type OrderOrderByRelevanceFieldEnum = (typeof OrderOrderByRelevanceFieldEnum)[keyof typeof OrderOrderByRelevanceFieldEnum]
+
+
+export const OrderItemOrderByRelevanceFieldEnum = {
+  id: 'id',
+  orderId: 'orderId',
+  variantId: 'variantId',
+  productName: 'productName',
+  variantLabel: 'variantLabel',
+  sku: 'sku',
+  color: 'color'
+} as const
+
+export type OrderItemOrderByRelevanceFieldEnum = (typeof OrderItemOrderByRelevanceFieldEnum)[keyof typeof OrderItemOrderByRelevanceFieldEnum]
+
+
+export const OrderHistoryOrderByRelevanceFieldEnum = {
+  id: 'id',
+  orderId: 'orderId',
+  authorId: 'authorId',
+  authorName: 'authorName',
+  internalNote: 'internalNote',
+  publicMessage: 'publicMessage'
+} as const
+
+export type OrderHistoryOrderByRelevanceFieldEnum = (typeof OrderHistoryOrderByRelevanceFieldEnum)[keyof typeof OrderHistoryOrderByRelevanceFieldEnum]
 

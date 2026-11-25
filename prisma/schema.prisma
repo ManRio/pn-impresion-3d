@@ -5,7 +5,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
 }
 
 enum ProductStatus {
@@ -62,7 +62,7 @@ model Product {
   seoKeywords String? @db.Text
   socialTitle String?
   socialDescription String? @db.Text
-  socialImageUrl String?
+  socialImageUrl String? @db.Text
   status      ProductStatus    @default(DRAFT)
   saleMode    SaleMode         @default(DIRECT)
   categoryId  String
@@ -73,7 +73,7 @@ model Product {
   updatedAt   DateTime         @updatedAt
   sourcePlatform       String?
   sourceModelId        String?
-  sourceUrl            String?
+  sourceUrl            String? @db.Text
   sourceDesigner       String?
   sourceLicense        String?
   commercialPermission Boolean @default(false)
@@ -90,7 +90,7 @@ model ProductImage {
   id        String  @id @default(cuid())
   productId String
   product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
-  url       String
+  url       String @db.Text
   alt       String
   position  Int     @default(0)
 
@@ -128,7 +128,7 @@ model QuoteRequest {
   customerName String
   email        String
   notes        String?     @db.Text
-  fileKey      String? // Ruta privada; NUNCA URL pública del STL del cliente.
+  fileKey      String? @db.Text // Ruta privada; NUNCA URL pública del STL del cliente.
   status       QuoteStatus @default(NEW)
   createdAt    DateTime    @default(now())
   updatedAt    DateTime    @updatedAt
@@ -148,7 +148,7 @@ model User {
   name          String
   email         String
   emailVerified Boolean   @default(false)
-  image         String?
+  image         String? @db.Text
   role       String?   @default("user")
   banned     Boolean?  @default(false)
   banReason  String?
@@ -188,9 +188,9 @@ model Account {
   providerId            String
   userId                String
   user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  accessToken           String?
-  refreshToken          String?
-  idToken               String?
+  accessToken           String? @db.Text
+  refreshToken          String? @db.Text
+  idToken               String? @db.Text
   accessTokenExpiresAt  DateTime?
   refreshTokenExpiresAt DateTime?
   scope                 String?
@@ -233,7 +233,7 @@ model SavedDesign {
   title      String
   designer   String
   license    String
-  sourceUrl  String
+  sourceUrl  String @db.Text
   status     SavedDesignStatus @default(TO_REVIEW)
   createdAt  DateTime          @default(now())
   updatedAt  DateTime          @updatedAt
@@ -339,7 +339,7 @@ model Order {
   customerPhone    String         @default("")
   shippingAddress  String         @db.Text
   billingAddress   String         @db.Text
-  customerNotes    String         @default("") @db.Text
+  customerNotes    String         @default("") @db.VarChar(2000)
   totalCents       Int
   taxableBaseCents     Int?
   vatCents             Int?

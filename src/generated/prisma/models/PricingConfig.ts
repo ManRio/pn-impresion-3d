@@ -219,6 +219,7 @@ export type PricingConfigOrderByWithRelationInput = {
   baseCentsPerGram?: Prisma.SortOrder
   minimumCents?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  _relevance?: Prisma.PricingConfigOrderByRelevanceInput
 }
 
 export type PricingConfigWhereUniqueInput = Prisma.AtLeast<{
@@ -302,6 +303,12 @@ export type PricingConfigUncheckedUpdateManyInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
+export type PricingConfigOrderByRelevanceInput = {
+  fields: Prisma.PricingConfigOrderByRelevanceFieldEnum | Prisma.PricingConfigOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
+}
+
 export type PricingConfigCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   baseCentsPerGram?: Prisma.SortOrder
@@ -342,19 +349,7 @@ export type PricingConfigSelect<ExtArgs extends runtime.Types.Extensions.Interna
   updatedAt?: boolean
 }, ExtArgs["result"]["pricingConfig"]>
 
-export type PricingConfigSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
-  id?: boolean
-  baseCentsPerGram?: boolean
-  minimumCents?: boolean
-  updatedAt?: boolean
-}, ExtArgs["result"]["pricingConfig"]>
 
-export type PricingConfigSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
-  id?: boolean
-  baseCentsPerGram?: boolean
-  minimumCents?: boolean
-  updatedAt?: boolean
-}, ExtArgs["result"]["pricingConfig"]>
 
 export type PricingConfigSelectScalar = {
   id?: boolean
@@ -491,30 +486,6 @@ export interface PricingConfigDelegate<ExtArgs extends runtime.Types.Extensions.
   createMany<T extends PricingConfigCreateManyArgs>(args?: Prisma.SelectSubset<T, PricingConfigCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
-   * Create many PricingConfigs and returns the data saved in the database.
-   * @param {PricingConfigCreateManyAndReturnArgs} args - Arguments to create many PricingConfigs.
-   * @example
-   * // Create many PricingConfigs
-   * const pricingConfig = await prisma.pricingConfig.createManyAndReturn({
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * 
-   * // Create many PricingConfigs and only return the `id`
-   * const pricingConfigWithIdOnly = await prisma.pricingConfig.createManyAndReturn({
-   *   select: { id: true },
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * Note, that providing `undefined` is treated as the value not being there.
-   * Read more here: https://pris.ly/d/null-undefined
-   * 
-   */
-  createManyAndReturn<T extends PricingConfigCreateManyAndReturnArgs>(args?: Prisma.SelectSubset<T, PricingConfigCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PricingConfigPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-  /**
    * Delete a PricingConfig.
    * @param {PricingConfigDeleteArgs} args - Arguments to delete one PricingConfig.
    * @example
@@ -577,36 +548,6 @@ export interface PricingConfigDelegate<ExtArgs extends runtime.Types.Extensions.
    * 
    */
   updateMany<T extends PricingConfigUpdateManyArgs>(args: Prisma.SelectSubset<T, PricingConfigUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
-
-  /**
-   * Update zero or more PricingConfigs and returns the data updated in the database.
-   * @param {PricingConfigUpdateManyAndReturnArgs} args - Arguments to update many PricingConfigs.
-   * @example
-   * // Update many PricingConfigs
-   * const pricingConfig = await prisma.pricingConfig.updateManyAndReturn({
-   *   where: {
-   *     // ... provide filter here
-   *   },
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * 
-   * // Update zero or more PricingConfigs and only return the `id`
-   * const pricingConfigWithIdOnly = await prisma.pricingConfig.updateManyAndReturn({
-   *   select: { id: true },
-   *   where: {
-   *     // ... provide filter here
-   *   },
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * Note, that providing `undefined` is treated as the value not being there.
-   * Read more here: https://pris.ly/d/null-undefined
-   * 
-   */
-  updateManyAndReturn<T extends PricingConfigUpdateManyAndReturnArgs>(args: Prisma.SelectSubset<T, PricingConfigUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PricingConfigPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
   /**
    * Create or update one PricingConfig.
@@ -1014,25 +955,6 @@ export type PricingConfigCreateManyArgs<ExtArgs extends runtime.Types.Extensions
 }
 
 /**
- * PricingConfig createManyAndReturn
- */
-export type PricingConfigCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the PricingConfig
-   */
-  select?: Prisma.PricingConfigSelectCreateManyAndReturn<ExtArgs> | null
-  /**
-   * Omit specific fields from the PricingConfig
-   */
-  omit?: Prisma.PricingConfigOmit<ExtArgs> | null
-  /**
-   * The data used to create many PricingConfigs.
-   */
-  data: Prisma.PricingConfigCreateManyInput | Prisma.PricingConfigCreateManyInput[]
-  skipDuplicates?: boolean
-}
-
-/**
  * PricingConfig update
  */
 export type PricingConfigUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1058,32 +980,6 @@ export type PricingConfigUpdateArgs<ExtArgs extends runtime.Types.Extensions.Int
  * PricingConfig updateMany
  */
 export type PricingConfigUpdateManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * The data used to update PricingConfigs.
-   */
-  data: Prisma.XOR<Prisma.PricingConfigUpdateManyMutationInput, Prisma.PricingConfigUncheckedUpdateManyInput>
-  /**
-   * Filter which PricingConfigs to update
-   */
-  where?: Prisma.PricingConfigWhereInput
-  /**
-   * Limit how many PricingConfigs to update.
-   */
-  limit?: number
-}
-
-/**
- * PricingConfig updateManyAndReturn
- */
-export type PricingConfigUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the PricingConfig
-   */
-  select?: Prisma.PricingConfigSelectUpdateManyAndReturn<ExtArgs> | null
-  /**
-   * Omit specific fields from the PricingConfig
-   */
-  omit?: Prisma.PricingConfigOmit<ExtArgs> | null
   /**
    * The data used to update PricingConfigs.
    */

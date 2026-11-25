@@ -235,6 +235,7 @@ export type SavedDesignOrderByWithRelationInput = {
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  _relevance?: Prisma.SavedDesignOrderByRelevanceInput
 }
 
 export type SavedDesignWhereUniqueInput = Prisma.AtLeast<{
@@ -377,6 +378,12 @@ export type SavedDesignUncheckedUpdateManyInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
+export type SavedDesignOrderByRelevanceInput = {
+  fields: Prisma.SavedDesignOrderByRelevanceFieldEnum | Prisma.SavedDesignOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
+}
+
 export type SavedDesignPlatformExternalIdCompoundUniqueInput = {
   platform: string
   externalId: string
@@ -440,31 +447,7 @@ export type SavedDesignSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   updatedAt?: boolean
 }, ExtArgs["result"]["savedDesign"]>
 
-export type SavedDesignSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
-  id?: boolean
-  platform?: boolean
-  externalId?: boolean
-  title?: boolean
-  designer?: boolean
-  license?: boolean
-  sourceUrl?: boolean
-  status?: boolean
-  createdAt?: boolean
-  updatedAt?: boolean
-}, ExtArgs["result"]["savedDesign"]>
 
-export type SavedDesignSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
-  id?: boolean
-  platform?: boolean
-  externalId?: boolean
-  title?: boolean
-  designer?: boolean
-  license?: boolean
-  sourceUrl?: boolean
-  status?: boolean
-  createdAt?: boolean
-  updatedAt?: boolean
-}, ExtArgs["result"]["savedDesign"]>
 
 export type SavedDesignSelectScalar = {
   id?: boolean
@@ -613,30 +596,6 @@ export interface SavedDesignDelegate<ExtArgs extends runtime.Types.Extensions.In
   createMany<T extends SavedDesignCreateManyArgs>(args?: Prisma.SelectSubset<T, SavedDesignCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
-   * Create many SavedDesigns and returns the data saved in the database.
-   * @param {SavedDesignCreateManyAndReturnArgs} args - Arguments to create many SavedDesigns.
-   * @example
-   * // Create many SavedDesigns
-   * const savedDesign = await prisma.savedDesign.createManyAndReturn({
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * 
-   * // Create many SavedDesigns and only return the `id`
-   * const savedDesignWithIdOnly = await prisma.savedDesign.createManyAndReturn({
-   *   select: { id: true },
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * Note, that providing `undefined` is treated as the value not being there.
-   * Read more here: https://pris.ly/d/null-undefined
-   * 
-   */
-  createManyAndReturn<T extends SavedDesignCreateManyAndReturnArgs>(args?: Prisma.SelectSubset<T, SavedDesignCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SavedDesignPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-  /**
    * Delete a SavedDesign.
    * @param {SavedDesignDeleteArgs} args - Arguments to delete one SavedDesign.
    * @example
@@ -699,36 +658,6 @@ export interface SavedDesignDelegate<ExtArgs extends runtime.Types.Extensions.In
    * 
    */
   updateMany<T extends SavedDesignUpdateManyArgs>(args: Prisma.SelectSubset<T, SavedDesignUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
-
-  /**
-   * Update zero or more SavedDesigns and returns the data updated in the database.
-   * @param {SavedDesignUpdateManyAndReturnArgs} args - Arguments to update many SavedDesigns.
-   * @example
-   * // Update many SavedDesigns
-   * const savedDesign = await prisma.savedDesign.updateManyAndReturn({
-   *   where: {
-   *     // ... provide filter here
-   *   },
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * 
-   * // Update zero or more SavedDesigns and only return the `id`
-   * const savedDesignWithIdOnly = await prisma.savedDesign.updateManyAndReturn({
-   *   select: { id: true },
-   *   where: {
-   *     // ... provide filter here
-   *   },
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * Note, that providing `undefined` is treated as the value not being there.
-   * Read more here: https://pris.ly/d/null-undefined
-   * 
-   */
-  updateManyAndReturn<T extends SavedDesignUpdateManyAndReturnArgs>(args: Prisma.SelectSubset<T, SavedDesignUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SavedDesignPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
   /**
    * Create or update one SavedDesign.
@@ -1142,25 +1071,6 @@ export type SavedDesignCreateManyArgs<ExtArgs extends runtime.Types.Extensions.I
 }
 
 /**
- * SavedDesign createManyAndReturn
- */
-export type SavedDesignCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the SavedDesign
-   */
-  select?: Prisma.SavedDesignSelectCreateManyAndReturn<ExtArgs> | null
-  /**
-   * Omit specific fields from the SavedDesign
-   */
-  omit?: Prisma.SavedDesignOmit<ExtArgs> | null
-  /**
-   * The data used to create many SavedDesigns.
-   */
-  data: Prisma.SavedDesignCreateManyInput | Prisma.SavedDesignCreateManyInput[]
-  skipDuplicates?: boolean
-}
-
-/**
  * SavedDesign update
  */
 export type SavedDesignUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1186,32 +1096,6 @@ export type SavedDesignUpdateArgs<ExtArgs extends runtime.Types.Extensions.Inter
  * SavedDesign updateMany
  */
 export type SavedDesignUpdateManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * The data used to update SavedDesigns.
-   */
-  data: Prisma.XOR<Prisma.SavedDesignUpdateManyMutationInput, Prisma.SavedDesignUncheckedUpdateManyInput>
-  /**
-   * Filter which SavedDesigns to update
-   */
-  where?: Prisma.SavedDesignWhereInput
-  /**
-   * Limit how many SavedDesigns to update.
-   */
-  limit?: number
-}
-
-/**
- * SavedDesign updateManyAndReturn
- */
-export type SavedDesignUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the SavedDesign
-   */
-  select?: Prisma.SavedDesignSelectUpdateManyAndReturn<ExtArgs> | null
-  /**
-   * Omit specific fields from the SavedDesign
-   */
-  omit?: Prisma.SavedDesignOmit<ExtArgs> | null
   /**
    * The data used to update SavedDesigns.
    */

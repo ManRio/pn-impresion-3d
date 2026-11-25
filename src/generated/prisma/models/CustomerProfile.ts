@@ -300,6 +300,7 @@ export type CustomerProfileOrderByWithRelationInput = {
   taxId?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
+  _relevance?: Prisma.CustomerProfileOrderByRelevanceInput
 }
 
 export type CustomerProfileWhereUniqueInput = Prisma.AtLeast<{
@@ -516,6 +517,12 @@ export type CustomerProfileNullableScalarRelationFilter = {
   isNot?: Prisma.CustomerProfileWhereInput | null
 }
 
+export type CustomerProfileOrderByRelevanceInput = {
+  fields: Prisma.CustomerProfileOrderByRelevanceFieldEnum | Prisma.CustomerProfileOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
+}
+
 export type CustomerProfileCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
@@ -723,47 +730,7 @@ export type CustomerProfileSelect<ExtArgs extends runtime.Types.Extensions.Inter
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["customerProfile"]>
 
-export type CustomerProfileSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
-  id?: boolean
-  userId?: boolean
-  firstName?: boolean
-  lastName?: boolean
-  phone?: boolean
-  shippingAddress?: boolean
-  shippingPostalCode?: boolean
-  shippingCity?: boolean
-  shippingProvince?: boolean
-  shippingCountry?: boolean
-  billingAddress?: boolean
-  billingPostalCode?: boolean
-  billingCity?: boolean
-  billingProvince?: boolean
-  billingCountry?: boolean
-  taxId?: boolean
-  updatedAt?: boolean
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-}, ExtArgs["result"]["customerProfile"]>
 
-export type CustomerProfileSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
-  id?: boolean
-  userId?: boolean
-  firstName?: boolean
-  lastName?: boolean
-  phone?: boolean
-  shippingAddress?: boolean
-  shippingPostalCode?: boolean
-  shippingCity?: boolean
-  shippingProvince?: boolean
-  shippingCountry?: boolean
-  billingAddress?: boolean
-  billingPostalCode?: boolean
-  billingCity?: boolean
-  billingProvince?: boolean
-  billingCountry?: boolean
-  taxId?: boolean
-  updatedAt?: boolean
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-}, ExtArgs["result"]["customerProfile"]>
 
 export type CustomerProfileSelectScalar = {
   id?: boolean
@@ -787,12 +754,6 @@ export type CustomerProfileSelectScalar = {
 
 export type CustomerProfileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "firstName" | "lastName" | "phone" | "shippingAddress" | "shippingPostalCode" | "shippingCity" | "shippingProvince" | "shippingCountry" | "billingAddress" | "billingPostalCode" | "billingCity" | "billingProvince" | "billingCountry" | "taxId" | "updatedAt", ExtArgs["result"]["customerProfile"]>
 export type CustomerProfileInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-}
-export type CustomerProfileIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-}
-export type CustomerProfileIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 
@@ -937,30 +898,6 @@ export interface CustomerProfileDelegate<ExtArgs extends runtime.Types.Extension
   createMany<T extends CustomerProfileCreateManyArgs>(args?: Prisma.SelectSubset<T, CustomerProfileCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
-   * Create many CustomerProfiles and returns the data saved in the database.
-   * @param {CustomerProfileCreateManyAndReturnArgs} args - Arguments to create many CustomerProfiles.
-   * @example
-   * // Create many CustomerProfiles
-   * const customerProfile = await prisma.customerProfile.createManyAndReturn({
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * 
-   * // Create many CustomerProfiles and only return the `id`
-   * const customerProfileWithIdOnly = await prisma.customerProfile.createManyAndReturn({
-   *   select: { id: true },
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * Note, that providing `undefined` is treated as the value not being there.
-   * Read more here: https://pris.ly/d/null-undefined
-   * 
-   */
-  createManyAndReturn<T extends CustomerProfileCreateManyAndReturnArgs>(args?: Prisma.SelectSubset<T, CustomerProfileCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CustomerProfilePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-  /**
    * Delete a CustomerProfile.
    * @param {CustomerProfileDeleteArgs} args - Arguments to delete one CustomerProfile.
    * @example
@@ -1023,36 +960,6 @@ export interface CustomerProfileDelegate<ExtArgs extends runtime.Types.Extension
    * 
    */
   updateMany<T extends CustomerProfileUpdateManyArgs>(args: Prisma.SelectSubset<T, CustomerProfileUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
-
-  /**
-   * Update zero or more CustomerProfiles and returns the data updated in the database.
-   * @param {CustomerProfileUpdateManyAndReturnArgs} args - Arguments to update many CustomerProfiles.
-   * @example
-   * // Update many CustomerProfiles
-   * const customerProfile = await prisma.customerProfile.updateManyAndReturn({
-   *   where: {
-   *     // ... provide filter here
-   *   },
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * 
-   * // Update zero or more CustomerProfiles and only return the `id`
-   * const customerProfileWithIdOnly = await prisma.customerProfile.updateManyAndReturn({
-   *   select: { id: true },
-   *   where: {
-   *     // ... provide filter here
-   *   },
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * Note, that providing `undefined` is treated as the value not being there.
-   * Read more here: https://pris.ly/d/null-undefined
-   * 
-   */
-  updateManyAndReturn<T extends CustomerProfileUpdateManyAndReturnArgs>(args: Prisma.SelectSubset<T, CustomerProfileUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CustomerProfilePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
   /**
    * Create or update one CustomerProfile.
@@ -1498,29 +1405,6 @@ export type CustomerProfileCreateManyArgs<ExtArgs extends runtime.Types.Extensio
 }
 
 /**
- * CustomerProfile createManyAndReturn
- */
-export type CustomerProfileCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the CustomerProfile
-   */
-  select?: Prisma.CustomerProfileSelectCreateManyAndReturn<ExtArgs> | null
-  /**
-   * Omit specific fields from the CustomerProfile
-   */
-  omit?: Prisma.CustomerProfileOmit<ExtArgs> | null
-  /**
-   * The data used to create many CustomerProfiles.
-   */
-  data: Prisma.CustomerProfileCreateManyInput | Prisma.CustomerProfileCreateManyInput[]
-  skipDuplicates?: boolean
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.CustomerProfileIncludeCreateManyAndReturn<ExtArgs> | null
-}
-
-/**
  * CustomerProfile update
  */
 export type CustomerProfileUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1562,36 +1446,6 @@ export type CustomerProfileUpdateManyArgs<ExtArgs extends runtime.Types.Extensio
    * Limit how many CustomerProfiles to update.
    */
   limit?: number
-}
-
-/**
- * CustomerProfile updateManyAndReturn
- */
-export type CustomerProfileUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the CustomerProfile
-   */
-  select?: Prisma.CustomerProfileSelectUpdateManyAndReturn<ExtArgs> | null
-  /**
-   * Omit specific fields from the CustomerProfile
-   */
-  omit?: Prisma.CustomerProfileOmit<ExtArgs> | null
-  /**
-   * The data used to update CustomerProfiles.
-   */
-  data: Prisma.XOR<Prisma.CustomerProfileUpdateManyMutationInput, Prisma.CustomerProfileUncheckedUpdateManyInput>
-  /**
-   * Filter which CustomerProfiles to update
-   */
-  where?: Prisma.CustomerProfileWhereInput
-  /**
-   * Limit how many CustomerProfiles to update.
-   */
-  limit?: number
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.CustomerProfileIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**
