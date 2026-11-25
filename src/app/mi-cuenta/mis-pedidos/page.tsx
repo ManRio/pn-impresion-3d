@@ -54,8 +54,7 @@ export default async function MyOrders() {
     <main className='mx-auto max-w-5xl px-5 py-14'>
       <h1 className='text-3xl font-bold'>Mis pedidos</h1>
       <p className='mt-2 text-sm text-white/60'>
-        Consulta tus pedidos, el estado del pago y su seguimiento. Actualmente
-        los pagos online son únicamente de prueba.
+        Consulta tus pedidos, el estado del pago y su seguimiento.
       </p>
 
       <div className='mt-7 space-y-5'>
@@ -71,7 +70,9 @@ export default async function MyOrders() {
         {orders.map((order) => {
           const paid = order.paymentStatus === 'PAID';
           const paymentText = paid
-            ? 'Pago de prueba confirmado'
+            ? (order.stripeCheckoutSessionId?.startsWith('cs_test_')
+                ? 'Pago de prueba confirmado'
+                : 'Pago confirmado')
             : order.paymentStatus === 'PENDING'
               ? 'Pago pendiente'
               : `Estado del pago: ${order.paymentStatus}`;
