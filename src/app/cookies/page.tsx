@@ -99,14 +99,19 @@ export default function Page() {
           aplicable.
         </p>
         <p>
-          La tienda utiliza Cloudflare Web Analytics para obtener estadísticas
-          de visitas y rendimiento del sitio web.
+          La tienda utiliza Cloudflare Web Analytics para estadísticas de visitas y rendimiento.
+          También ofrece, previo consentimiento, Google Tag Manager (contenedor GTM-KZZJ26DZ)
+          para medir compras, analítica y atribución de productos en Google.
+          Las categorías opcionales de analítica y publicidad pueden aceptarse o rechazarse
+          independientemente. Sin autorización, la etiqueta de Google no se carga.
         </p>
         <p>
-          Según la documentación de Cloudflare, esta herramienta no utiliza
-          cookies, localStorage ni técnicas de identificación persistente para
-          realizar el seguimiento de visitantes. No se han identificado cookies
-          publicitarias instaladas por la tienda.
+          Cloudflare Web Analytics declara no utilizar cookies ni almacenamiento
+          persistente para medir visitas. Si el usuario autoriza el seguimiento de Google,
+          sus etiquetas pueden utilizar cookies e identificadores para medición y atribución
+          de conversiones, según las categorías aceptadas y la configuración de Google.
+          El consentimiento se conserva localmente mediante la clave
+          pn3d-google-consent-v1 y puede modificarse desde «Configurar cookies» en el pie.
         </p>
       </section>
 
@@ -157,9 +162,9 @@ export default function Page() {
           de almacenamiento o cambien las finalidades de las existentes.
         </p>
         <p>
-          Si se incorporan herramientas de analítica, publicidad u otras
-          tecnologías que requieran consentimiento, se implementarán los
-          mecanismos correspondientes antes de su activación.
+          La gestión del consentimiento se realiza con el panel de preferencias.
+          Los usuarios pueden retirar su consentimiento en cualquier momento
+          mediante «Configurar cookies» en el pie de la web.
         </p>
       </section>
 
@@ -176,7 +181,7 @@ export default function Page() {
           </a>
         </p>
         <p>
-          <strong>Última actualización: 14 de noviembre de 2026.</strong>
+          <strong>Última actualización: 25 de noviembre de 2026.</strong>
         </p>
       </section>
     </LegalPage>

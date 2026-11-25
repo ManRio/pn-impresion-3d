@@ -83,11 +83,12 @@ export default function Page() {
           los tratamientos descritos en esta política.
         </p>
         <p>
-          <strong>Medición de audiencia:</strong> utilizamos Cloudflare Web
-          Analytics para conocer las visitas, las páginas consultadas y el
-          rendimiento de la web, con el objetivo de mejorar nuestros servicios.
-          Según la documentación de Cloudflare, esta herramienta no utiliza
-          cookies ni almacenamiento local para realizar sus mediciones.
+          <strong>Medición de audiencia:</strong> utilizamos Cloudflare Web Analytics
+          para conocer visitas y rendimiento. Mediante consentimiento opcional podemos
+          utilizar Google Tag Manager y servicios de medición vinculados para conocer
+          el rendimiento de productos, compras y campañas. Sin consentimiento, no
+          cargamos la etiqueta de Google. No enviamos nombres, direcciones ni correos
+          de clientes en los eventos de compra.
         </p>
       </section>
 
@@ -145,10 +146,7 @@ export default function Page() {
 
         <ul>
           <li>
-            <strong>Railway:</strong> alojamiento de la aplicación web.
-          </li>
-          <li>
-            <strong>Neon:</strong> infraestructura de base de datos PostgreSQL.
+            <strong>OVHcloud:</strong> alojamiento de la aplicación y base de datos MySQL gestionada.
           </li>
           <li>
             <strong>Stripe:</strong> procesamiento de pagos y gestión de
@@ -165,6 +163,10 @@ export default function Page() {
           </li>
           <li>
             <strong>OVHcloud:</strong> servicio de correo electrónico comercial.
+          </li>
+          <li>
+            <strong>Google:</strong> analítica, medición de conversiones y atribución de productos
+            mediante etiquetas cargadas únicamente con consentimiento opcional.
           </li>
           <li>
             <strong>Cloudflare:</strong> gestión del dominio, servicios técnicos
@@ -357,7 +359,7 @@ export default function Page() {
         </p>
 
         <p>
-          <strong>Última actualización: 14 de noviembre de 2026.</strong>
+          <strong>Última actualización: 25 de noviembre de 2026.</strong>
         </p>
       </section>
     </LegalPage>

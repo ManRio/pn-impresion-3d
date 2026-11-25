@@ -3,6 +3,7 @@ import { headers } from 'next/headers';
 import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import ConfirmPaidCart from './ConfirmPaidCart';
+import PurchaseTracker from '@/components/google/PurchaseTracker';
 
 export const dynamic = 'force-dynamic';
 export const metadata = {
@@ -24,7 +25,11 @@ export default async function PaymentResult({
             userId: session.user.id,
             stripeCheckoutSessionId: session_id,
           },
-          select: { id: true, checkoutKey: true, paymentStatus: true },
+          select: {
+            id: true, checkoutKey: true, paymentStatus: true,
+            subtotalCents: true, shippingCents: true,
+            items: { select: { sku: true, productName: true, quantity: true, unitPriceCents: true } },
+          },
         })
       : null;
   const paid = order?.paymentStatus === 'PAID';
@@ -36,6 +41,20 @@ export default async function PaymentResult({
       {paid ? (
         <>
           <ConfirmPaidCart checkoutKey={order.checkoutKey} />
+          {session_id?.startsWith('cs_live_') && (
+            <PurchaseTracker purchase={{
+              transaction_id: order.id,
+              currency: 'EUR',
+              value: (order.subtotalCents ?? order.items.reduce((sum, item) => sum + item.unitPriceCents * item.quantity, 0)) / 100,
+              shipping: (order.shippingCents ?? 0) / 100,
+              items: order.items.map(item => ({
+                item_id: item.sku,
+                item_name: item.productName,
+                price: item.unitPriceCents / 100,
+                quantity: item.quantity,
+              })),
+            }} />
+          )}
           <p className='mt-4 text-white/75'>
             {session_id?.startsWith('cs_test_')
               ? 'Tu pago de prueba está confirmado y el pedido figura como pagado.'
